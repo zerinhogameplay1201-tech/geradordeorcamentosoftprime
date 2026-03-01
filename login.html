@@ -13,21 +13,43 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
+      background-color: #020b18;
+      background-image: url('bg-login.jpg');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    /* Overlay escuro suave para melhorar legibilidade */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 11, 30, 0.55);
+      z-index: 0;
     }
 
     .login-container {
-      background: white;
+      position: relative;
+      z-index: 1;
+      background: rgba(5, 20, 50, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      max-width: 400px;
+      border-radius: 20px;
+      box-shadow:
+        0 0 0 1px rgba(0, 180, 255, 0.25),
+        0 8px 40px rgba(0, 140, 255, 0.2),
+        0 20px 60px rgba(0, 0, 0, 0.5);
+      max-width: 420px;
       width: 100%;
+      border: 1px solid rgba(0, 180, 255, 0.2);
     }
 
     .logo {
@@ -36,21 +58,33 @@
     }
 
     .logo h1 {
-      color: #667eea;
-      font-size: 24px;
-      margin-bottom: 5px;
+      color: #00c8ff;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 10px rgba(0, 200, 255, 0.8),
+        0 0 30px rgba(0, 140, 255, 0.5);
+      margin-bottom: 6px;
     }
 
     .logo p {
-      color: #666;
+      color: rgba(180, 220, 255, 0.8);
       font-size: 14px;
+    }
+
+    .logo .subtitle {
+      font-size: 12px;
+      margin-top: 6px;
+      color: rgba(100, 180, 255, 0.6);
     }
 
     .tabs {
       display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-      border-bottom: 2px solid #f0f0f0;
+      gap: 0;
+      margin-bottom: 28px;
+      border-bottom: 1px solid rgba(0, 180, 255, 0.2);
     }
 
     .tab {
@@ -60,17 +94,23 @@
       cursor: pointer;
       background: none;
       border: none;
-      color: #666;
-      font-size: 16px;
-      font-weight: 500;
+      color: rgba(150, 200, 255, 0.6);
+      font-size: 15px;
+      font-weight: 600;
       transition: all 0.3s;
-      border-bottom: 3px solid transparent;
-      margin-bottom: -2px;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      letter-spacing: 0.5px;
     }
 
     .tab.active {
-      color: #667eea;
-      border-bottom-color: #667eea;
+      color: #00c8ff;
+      border-bottom-color: #00c8ff;
+      text-shadow: 0 0 8px rgba(0, 200, 255, 0.6);
+    }
+
+    .tab:hover {
+      color: #00c8ff;
     }
 
     .form-container {
@@ -82,66 +122,84 @@
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 8px;
-      color: #333;
+      margin-bottom: 7px;
+      color: rgba(150, 210, 255, 0.9);
       font-weight: 500;
-      font-size: 14px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
     .form-group input {
       width: 100%;
       padding: 12px 16px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
+      border: 1px solid rgba(0, 180, 255, 0.25);
+      border-radius: 10px;
       font-size: 15px;
-      transition: border-color 0.3s;
+      transition: all 0.3s;
+      background: rgba(0, 30, 70, 0.6);
+      color: #e0f0ff;
+    }
+
+    .form-group input::placeholder {
+      color: rgba(100, 160, 220, 0.5);
     }
 
     .form-group input:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: #00c8ff;
+      background: rgba(0, 40, 90, 0.7);
+      box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.15),
+                  0 0 15px rgba(0, 150, 255, 0.1);
     }
 
     .btn {
       width: 100%;
       padding: 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.3s;
       margin-top: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .btn-primary {
-      background: #667eea;
+      background: linear-gradient(135deg, #0078d4, #00c8ff);
       color: white;
+      box-shadow: 0 4px 20px rgba(0, 180, 255, 0.35),
+                  0 0 0 1px rgba(0, 200, 255, 0.2);
     }
 
     .btn-primary:hover {
-      background: #5568d3;
+      background: linear-gradient(135deg, #0090f0, #40d8ff);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 30px rgba(0, 180, 255, 0.5),
+                  0 0 20px rgba(0, 200, 255, 0.3);
     }
 
     .btn-primary:disabled {
-      background: #ccc;
+      background: rgba(0, 100, 180, 0.4);
       cursor: not-allowed;
       transform: none;
+      box-shadow: none;
     }
 
     .alert {
       padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 20px;
+      border-radius: 10px;
+      margin-bottom: 18px;
       font-size: 14px;
       display: none;
+      border: 1px solid transparent;
     }
 
     .alert.show {
@@ -149,30 +207,32 @@
     }
 
     .alert-error {
-      background: #fee;
-      color: #c33;
-      border: 1px solid #fcc;
+      background: rgba(200, 30, 30, 0.2);
+      color: #ff8080;
+      border-color: rgba(255, 80, 80, 0.3);
     }
 
     .alert-success {
-      background: #efe;
-      color: #3c3;
-      border: 1px solid #cfc;
+      background: rgba(0, 180, 100, 0.2);
+      color: #80ffb0;
+      border-color: rgba(0, 220, 120, 0.3);
     }
 
     .forgot-password {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 16px;
     }
 
     .forgot-password a {
-      color: #667eea;
+      color: rgba(0, 180, 255, 0.7);
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13px;
+      transition: color 0.2s;
     }
 
     .forgot-password a:hover {
-      text-decoration: underline;
+      color: #00c8ff;
+      text-shadow: 0 0 8px rgba(0, 200, 255, 0.5);
     }
 
     .loading {
@@ -193,9 +253,9 @@
 <body>
   <div class="login-container">
     <div class="logo">
-      <h1> SoftPrime</h1>
+      <h1>⚡ SoftPrime</h1>
       <p>Gerador de Orçamentos</p>
-      <p style="font-size: 12px; margin-top: 10px;">Faça login ou crie sua conta</p>
+      <p class="subtitle">Faça login ou crie sua conta</p>
     </div>
 
     <div class="tabs">
@@ -248,14 +308,11 @@
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script>
-    // Troca de abas
     function showTab(tab) {
       const loginForm = document.getElementById('loginForm');
       const cadastroForm = document.getElementById('cadastroForm');
       const tabs = document.querySelectorAll('.tab');
-      
       tabs.forEach(t => t.classList.remove('active'));
-      
       if (tab === 'login') {
         loginForm.classList.add('active');
         cadastroForm.classList.remove('active');
@@ -265,54 +322,39 @@
         loginForm.classList.remove('active');
         tabs[1].classList.add('active');
       }
-      
       hideAlert();
     }
 
-    // Mostra alerta
     function showAlert(message, type) {
       const alertBox = document.getElementById('alertBox');
       alertBox.textContent = message;
       alertBox.className = `alert alert-${type} show`;
     }
 
-    // Esconde alerta
     function hideAlert() {
       const alertBox = document.getElementById('alertBox');
       alertBox.className = 'alert';
     }
 
-    // Verifica se já está logado ao carregar a página
     window.addEventListener('DOMContentLoaded', async () => {
-      // Aguarda o AuthManager inicializar
       await new Promise(resolve => setTimeout(resolve, 500));
-      
       if (window.authManager && window.authManager.isAuthenticated()) {
-        console.log('✅ Usuário já logado, redirecionando...');
         window.location.href = 'index.html';
       }
     });
 
-    // Login
     async function handleLogin(event) {
       event.preventDefault();
       hideAlert();
-      
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
       const btn = document.getElementById('loginBtn');
-      
       btn.disabled = true;
       btn.innerHTML = '<span class="loading"></span> Entrando...';
-      
-      console.log('🔄 Tentando fazer login...');
       const result = await window.authManager.signIn(email, password);
-      
       if (result.success) {
         showAlert('✅ Login realizado! Redirecionando...', 'success');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1000);
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
       } else {
         showAlert(result.message, 'error');
         btn.disabled = false;
@@ -320,22 +362,16 @@
       }
     }
 
-    // Cadastro
     async function handleSignUp(event) {
       event.preventDefault();
       hideAlert();
-      
       const name = document.getElementById('signupName').value;
       const email = document.getElementById('signupEmail').value;
       const password = document.getElementById('signupPassword').value;
       const btn = document.getElementById('signupBtn');
-      
       btn.disabled = true;
       btn.innerHTML = '<span class="loading"></span> Criando conta...';
-      
-      console.log('🔄 Criando conta...');
       const result = await window.authManager.signUp(email, password, name);
-      
       if (result.success) {
         showAlert('✅ Conta criada! Faça login agora.', 'success');
         setTimeout(() => {
@@ -351,11 +387,9 @@
       }
     }
 
-    // Recuperar senha
     async function handleForgotPassword(event) {
       event.preventDefault();
       const email = prompt('Digite seu email para recuperação de senha:');
-      
       if (email) {
         const result = await window.authManager.resetPassword(email);
         showAlert(result.message, result.success ? 'success' : 'error');
