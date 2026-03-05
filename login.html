@@ -194,6 +194,39 @@
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    .password-field-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-field-wrap input {
+      width: 100%;
+      padding-right: 44px;
+    }
+
+    .btn-toggle-password {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: rgba(255,255,255,0.5);
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-toggle-password:hover {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .eye-icon {
+      width: 20px;
+      height: 20px;
+    }
   </style>
 </head>
 <body>
@@ -215,11 +248,19 @@
       <form onsubmit="handleLogin(event)">
         <div class="form-group">
           <label>Email ou Usuário</label>
-          <input type="text" id="loginIdentifier" placeholder="seu@email.com ou nome de usuário" autocomplete="username" required>
+          <input type="text" id="loginIdentifier" placeholder="seu@email.com ou nome de usuário" autocomplete="off" spellcheck="false" required>
         </div>
         <div class="form-group">
           <label>Senha</label>
-          <input type="password" id="loginPassword" placeholder="Mínimo 6 caracteres" required>
+          <div class="password-field-wrap">
+            <input type="password" id="loginPassword" placeholder="Mínimo 6 caracteres" autocomplete="current-password" required>
+            <button type="button" class="btn-toggle-password" onclick="togglePassword('loginPassword', this)" title="Mostrar/ocultar senha" aria-label="Mostrar senha">
+              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <button type="submit" class="btn btn-primary" id="loginBtn">🔐 Entrar</button>
       </form>
@@ -244,9 +285,17 @@
         </div>
         <div class="form-group">
           <label>Senha (mínimo 6 caracteres)</label>
-          <input type="password" id="signupPassword" placeholder="Escolha uma senha forte" required minlength="6">
+          <div class="password-field-wrap">
+            <input type="password" id="signupPassword" placeholder="Escolha uma senha forte" autocomplete="new-password" required minlength="6">
+            <button type="button" class="btn-toggle-password" onclick="togglePassword('signupPassword', this)" title="Mostrar/ocultar senha" aria-label="Mostrar senha">
+              <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary" id="signupBtn"> Criar Conta</button>
+        <button type="submit" class="btn btn-primary" id="signupBtn">Criar Conta</button>
       </form>
     </div>
   </div>
@@ -255,6 +304,29 @@
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script>
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      btn.setAttribute('aria-label', isHidden ? 'Ocultar senha' : 'Mostrar senha');
+
+      const svg = btn.querySelector('svg');
+      if (isHidden) {
+        svg.innerHTML = `
+          <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+          <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        `;
+      } else {
+        svg.innerHTML = `
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        `;
+      }
+    }
+
     function showTab(tab) {
       const loginForm = document.getElementById('loginForm');
       const cadastroForm = document.getElementById('cadastroForm');
@@ -331,12 +403,12 @@
           showTab('login');
           document.getElementById('loginIdentifier').value = email;
           btn.disabled = false;
-          btn.innerHTML = ' Criar Conta';
+          btn.innerHTML = 'Criar Conta';
         }, 2000);
       } else {
         showAlert(result.message, 'error');
         btn.disabled = false;
-        btn.innerHTML = ' Criar Conta';
+        btn.innerHTML = 'Criar Conta';
       }
     }
 
