@@ -1073,10 +1073,6 @@ function renderQuoteHtml(q, issuer, client){
       <div style="page-break-inside:avoid;page-break-before:avoid;margin-top:0;">
         <table style="width:100%;border-collapse:collapse;">
           <tr>
-            <td colspan="3" style="text-align:right;font-weight:600;padding:10px;border:1px solid #e5e7eb;">Subtotal:</td>
-            <td style="text-align:right;font-weight:600;padding:10px;border:1px solid #e5e7eb;">R$ ${money(q.subtotal)}</td>
-          </tr>
-          <tr>
             <td colspan="3" style="text-align:right;font-weight:700;font-size:18px;color:#0d7de0;padding:10px;border:1px solid #e5e7eb;">TOTAL:</td>
             <td style="text-align:right;font-weight:700;font-size:18px;color:#0d7de0;padding:10px;border:1px solid #e5e7eb;">R$ ${money(q.total)}</td>
           </tr>
