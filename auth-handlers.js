@@ -129,25 +129,18 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       
       const name = document.getElementById('signupName').value.trim();
-      const username = document.getElementById('signupUsername').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
 
-      console.log('[AUTH] Tentando cadastro:', { name, username, email });
+      console.log('[AUTH] Tentando cadastro:', { name, email });
 
-      if (!name || !username || !email || !password) {
+      if (!name || !email || !password) {
         showMessage('Preencha todos os campos', 'error');
         return;
       }
 
       if (password.length < 6) {
         showMessage('A senha deve ter no mínimo 6 caracteres', 'error');
-        return;
-      }
-
-      const normalizedUsername = username.toLowerCase().replace(/\s+/g, '');
-      if (normalizedUsername.length < 3 || normalizedUsername.length > 30 || !/^[a-z0-9_-]+$/.test(normalizedUsername)) {
-        showMessage('O nome de usuário deve ter entre 3 e 30 caracteres e conter apenas letras, números, _ e -', 'error');
         return;
       }
 
@@ -159,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       showMessage('🔄 Criando conta...', 'info');
 
-      const result = await window.authManager.signUp(email, password, name, username);
+      const result = await window.authManager.signUp(email, password, name);
       
       if (result.success) {
         showMessage(result.message, 'success');
