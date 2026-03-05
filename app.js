@@ -16,8 +16,9 @@ function loadStore(){
     return seed;
   }
   const s = JSON.parse(raw);
-  if (!s.nextQuoteNumber) {
-    s.nextQuoteNumber = computeNextQuoteNumberFromQuotes(s.quotes || []);
+  const minNext = computeNextQuoteNumberFromQuotes(s.quotes || []);
+  if (!s.nextQuoteNumber || s.nextQuoteNumber < minNext) {
+    s.nextQuoteNumber = minNext;
     localStorage.setItem(STORE_KEY, JSON.stringify(s));
   }
   s.issuers = s.issuers || [];
