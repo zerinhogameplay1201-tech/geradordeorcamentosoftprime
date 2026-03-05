@@ -273,15 +273,11 @@
       <form onsubmit="handleSignUp(event)">
         <div class="form-group">
           <label>Nome Completo</label>
-          <input type="text" id="signupName" placeholder="Seu nome" required>
-        </div>
-        <div class="form-group">
-          <label for="signupUsername">Nome de Usuário</label>
-          <input type="text" id="signupUsername" placeholder="ex: joaosilva123" autocomplete="username" required>
+          <input type="text" id="signupName" placeholder="Seu nome completo" autocomplete="name" required>
         </div>
         <div class="form-group">
           <label>Email</label>
-          <input type="email" id="signupEmail" placeholder="seu@email.com" required>
+          <input type="email" id="signupEmail" placeholder="seu@email.com" autocomplete="email" required>
         </div>
         <div class="form-group">
           <label>Senha (mínimo 6 caracteres)</label>
@@ -390,13 +386,12 @@
       event.preventDefault();
       hideAlert();
       const name = document.getElementById('signupName').value.trim();
-      const username = document.getElementById('signupUsername').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
       const btn = document.getElementById('signupBtn');
       btn.disabled = true;
       btn.innerHTML = '<span class="loading"></span> Criando conta...';
-      const result = await window.authManager.signUp(email, password, name, username);
+      const result = await window.authManager.signUp(email, password, name);
       if (result.success) {
         showAlert('✅ Conta criada! Faça login agora.', 'success');
         setTimeout(() => {

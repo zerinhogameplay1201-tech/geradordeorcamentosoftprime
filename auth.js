@@ -102,11 +102,7 @@ class AuthManager {
     console.log('✅ App carregado para:', this.currentUser?.email);
   }
 
-  _normalizeUsername(username) {
-    return (username || '').toLowerCase().replace(/\s+/g, '');
-  }
-
-  async signUp(email, password, fullName, username) {
+  async signUp(email, password, fullName) {
     try {
       if (!this.supabase) {
         return { success: false, message: '❌ Sistema não inicializado. Recarregue a página.' };
@@ -114,47 +110,28 @@ class AuthManager {
 
       console.log('🔄 Cadastrando usuário:', email);
 
-      // Validar e normalizar o username
-      const normalizedUsername = this._normalizeUsername(username);
-      if (normalizedUsername) {
-        if (normalizedUsername.length < 3) {
-          return { success: false, message: '❌ O nome de usuário deve ter pelo menos 3 caracteres.' };
-        }
-        if (normalizedUsername.length > 30) {
-          return { success: false, message: '❌ O nome de usuário deve ter no máximo 30 caracteres.' };
-        }
-        if (!/^[a-z0-9_-]+$/.test(normalizedUsername)) {
-          return { success: false, message: '❌ O nome de usuário só pode conter letras, números, _ e -.' };
-        }
-
-        // Verificar se o username já está em uso
-        const { data: existing } = await this.supabase
-          .from('profiles')
-          .select('username')
-          .eq('username', normalizedUsername)
-          .maybeSingle();
-        if (existing) {
-          return { success: false, message: '❌ Este nome de usuário já está em uso. Escolha outro.' };
-        }
-      }
-
       const { data, error } = await this.supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { full_name: fullName, username: normalizedUsername }
+          data: { full_name: fullName }
         }
       });
 
       if (error) throw error;
 
-      // Salvar o username na tabela de perfis para lookups futuros
-      if (normalizedUsername && data.user) {
+      // Salvar full_name na tabela de perfis
+      if (data.user) {
         const { error: profileError } = await this.supabase
           .from('profiles')
-          .upsert({ id: data.user.id, email, username: normalizedUsername, full_name: fullName });
+          .upsert({
+            id: data.user.id,
+            email,
+            full_name: fullName,
+            updated_at: new Date().toISOString()
+          });
         if (profileError) {
-          console.error('❌ Erro ao salvar perfil (username pode não funcionar para login):', profileError.message);
+          console.error('❌ Erro ao salvar perfil:', profileError.message);
         }
       }
 
@@ -181,14 +158,13 @@ class AuthManager {
 
       let email = identifier;
 
-      // Se não contém '@', trata como nome de usuário e busca o email correspondente
+      // Se não contém '@', trata como nome completo e busca o email correspondente
       if (!identifier.includes('@')) {
-        const normalizedUsername = this._normalizeUsername(identifier);
-        console.log('🔄 Buscando email por nome de usuário:', normalizedUsername);
+        console.log('🔄 Buscando email por nome completo:', identifier);
         const { data: profile, error: profileError } = await this.supabase
           .from('profiles')
           .select('email')
-          .eq('username', normalizedUsername)
+          .ilike('full_name', identifier)
           .maybeSingle();
 
         if (profileError) {
@@ -196,7 +172,7 @@ class AuthManager {
         }
 
         if (!profile) {
-          return { success: false, message: '❌ Usuário não encontrado. Verifique seu email ou nome de usuário.' };
+          return { success: false, message: '❌ Usuário não encontrado. Verifique seu email ou nome.' };
         }
 
         email = profile.email;
