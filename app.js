@@ -102,7 +102,6 @@ const quotesList = document.getElementById("quotesList");
 const quotesSearch = document.getElementById("quotesSearch");
 const clearSearch = document.getElementById("clearSearch");
 const filterResultsCount = document.getElementById("filterResultsCount");
-const filterTagsEl = document.getElementById("filterTags");
 
 const exportCsvBtn = document.getElementById("exportCsvBtn");
 const exportDocBtn = document.getElementById("exportDocBtn");
@@ -120,7 +119,6 @@ let lastPreviewHtml = "";
 let currentIssuerLogoDataUrl = null; // base64 data URL do logo atual
 
 // ===== FILTRO DE ORÇAMENTOS =====
-let activeIssuerFilter = 'all';
 let searchQuery = '';
 
 function normalizeStr(str) {
@@ -129,10 +127,6 @@ function normalizeStr(str) {
 
 function filterQuotes(quotes) {
   let result = quotes;
-
-  if (activeIssuerFilter !== 'all') {
-    result = result.filter(q => q.issuerId === activeIssuerFilter);
-  }
 
   const q = normalizeStr(searchQuery);
   if (q.length > 0) {
@@ -169,46 +163,6 @@ function highlightText(text, query) {
     '</mark>' +
     escapeHtml(text.slice(idx + normalizedQuery.length))
   );
-}
-
-function renderFilterTags() {
-  if (!filterTagsEl) return;
-
-  // Remove dynamically generated issuer tags (keep "Todos")
-  filterTagsEl.querySelectorAll('.filter-tag[data-issuer]').forEach(t => t.remove());
-
-  // Update "Todos" active state
-  const allBtn = filterTagsEl.querySelector('.filter-tag[data-filter="all"]');
-  if (allBtn) {
-    allBtn.classList.toggle('active', activeIssuerFilter === 'all');
-    if (!allBtn._listenerAdded) {
-      allBtn._listenerAdded = true;
-      allBtn.addEventListener('click', () => {
-        activeIssuerFilter = 'all';
-        renderQuotes();
-      });
-    }
-  }
-
-  // Add a tag per unique issuer that has quotes
-  const issuersSeen = new Set();
-  (store.quotes || []).forEach(q => {
-    if (issuersSeen.has(q.issuerId)) return;
-    issuersSeen.add(q.issuerId);
-    const issuer = store.issuers.find(i => i.id === q.issuerId);
-    if (!issuer) return;
-    const btn = document.createElement('button');
-    btn.className = 'filter-tag' + (activeIssuerFilter === q.issuerId ? ' active' : '');
-    btn.dataset.issuer = q.issuerId;
-    btn.dataset.filter = q.issuerId;
-    btn.textContent = issuer.name.length > 22 ? issuer.name.slice(0, 20) + '…' : issuer.name;
-    btn.title = issuer.name;
-    btn.addEventListener('click', () => {
-      activeIssuerFilter = q.issuerId;
-      renderQuotes();
-    });
-    filterTagsEl.appendChild(btn);
-  });
 }
 
 // ========== UTILITY FUNCTIONS ==========
@@ -318,8 +272,6 @@ function renderQuotes(){
   if (!quotesList) return;
   quotesList.innerHTML = "";
 
-  renderFilterTags();
-
   if (!store.quotes.length) {
     quotesList.innerHTML = "<li style='text-align:center;color:#9ca3af;'>📭 Nenhum orçamento salvo ainda</li>";
     if (filterResultsCount) { filterResultsCount.textContent = ''; filterResultsCount.className = 'filter-results-count'; }
@@ -329,7 +281,7 @@ function renderQuotes(){
   const filtered = filterQuotes(store.quotes.slice().reverse());
   const total = store.quotes.length;
   const shown = filtered.length;
-  const isFiltering = activeIssuerFilter !== 'all' || searchQuery.length > 0;
+  const isFiltering = searchQuery.length > 0;
 
   if (filterResultsCount) {
     if (isFiltering) {
