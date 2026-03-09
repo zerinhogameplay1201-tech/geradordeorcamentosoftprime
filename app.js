@@ -116,7 +116,7 @@ let editingQuoteId = null;
 let editingIssuerId = null;
 let editingClientId = null;
 let lastPreviewHtml = "";
-let currentIssuerLogoDataUrl = null; // base64 data URL do logo atual
+let currentIssuerLogoDataUrl = null;
 
 // ===== FILTRO DE ORÇAMENTOS =====
 let searchQuery = '';
@@ -127,7 +127,6 @@ function normalizeStr(str) {
 
 function filterQuotes(quotes) {
   let result = quotes;
-
   const q = normalizeStr(searchQuery);
   if (q.length > 0) {
     result = result.filter(quote => {
@@ -143,7 +142,6 @@ function filterQuotes(quotes) {
       return fields.some(f => normalizeStr(f).includes(q));
     });
   }
-
   return result;
 }
 
@@ -154,8 +152,6 @@ function highlightText(text, query) {
   if (!normalizedQuery) return escapeHtml(text);
   const idx = normalizedText.indexOf(normalizedQuery);
   if (idx === -1) return escapeHtml(text);
-  // Slice the original text (pre-escape) to avoid HTML entity length mismatches,
-  // then escape each fragment individually.
   return (
     escapeHtml(text.slice(0, idx)) +
     '<mark class="search-highlight">' +
@@ -339,35 +335,13 @@ function renderItems(items=[]){
     tr.dataset.idx = idx;
     tr.innerHTML = `
       <td>
-        <input 
-          data-idx="${idx}" 
-          data-field="descricao" 
-          value="${escapeHtml(it.descricao||'')}" 
-          placeholder="Descrição do item" 
-          aria-label="Descrição do item ${idx + 1}"
-        />
+        <input data-idx="${idx}" data-field="descricao" value="${escapeHtml(it.descricao||'')}" placeholder="Descrição do item" aria-label="Descrição do item ${idx + 1}" />
       </td>
       <td>
-        <input 
-          data-idx="${idx}" 
-          data-field="quantidade" 
-          type="number" 
-          min="0" 
-          step="1" 
-          value="${it.quantidade||1}" 
-          aria-label="Quantidade do item ${idx + 1}"
-        />
+        <input data-idx="${idx}" data-field="quantidade" type="number" min="0" step="1" value="${it.quantidade||1}" aria-label="Quantidade do item ${idx + 1}" />
       </td>
       <td>
-        <input 
-          data-idx="${idx}" 
-          data-field="valorUnitario" 
-          type="number" 
-          min="0" 
-          step="0.01" 
-          value="${it.valorUnitario||0}" 
-          aria-label="Valor unitário do item ${idx + 1}"
-        />
+        <input data-idx="${idx}" data-field="valorUnitario" type="number" min="0" step="0.01" value="${it.valorUnitario||0}" aria-label="Valor unitário do item ${idx + 1}" />
       </td>
       <td class="item-total">R$ ${money((it.quantidade||1)*(it.valorUnitario||0))}</td>
       <td>
@@ -384,7 +358,6 @@ function renderItems(items=[]){
         let val = e.target.value;
         if (["quantidade","valorUnitario"].includes(field)) val = Number(val || 0);
         currentItems[idx][field] = val;
-
         const it = currentItems[idx];
         const total = (Number(it.quantidade||0) * Number(it.valorUnitario||0));
         const td = tr.querySelector(".item-total");
@@ -425,20 +398,14 @@ if (issuerForm) {
       const address = (issuerAddress && issuerAddress.value || "").trim();
       const phone = (issuerPhone && issuerPhone.value || "").trim();
 
-      if (!name) {
-        showNotification("Preencha o nome do emissor", "error");
-        return;
-      }
+      if (!name) { showNotification("Preencha o nome do emissor", "error"); return; }
 
       store.issuers = store.issuers || [];
 
       if (editingIssuerId) {
         const item = store.issuers.find(x => x.id === editingIssuerId);
         if (item) {
-          item.name = name; 
-          item.cnpjCpf = cnpjCpf; 
-          item.address = address; 
-          item.phone = phone;
+          item.name = name; item.cnpjCpf = cnpjCpf; item.address = address; item.phone = phone;
           item.logo = currentIssuerLogoDataUrl;
           saveStore(store);
           editingIssuerId = null;
@@ -449,8 +416,7 @@ if (issuerForm) {
           if (issuerLogoInput) issuerLogoInput.value = '';
           if (issuerLogoPreview) issuerLogoPreview.style.display = 'none';
           if (issuerLogoImg) issuerLogoImg.src = '';
-          renderIssuers(); 
-          renderQuotes();
+          renderIssuers(); renderQuotes();
           showNotification("Emissor atualizado com sucesso!", "success");
           return;
         }
@@ -464,8 +430,7 @@ if (issuerForm) {
       if (issuerLogoInput) issuerLogoInput.value = '';
       if (issuerLogoPreview) issuerLogoPreview.style.display = 'none';
       if (issuerLogoImg) issuerLogoImg.src = '';
-      renderIssuers(); 
-      renderQuotes();
+      renderIssuers(); renderQuotes();
       showNotification("Emissor adicionado com sucesso!", "success");
     } catch (err) {
       console.error("[ERROR] issuerForm handler:", err);
@@ -481,9 +446,7 @@ if (issuerList) {
         const id = e.target.dataset.id;
         if (!confirm("❓ Excluir este emissor?")) return;
         store.issuers = store.issuers.filter(x => x.id !== id);
-        saveStore(store); 
-        renderIssuers(); 
-        renderQuotes();
+        saveStore(store); renderIssuers(); renderQuotes();
         showNotification("Emissor excluído", "success");
       } else if (e.target.classList.contains("edit-issuer")) {
         const id = e.target.dataset.id;
@@ -495,28 +458,20 @@ if (issuerList) {
         if (issuerAddress) issuerAddress.value = it.address || "";
         if (issuerPhone) issuerPhone.value = it.phone || "";
         currentIssuerLogoDataUrl = it.logo || null;
-        if (issuerLogoImg && it.logo) {
-          issuerLogoImg.src = it.logo;
-          if (issuerLogoPreview) issuerLogoPreview.style.display = 'block';
-        } else {
-          if (issuerLogoPreview) issuerLogoPreview.style.display = 'none';
-          if (issuerLogoImg) issuerLogoImg.src = '';
-        }
+        if (issuerLogoImg && it.logo) { issuerLogoImg.src = it.logo; if (issuerLogoPreview) issuerLogoPreview.style.display = 'block'; }
+        else { if (issuerLogoPreview) issuerLogoPreview.style.display = 'none'; if (issuerLogoImg) issuerLogoImg.src = ''; }
         if (issuerLogoInput) issuerLogoInput.value = '';
         if (issuerSubmitBtn) issuerSubmitBtn.textContent = "Atualizar Emissor";
         if (issuerCancelBtn) issuerCancelBtn.style.display = "inline-block";
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    } catch (err) {
-      console.error("[ERROR] issuerList click:", err);
-    }
+    } catch (err) { console.error("[ERROR] issuerList click:", err); }
   });
 }
 
 if (issuerCancelBtn) {
   issuerCancelBtn.addEventListener("click", () => {
-    editingIssuerId = null; 
-    issuerForm && issuerForm.reset();
+    editingIssuerId = null; issuerForm && issuerForm.reset();
     if (issuerSubmitBtn) issuerSubmitBtn.textContent = "Adicionar Emissor";
     issuerCancelBtn.style.display = "none";
     currentIssuerLogoDataUrl = null;
@@ -526,16 +481,11 @@ if (issuerCancelBtn) {
   });
 }
 
-// ========== ISSUER LOGO HANDLERS ==========
 if (issuerLogoInput) {
   issuerLogoInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 4 * 1024 * 1024) {
-      showNotification('Imagem muito grande. Máximo 4MB.', 'error');
-      issuerLogoInput.value = '';
-      return;
-    }
+    if (file.size > 4 * 1024 * 1024) { showNotification('Imagem muito grande. Máximo 4MB.', 'error'); issuerLogoInput.value = ''; return; }
     const reader = new FileReader();
     reader.onload = (ev) => {
       currentIssuerLogoDataUrl = ev.target.result;
@@ -565,27 +515,20 @@ if (clientForm) {
       const address = (clientAddress && clientAddress.value || "").trim();
       const phone = (clientPhone && clientPhone.value || "").trim();
 
-      if (!name) {
-        showNotification("Preencha o nome do cliente", "error");
-        return;
-      }
+      if (!name) { showNotification("Preencha o nome do cliente", "error"); return; }
 
       store.clients = store.clients || [];
 
       if (editingClientId) {
         const item = store.clients.find(x => x.id === editingClientId);
         if (item) {
-          item.name = name; 
-          item.cnpjCpf = cnpjCpf; 
-          item.address = address; 
-          item.phone = phone;
+          item.name = name; item.cnpjCpf = cnpjCpf; item.address = address; item.phone = phone;
           saveStore(store);
           editingClientId = null;
           if (clientSubmitBtn) clientSubmitBtn.textContent = "Adicionar Cliente";
           if (clientCancelBtn) clientCancelBtn.style.display = "none";
           clientForm.reset();
-          renderClients(); 
-          renderQuotes();
+          renderClients(); renderQuotes();
           showNotification("Cliente atualizado com sucesso!", "success");
           return;
         }
@@ -595,8 +538,7 @@ if (clientForm) {
       store.clients.push(newItem);
       saveStore(store);
       clientForm.reset();
-      renderClients(); 
-      renderQuotes();
+      renderClients(); renderQuotes();
       showNotification("Cliente adicionado com sucesso!", "success");
     } catch (err) {
       console.error("[ERROR] clientForm handler:", err);
@@ -612,9 +554,7 @@ if (clientList) {
         const id = e.target.dataset.id;
         if (!confirm("❓ Excluir este cliente?")) return;
         store.clients = store.clients.filter(x => x.id !== id);
-        saveStore(store); 
-        renderClients(); 
-        renderQuotes();
+        saveStore(store); renderClients(); renderQuotes();
         showNotification("Cliente excluído", "success");
       } else if (e.target.classList.contains("edit-client")) {
         const id = e.target.dataset.id;
@@ -629,16 +569,13 @@ if (clientList) {
         if (clientCancelBtn) clientCancelBtn.style.display = "inline-block";
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    } catch (err) {
-      console.error("[ERROR] clientList click:", err);
-    }
+    } catch (err) { console.error("[ERROR] clientList click:", err); }
   });
 }
 
 if (clientCancelBtn) {
   clientCancelBtn.addEventListener("click", () => {
-    editingClientId = null; 
-    clientForm && clientForm.reset();
+    editingClientId = null; clientForm && clientForm.reset();
     if (clientSubmitBtn) clientSubmitBtn.textContent = "Adicionar Cliente";
     clientCancelBtn.style.display = "none";
   });
@@ -656,18 +593,14 @@ if (addItemBtn) {
         const newInput = itemsBody.querySelector(`input[data-idx="${lastIdx}"][data-field="descricao"]`);
         if (newInput) newInput.focus();
       }, 100);
-    } catch (err) {
-      console.error("[ERROR] addItemBtn:", err);
-    }
+    } catch (err) { console.error("[ERROR] addItemBtn:", err); }
   });
 }
 
 // ========== QUOTE HANDLERS ==========
 if (selectIssuer) {
   selectIssuer.addEventListener('change', () => {
-    if (!editingQuoteId) {
-      setDefaultQuoteFields();
-    }
+    if (!editingQuoteId) setDefaultQuoteFields();
   });
 }
 
@@ -677,12 +610,8 @@ if (saveQuoteBtn) {
       const issuerId = selectIssuer && selectIssuer.value;
       const clientId = selectClient && selectClient.value;
       
-      if (!issuerId || !clientId) {
-        showNotification("Selecione emissor e cliente", "error");
-        return;
-      }
+      if (!issuerId || !clientId) { showNotification("Selecione emissor e cliente", "error"); return; }
 
-      // Persist pending logo to the issuer if not yet saved
       if (currentIssuerLogoDataUrl) {
         const issuerToUpdate = store.issuers.find(i => i.id === issuerId);
         if (issuerToUpdate && !issuerToUpdate.logo) {
@@ -692,72 +621,45 @@ if (saveQuoteBtn) {
       }
 
       const validItems = currentItems.filter(it => (it.descricao || "").trim() !== "");
-      if (validItems.length === 0) {
-        showNotification("Adicione pelo menos um item com descrição", "error");
-        return;
-      }
+      if (validItems.length === 0) { showNotification("Adicione pelo menos um item com descrição", "error"); return; }
 
       const totals = recalcTotals();
-
       let numeroValue = (quoteNumber && quoteNumber.value || "").trim();
-      let generatedNumber = false;
-      
-      if (!numeroValue) {
-        numeroValue = formatQuoteNumber(computeNextQuoteNumberForIssuer(issuerId));
-        generatedNumber = true;
-      }
+      if (!numeroValue) numeroValue = formatQuoteNumber(computeNextQuoteNumberForIssuer(issuerId));
 
       const notesVal = (notes && notes.value || "").trim();
 
       if (editingQuoteId) {
         const q = store.quotes.find(x => x.id === editingQuoteId);
-        if (!q) {
-          showNotification("Orçamento não encontrado", "error");
-          return;
-        }
-        q.issuerId = issuerId;
-        q.clientId = clientId;
-        q.numero = numeroValue || null;
+        if (!q) { showNotification("Orçamento não encontrado", "error"); return; }
+        q.issuerId = issuerId; q.clientId = clientId; q.numero = numeroValue || null;
         q.items = JSON.parse(JSON.stringify(validItems));
-        q.subtotal = totals.subtotal;
-        q.total = totals.total;
-        q.notes = notesVal;
-        q.updatedAt = new Date().toISOString();
+        q.subtotal = totals.subtotal; q.total = totals.total;
+        q.notes = notesVal; q.updatedAt = new Date().toISOString();
         saveStore(store);
         showNotification(`✅ Orçamento ${q.numero} atualizado!`, "success");
-        endEditMode();
-        renderQuotes();
+        endEditMode(); renderQuotes();
         currentItems = [{descricao:"",quantidade:1,valorUnitario:0}];
         renderItems(currentItems);
         return;
       }
 
       const q = {
-        id: uid(),
-        issuerId, 
-        clientId,
+        id: uid(), issuerId, clientId,
         numero: numeroValue || null,
         items: JSON.parse(JSON.stringify(validItems)),
-        subtotal: totals.subtotal, 
-        total: totals.total,
+        subtotal: totals.subtotal, total: totals.total,
         notes: notesVal,
         createdAt: new Date().toISOString()
       };
       
       store.quotes.push(q);
-      
       saveStore(store);
-      
       currentItems = [{descricao:"",quantidade:1,valorUnitario:0}];
-      renderItems(currentItems); 
-      renderQuotes();
+      renderItems(currentItems); renderQuotes();
       setDefaultQuoteFields();
-      
       showNotification(`✅ Orçamento ${q.numero} salvo com sucesso!`, "success");
-      
-      setTimeout(() => {
-        quotesList && quotesList.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
+      setTimeout(() => { quotesList && quotesList.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
       
     } catch (err) {
       console.error("[ERROR] saveQuoteBtn:", err);
@@ -768,29 +670,19 @@ if (saveQuoteBtn) {
 
 function startEditMode(quoteId) {
   const q = store.quotes.find(x => x.id === quoteId);
-  if (!q) {
-    showNotification("Orçamento não encontrado", "error");
-    return;
-  }
+  if (!q) { showNotification("Orçamento não encontrado", "error"); return; }
   
   editingQuoteId = quoteId;
   if (selectIssuer) selectIssuer.value = q.issuerId || "";
   if (selectClient) selectClient.value = q.clientId || "";
-  
-  if (quoteNumber) {
-    quoteNumber.value = q.numero || "";
-    quoteNumber.removeAttribute("readonly");
-  }
-  
+  if (quoteNumber) { quoteNumber.value = q.numero || ""; quoteNumber.removeAttribute("readonly"); }
   if (quoteDate) quoteDate.value = formatDateISOtoLocal(q.createdAt || q.updatedAt || new Date().toISOString());
   if (notes) notes.value = q.notes || "";
   
   currentItems = JSON.parse(JSON.stringify(q.items || [{descricao:"",quantidade:1,valorUnitario:0}]));
   renderItems(currentItems);
-  
   if (saveQuoteBtn) saveQuoteBtn.textContent = "💾 Atualizar Orçamento";
   if (cancelEditBtn) cancelEditBtn.style.display = "block";
-  
   window.scrollTo({ top: 300, behavior: 'smooth' });
   showNotification("Modo de edição ativado. Você pode editar o número do orçamento!", "info");
 }
@@ -799,9 +691,7 @@ function endEditMode() {
   editingQuoteId = null;
   if (saveQuoteBtn) saveQuoteBtn.textContent = "📄 Gerar Orçamento";
   if (cancelEditBtn) cancelEditBtn.style.display = "none";
-  
   if (quoteNumber) quoteNumber.setAttribute("readonly", "true");
-  
   setDefaultQuoteFields();
   if (notes) notes.value = "";
 }
@@ -817,7 +707,6 @@ if (cancelEditBtn) {
   });
 }
 
-// ========== FILTRO DE ORÇAMENTOS — EVENT LISTENERS ==========
 if (quotesSearch) {
   quotesSearch.addEventListener('input', () => {
     searchQuery = quotesSearch.value;
@@ -834,26 +723,20 @@ if (clearSearch) {
     renderQuotes();
   });
 }
+
 function openPreview(id){
   const q = store.quotes.find(x=>x.id===id); 
-  if (!q) {
-    showNotification("Orçamento não encontrado", "error");
-    return;
-  }
-  
+  if (!q) { showNotification("Orçamento não encontrado", "error"); return; }
   const issuer = store.issuers.find(i=>i.id===q.issuerId)||{};
   const client = store.clients.find(c=>c.id===q.clientId)||{};
   const html = renderQuoteHtml(q, issuer, client);
-  
   previewArea && (previewArea.innerHTML = html);
   lastPreviewHtml = html;
   previewModal && previewModal.classList.remove("hidden");
 }
 
 if (closePreview) {
-  closePreview.addEventListener("click", ()=> {
-    previewModal && previewModal.classList.add("hidden");
-  });
+  closePreview.addEventListener("click", ()=> { previewModal && previewModal.classList.add("hidden"); });
 }
 
 if (printBtn) {
@@ -862,8 +745,7 @@ if (printBtn) {
       const content = previewArea ? previewArea.innerHTML : "";
       const w = window.open("", "_blank");
       w.document.write(`
-        <html>
-        <head>
+        <html><head>
           <meta charset="utf-8">
           <title>Orçamento - SoftPrime</title>
           <style>
@@ -875,17 +757,10 @@ if (printBtn) {
             .signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}
             .signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a;margin-top:8px}
             .print-footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:0.85rem;color:#6b7280;padding:8px 16px;border-top:1px solid #e5e7eb;background:white;}
-            tfoot{display:none;}
-            thead{display:table-row-group;}
-            tr{page-break-inside:avoid;page-break-after:auto;}
-            .totals-block{page-break-inside:avoid;page-break-before:avoid;margin-top:0}
           </style>
-        </head>
-        <body>${content}</body>
-        </html>
+        </head><body>${content}</body></html>
       `);
-      w.document.close();
-      w.focus();
+      w.document.close(); w.focus();
       printWindowWhenReady(w);
     } catch (err) {
       console.error("[ERROR] printBtn:", err);
@@ -894,219 +769,79 @@ if (printBtn) {
   });
 }
 
-// ========== EXPORT EXCEL (CSV FORMATADO) ==========
 if (exportCsvBtn) {
   exportCsvBtn.addEventListener("click", ()=>{
     try {
-      if (!store.quotes.length) {
-        showNotification("Nenhum orçamento para exportar", "info");
-        return;
-      }
-      
+      if (!store.quotes.length) { showNotification("Nenhum orçamento para exportar", "info"); return; }
       const rows = [];
-      
-      // Cabeçalho formatado
-      rows.push([
-        "Número do Orçamento",
-        "Emissor",
-        "CNPJ/CPF Emissor",
-        "Cliente",
-        "CNPJ/CPF Cliente",
-        "Data",
-        "Subtotal (R$)",
-        "Total (R$)",
-        "Observações"
-      ].map(h => `"${h}"`).join(","));
-      
-      // Dados dos orçamentos
+      rows.push(["Número do Orçamento","Emissor","CNPJ/CPF Emissor","Cliente","CNPJ/CPF Cliente","Data","Subtotal (R$)","Total (R$)","Observações"].map(h => `"${h}"`).join(","));
       store.quotes.forEach(q => {
         const issuer = store.issuers.find(i=>i.id===q.issuerId) || {};
         const client = store.clients.find(c=>c.id===q.clientId) || {};
-        
-        rows.push([
-          q.numero || "",
-          issuer.name || "",
-          issuer.cnpjCpf || "",
-          client.name || "",
-          client.cnpjCpf || "",
-          formatDateISOtoLocal(q.createdAt),
-          money(q.subtotal || 0),
-          money(q.total || 0),
-          (q.notes || "").substring(0, 100) // Limita observações a 100 caracteres
-        ].map(v => `"${escapeCsv(v)}"`).join(","));
+        rows.push([q.numero||"",issuer.name||"",issuer.cnpjCpf||"",client.name||"",client.cnpjCpf||"",formatDateISOtoLocal(q.createdAt),money(q.subtotal||0),money(q.total||0),(q.notes||"").substring(0,100)].map(v => `"${escapeCsv(v)}"`).join(","));
       });
-      
       const csv = rows.join("\n");
       const blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); 
-      a.href = url; 
-      a.download = `orcamentos_softprime_${new Date().toISOString().slice(0,10)}.csv`; 
-      a.click();
+      const a = document.createElement('a'); a.href = url; a.download = `orcamentos_softprime_${new Date().toISOString().slice(0,10)}.csv`; a.click();
       URL.revokeObjectURL(url);
-      
       showNotification("✅ Excel exportado com sucesso!", "success");
-    } catch (err) {
-      console.error("[ERROR] exportCsvBtn:", err);
-      showNotification("Erro ao exportar Excel", "error");
-    }
+    } catch (err) { console.error("[ERROR] exportCsvBtn:", err); showNotification("Erro ao exportar Excel", "error"); }
   });
 }
 
-// ========== EXPORT WORD (COM ASSINATURA) ==========
 if (exportDocBtn) {
   exportDocBtn.addEventListener("click", ()=>{
     try {
-      if (!lastPreviewHtml) {
-        showNotification("Abra um orçamento primeiro (Visualizar/Imprimir) para exportar", "info");
-        return;
-      }
-      
-      const html = `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Orçamento - SoftPrime</title>
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;padding:30px;color:#1a1a1a;max-width:800px;margin:0 auto}
-    table{width:100%;border-collapse:collapse;margin-top:16px}
-    th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}
-    th{background:#f9fafb;font-weight:600}
-    .signature{margin-top:200px;display:flex;flex-direction:column;align-items:center;gap:8px}
-    .signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}
-    .signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a}
-    .print-footer{margin-top:24px;font-size:0.85rem;color:#6b7280;text-align:center}
-  </style>
-</head>
-<body>${lastPreviewHtml}</body>
-</html>`;
-      
+      if (!lastPreviewHtml) { showNotification("Abra um orçamento primeiro (Visualizar/Imprimir) para exportar", "info"); return; }
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Orçamento - SoftPrime</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:30px;color:#1a1a1a;max-width:800px;margin:0 auto}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}th{background:#f9fafb;font-weight:600}.signature{margin-top:200px;display:flex;flex-direction:column;align-items:center;gap:8px}.signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}.signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a}.print-footer{margin-top:24px;font-size:0.85rem;color:#6b7280;text-align:center}</style></head><body>${lastPreviewHtml}</body></html>`;
       const blob = new Blob([html], { type: "application/msword" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); 
-      a.href = url; 
-      a.download = `orcamento_softprime_${new Date().getTime()}.doc`; 
-      a.click();
+      const a = document.createElement('a'); a.href = url; a.download = `orcamento_softprime_${new Date().getTime()}.doc`; a.click();
       URL.revokeObjectURL(url);
-      
       showNotification("✅ Word exportado com sucesso!", "success");
-    } catch (err) {
-      console.error("[ERROR] exportDocBtn:", err);
-      showNotification("Erro ao exportar Word", "error");
-    }
+    } catch (err) { console.error("[ERROR] exportDocBtn:", err); showNotification("Erro ao exportar Word", "error"); }
   });
 }
 
 function exportQuoteDoc(quoteId){
   try {
     const q = store.quotes.find(x=>x.id===quoteId); 
-    if (!q) {
-      showNotification("Orçamento não encontrado", "error");
-      return;
-    }
-    
+    if (!q) { showNotification("Orçamento não encontrado", "error"); return; }
     const issuer = store.issuers.find(i=>i.id===q.issuerId)||{};
     const client = store.clients.find(c=>c.id===q.clientId)||{};
     const html = renderQuoteHtml(q, issuer, client);
-    
-    const doc = `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Orçamento ${escapeHtml(q.numero || q.id)}</title>
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;padding:30px;color:#1a1a1a;max-width:800px;margin:0 auto}
-    table{width:100%;border-collapse:collapse;margin-top:16px}
-    th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}
-    th{background:#f9fafb;font-weight:600}
-    .signature{margin-top:200px;display:flex;flex-direction:column;align-items:center;gap:8px;page-break-inside:avoid}
-    .signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}
-    .signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a;margin-top:8px}
-    .print-footer{margin-top:24px;font-size:0.85rem;color:#6b7280;text-align:center}
-  </style>
-</head>
-<body>${html}</body>
-</html>`;
-    
+    const doc = `<!doctype html><html><head><meta charset="utf-8"><title>Orçamento ${escapeHtml(q.numero || q.id)}</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:30px;color:#1a1a1a;max-width:800px;margin:0 auto}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}th{background:#f9fafb;font-weight:600}.signature{margin-top:200px;display:flex;flex-direction:column;align-items:center;gap:8px;page-break-inside:avoid}.signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}.signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a;margin-top:8px}.print-footer{margin-top:24px;font-size:0.85rem;color:#6b7280;text-align:center}</style></head><body>${html}</body></html>`;
     const blob = new Blob([doc], { type: "application/msword" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); 
-    a.href = url; 
-    a.download = `orcamento_${q.numero || q.id}.doc`; 
-    a.click();
+    const a = document.createElement('a'); a.href = url; a.download = `orcamento_${q.numero || q.id}.doc`; a.click();
     URL.revokeObjectURL(url);
-    
     showNotification("✅ Word exportado!", "success");
-  } catch (err) {
-    console.error("[ERROR] exportQuoteDoc:", err);
-    showNotification("Erro ao exportar documento", "error");
-  }
+  } catch (err) { console.error("[ERROR] exportQuoteDoc:", err); showNotification("Erro ao exportar documento", "error"); }
 }
 
 function printWindowWhenReady(w) {
   const allImgs = Array.from(w.document.images);
-  if (allImgs.length === 0) {
-    setTimeout(() => w.print(), 300);
-    return;
-  }
+  if (allImgs.length === 0) { setTimeout(() => w.print(), 300); return; }
   const pending = allImgs.filter(img => !img.complete);
-  if (pending.length === 0) {
-    setTimeout(() => w.print(), 200);
-    return;
-  }
+  if (pending.length === 0) { setTimeout(() => w.print(), 200); return; }
   let loaded = 0;
-  const tryPrint = () => {
-    loaded++;
-    if (loaded === pending.length) setTimeout(() => w.print(), 200);
-  };
-  for (const img of pending) {
-    img.addEventListener('load', tryPrint);
-    img.addEventListener('error', tryPrint);
-  }
+  const tryPrint = () => { loaded++; if (loaded === pending.length) setTimeout(() => w.print(), 200); };
+  for (const img of pending) { img.addEventListener('load', tryPrint); img.addEventListener('error', tryPrint); }
 }
 
 function exportQuotePdf(quoteId){
   try {
     const q = store.quotes.find(x=>x.id===quoteId); 
-    if (!q) {
-      showNotification("Orçamento não encontrado", "error");
-      return;
-    }
-    
+    if (!q) { showNotification("Orçamento não encontrado", "error"); return; }
     const issuer = store.issuers.find(i=>i.id===q.issuerId)||{};
     const client = store.clients.find(c=>c.id===q.clientId)||{};
     const html = renderQuoteHtml(q, issuer, client);
     const w = window.open("", "_blank");
-    w.document.write(`
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Orçamento ${escapeHtml(q.numero || q.id)}</title>
-        <style>
-          body{font-family:Arial,Helvetica,sans-serif;padding:30px 30px 70px 30px;color:#1a1a1a;max-width:800px;margin:0 auto}
-          table{width:100%;border-collapse:collapse;margin-top:16px}
-          th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}
-          th{background:#f9fafb;font-weight:600}
-          .signature{margin-top:120px;display:flex;flex-direction:column;align-items:center;gap:8px;page-break-inside:avoid}
-          .signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}
-          .signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a;margin-top:8px}
-          .print-footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:0.85rem;color:#6b7280;padding:8px 16px;border-top:1px solid #e5e7eb;background:white;}
-          tfoot{display:none;}
-          thead{display:table-row-group;}
-          tr{page-break-inside:avoid;page-break-after:auto;}
-          .totals-block{page-break-inside:avoid;page-break-before:avoid;margin-top:0}
-        </style>
-      </head>
-      <body>${html}</body>
-      </html>
-    `);
-    w.document.close();
-    w.focus();
+    w.document.write(`<html><head><meta charset="utf-8"><title>Orçamento ${escapeHtml(q.numero || q.id)}</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:30px 30px 70px 30px;color:#1a1a1a;max-width:800px;margin:0 auto}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}th{background:#f9fafb;font-weight:600}.signature{margin-top:120px;display:flex;flex-direction:column;align-items:center;gap:8px;page-break-inside:avoid}.signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}.signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a;margin-top:8px}.print-footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:0.85rem;color:#6b7280;padding:8px 16px;border-top:1px solid #e5e7eb;background:white;}</style></head><body>${html}</body></html>`);
+    w.document.close(); w.focus();
     printWindowWhenReady(w);
-  } catch (err) {
-    console.error("[ERROR] exportQuotePdf:", err);
-    showNotification("Erro ao exportar PDF", "error");
-  }
+  } catch (err) { console.error("[ERROR] exportQuotePdf:", err); showNotification("Erro ao exportar PDF", "error"); }
 }
 
 function renderQuoteHtml(q, issuer, client){
@@ -1132,7 +867,6 @@ function renderQuoteHtml(q, issuer, client){
           ${issuer.cnpjCpf? '<span style="color:#6b7280;">CNPJ/CPF:</span> ' + escapeHtml(issuer.cnpjCpf) + '<br/>':''}
           <div style="font-size:14px;color:#4b5563;margin-top:8px;">${issuerContact}</div>
         </div>
-        
         <div style="padding:16px;background:#f9fafb;border-radius:8px;">
           <h3 style="margin:0 0 12px 0;color:#0d7de0;font-size:16px;">DESTINATÁRIO</h3>
           <strong style="font-size:16px;">${escapeHtml(client.name||'—')}</strong><br/>
@@ -1160,7 +894,7 @@ function renderQuoteHtml(q, issuer, client){
         </tbody>
       </table>
 
-      <div style="page-break-inside:avoid;page-break-before:avoid;margin-top:0;">
+      <div style="page-break-inside:avoid;margin-top:0;">
         <table style="width:100%;border-collapse:collapse;">
           <tr>
             <td colspan="3" style="text-align:right;font-weight:700;font-size:18px;color:#0d7de0;padding:10px;border:1px solid #e5e7eb;">TOTAL:</td>
@@ -1179,8 +913,8 @@ function renderQuoteHtml(q, issuer, client){
         <div class="sig-name">${escapeHtml(issuer.name || '')}</div>
       </div>
 
-      <div class="print-footer">
-        Orçamento gerado em: ${escapeHtml(dateOnly)} | SoftPrime - Gerador de Orçamentos
+      <div class="print-footer" style="text-align:center;">
+        Orçamento gerado em: ${escapeHtml(dateOnly)}
       </div>
     </div>
   `;
@@ -1188,30 +922,16 @@ function renderQuoteHtml(q, issuer, client){
 
 function attachQuoteListListeners(){
   if (!quotesList) return;
-  
-  quotesList.querySelectorAll(".view-quote").forEach(btn=>{
-    btn.addEventListener("click",(e)=> openPreview(e.target.dataset.id));
-  });
-  
-  quotesList.querySelectorAll(".export-quote").forEach(btn=>{
-    btn.addEventListener("click",(e)=> exportQuoteDoc(e.target.dataset.id));
-  });
-  
-  quotesList.querySelectorAll(".export-pdf").forEach(btn=>{
-    btn.addEventListener("click",(e)=> exportQuotePdf(e.target.dataset.id));
-  });
-  
-  quotesList.querySelectorAll(".edit-quote").forEach(btn=>{
-    btn.addEventListener("click",(e)=> startEditMode(e.target.dataset.id));
-  });
-  
+  quotesList.querySelectorAll(".view-quote").forEach(btn=>{ btn.addEventListener("click",(e)=> openPreview(e.target.dataset.id)); });
+  quotesList.querySelectorAll(".export-quote").forEach(btn=>{ btn.addEventListener("click",(e)=> exportQuoteDoc(e.target.dataset.id)); });
+  quotesList.querySelectorAll(".export-pdf").forEach(btn=>{ btn.addEventListener("click",(e)=> exportQuotePdf(e.target.dataset.id)); });
+  quotesList.querySelectorAll(".edit-quote").forEach(btn=>{ btn.addEventListener("click",(e)=> startEditMode(e.target.dataset.id)); });
   quotesList.querySelectorAll(".del-quote").forEach(btn=>{
     btn.addEventListener("click",(e)=>{
       const id = e.target.dataset.id;
       if (!confirm("❓ Excluir este orçamento permanentemente?")) return;
       store.quotes = store.quotes.filter(q=>q.id!==id); 
-      saveStore(store); 
-      renderQuotes();
+      saveStore(store); renderQuotes();
       showNotification("Orçamento excluído", "success");
     });
   });
@@ -1219,10 +939,7 @@ function attachQuoteListListeners(){
 
 // ========== INITIALIZATION ==========
 function renderAll(){ 
-  renderIssuers(); 
-  renderClients(); 
-  renderQuotes(); 
-  renderItems(currentItems); 
+  renderIssuers(); renderClients(); renderQuotes(); renderItems(currentItems); 
 }
 
 document.addEventListener('DOMContentLoaded', () => {

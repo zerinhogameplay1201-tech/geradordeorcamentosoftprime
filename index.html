@@ -11,59 +11,87 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
-    /* ===== SIDEBAR ===== */
-    .layout {
-      display: flex;
-      min-height: calc(100vh - 65px);
-      position: relative;
-    }
+    /* ============================================================
+       SIDEBAR ELEGANTE
+    ============================================================ */
 
-    /* Botão flutuante para abrir sidebar */
-    .sidebar-toggle {
+    /* Botão lateral fixo */
+    .sidebar-fab {
       position: fixed;
       left: 0;
       top: 50%;
       transform: translateY(-50%);
       z-index: 300;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 0 10px 10px 0;
-      width: 36px;
-      height: 80px;
-      cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 4px;
-      box-shadow: 3px 0 16px rgba(13,125,224,0.35);
-      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+
+    .sidebar-fab-inner {
+      background: linear-gradient(180deg, #0d7de0 0%, #0a5fb8 100%);
+      border-radius: 0 14px 14px 0;
+      width: 48px;
+      padding: 18px 0 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 4px 0 24px rgba(13,125,224,0.30), 2px 0 8px rgba(0,0,0,0.12);
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+    }
+    .sidebar-fab:hover .sidebar-fab-inner {
+      width: 56px;
+      background: linear-gradient(180deg, #1a8af0 0%, #0d6fd4 100%);
+      box-shadow: 6px 0 32px rgba(13,125,224,0.45);
+    }
+
+    .sidebar-fab-icon { font-size: 20px; line-height: 1; }
+
+    .sidebar-fab-label {
+      color: rgba(255,255,255,0.92);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
       writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      font-family: inherit;
+      line-height: 1;
+    }
+
+    .sidebar-fab-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ef4444;
+      color: #fff;
+      border-radius: 50%;
+      min-width: 20px;
+      height: 20px;
       font-size: 11px;
       font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      padding: 10px 4px;
+      display: none;
+      align-items: center;
+      justify-content: center;
       font-family: inherit;
+      box-shadow: 0 2px 8px rgba(239,68,68,0.5);
+      border: 2px solid #fff;
+      padding: 0 3px;
     }
-    .sidebar-toggle:hover {
-      width: 42px;
-      background: var(--primary-dark);
-      box-shadow: 4px 0 20px rgba(13,125,224,0.5);
+
+    .sidebar-fab-line {
+      width: 2px;
+      height: 36px;
+      background: linear-gradient(to bottom, rgba(13,125,224,0.4), transparent);
     }
-    .sidebar-toggle .toggle-icon {
-      font-size: 16px;
-      writing-mode: horizontal-tb;
-      margin-bottom: 4px;
-    }
-    .sidebar-toggle.open {
-      left: 380px;
-      border-radius: 0 10px 10px 0;
-      background: #374151;
-    }
-    .sidebar-toggle.open:hover {
-      background: #1f2937;
+    .sidebar-fab-line.top {
+      background: linear-gradient(to top, rgba(13,125,224,0.4), transparent);
     }
 
     /* Overlay */
@@ -71,334 +99,299 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 290;
-      backdrop-filter: blur(2px);
+      background: rgba(15,23,42,0.5);
+      z-index: 390;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
     }
-    .sidebar-overlay.visible {
-      display: block;
-    }
+    .sidebar-overlay.visible { display: block; }
 
-    /* Sidebar panel */
-    .sidebar {
+    /* Painel */
+    .sidebar-panel {
       position: fixed;
-      left: -400px;
+      left: -420px;
       top: 0;
       bottom: 0;
-      width: 380px;
+      width: 400px;
       background: #fff;
-      z-index: 295;
-      box-shadow: 4px 0 30px rgba(0,0,0,0.15);
+      z-index: 400;
       display: flex;
       flex-direction: column;
-      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      border-right: 1px solid #e5e7eb;
+      transition: left 0.38s cubic-bezier(0.4,0,0.2,1);
     }
-    .sidebar.open {
+    .sidebar-panel.open {
       left: 0;
+      box-shadow: 8px 0 40px rgba(0,0,0,0.18);
     }
 
-    .sidebar-header {
-      padding: 20px 20px 16px;
-      border-bottom: 1px solid #f3f4f6;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(135deg, #0d7de0 0%, #0a5fb8 100%);
-      color: #fff;
+    /* Header */
+    .sp-header {
+      background: linear-gradient(135deg, #0a1628 0%, #0d2b5e 55%, #0d7de0 100%);
+      padding: 24px 20px 20px;
       flex-shrink: 0;
-    }
-    .sidebar-header h3 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .sidebar-header .quote-count-badge {
-      background: rgba(255,255,255,0.25);
-      border-radius: 20px;
-      padding: 2px 10px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .sidebar-close {
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    .sidebar-close:hover {
-      background: rgba(255,255,255,0.3);
-    }
-
-    /* Search inside sidebar */
-    .sidebar-search {
-      padding: 14px 16px;
-      border-bottom: 1px solid #f3f4f6;
-      flex-shrink: 0;
-    }
-    .sidebar-search-wrap {
       position: relative;
-      display: flex;
-      align-items: center;
-      background: #f9fafb;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 0 12px;
-      transition: border-color 0.2s;
-    }
-    .sidebar-search-wrap:focus-within {
-      border-color: var(--primary);
-      background: #fff;
-    }
-    .sidebar-search-icon {
-      color: #9ca3af;
-      font-size: 14px;
-      margin-right: 8px;
-      flex-shrink: 0;
-    }
-    .sidebar-search-input {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
-      padding: 10px 0;
-      font-size: 13px;
-      color: #1a1a1a;
-      font-family: inherit;
-      width: 100%;
-    }
-    .sidebar-search-input::placeholder { color: #9ca3af; }
-    .sidebar-clear {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #9ca3af;
-      font-size: 14px;
-      padding: 2px 4px;
-      border-radius: 4px;
-      display: none;
-    }
-    .sidebar-clear:hover { color: #374151; background: #e5e7eb; }
-
-    /* Sidebar results info */
-    .sidebar-results-info {
-      padding: 6px 16px 0;
-      font-size: 11px;
-      color: #9ca3af;
-      flex-shrink: 0;
-      min-height: 20px;
-    }
-
-    /* Sidebar list */
-    .sidebar-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 8px 12px 16px;
-    }
-    .sidebar-list::-webkit-scrollbar { width: 4px; }
-    .sidebar-list::-webkit-scrollbar-track { background: #f9fafb; }
-    .sidebar-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-
-    .sidebar-empty {
-      text-align: center;
-      color: #9ca3af;
-      font-size: 13px;
-      padding: 40px 20px;
-    }
-    .sidebar-empty .empty-icon {
-      font-size: 36px;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    /* Sidebar quote card */
-    .sidebar-quote-card {
-      background: #fff;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-    .sidebar-quote-card:hover {
-      border-color: var(--primary);
-      box-shadow: 0 4px 16px rgba(13,125,224,0.12);
-      transform: translateX(2px);
-    }
-    .sidebar-quote-card .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    .sidebar-quote-card .card-number {
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .sidebar-quote-card .card-total {
-      font-weight: 700;
-      font-size: 14px;
-      color: #059669;
-      background: #ecfdf5;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-size: 12px;
-    }
-    .sidebar-quote-card .card-from {
-      font-size: 12px;
-      color: #6b7280;
-      margin-bottom: 3px;
-      white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
     }
-    .sidebar-quote-card .card-to {
-      font-size: 13px;
-      font-weight: 600;
-      color: #1a1a1a;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 6px;
-    }
-    .sidebar-quote-card .card-date {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-    .sidebar-quote-card .card-actions {
-      display: flex;
-      gap: 5px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid #f3f4f6;
-    }
-    .sidebar-quote-card .card-actions button {
-      flex: 1;
-      padding: 6px 4px;
-      font-size: 11px;
-      border-radius: 6px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      color: #374151;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.15s;
-      font-family: inherit;
-    }
-    .sidebar-quote-card .card-actions button:hover {
-      background: #e5e7eb;
-    }
-    .sidebar-quote-card .card-actions .btn-view-card {
-      background: #eff6ff;
-      border-color: #bfdbfe;
-      color: var(--primary);
-    }
-    .sidebar-quote-card .card-actions .btn-view-card:hover {
-      background: #dbeafe;
-    }
-    .sidebar-quote-card .card-actions .btn-del-card {
-      color: #dc2626;
-      border-color: #fecaca;
-      background: #fff5f5;
-    }
-    .sidebar-quote-card .card-actions .btn-del-card:hover {
-      background: #fee2e2;
-    }
-
-    /* Floating badge on toggle button */
-    .toggle-badge {
+    .sp-header::before {
+      content: '';
       position: absolute;
-      top: -6px;
-      right: -6px;
-      background: #ef4444;
-      color: #fff;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
       border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 10px;
-      font-weight: 700;
+    }
+    .sp-header-top {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      writing-mode: horizontal-tb;
-      font-family: inherit;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .sp-header-title { display: flex; align-items: center; gap: 12px; }
+    .sp-header-icon {
+      width: 42px; height: 42px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 21px;
+    }
+    .sp-header-text h3 { color: #fff; font-size: 17px; font-weight: 700; margin: 0 0 3px; }
+    .sp-header-text p  { color: rgba(180,210,255,0.75); font-size: 12px; margin: 0; }
+
+    .sp-close-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.8);
+      width: 34px; height: 34px;
+      border-radius: 8px; font-size: 16px;
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .sp-close-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+
+    .sp-stats {
+      display: flex; gap: 10px;
+      position: relative; z-index: 1;
+    }
+    .sp-stat {
+      flex: 1;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+    .sp-stat-value { color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 3px; }
+    .sp-stat-label { color: rgba(180,210,255,0.7); font-size: 11px; font-weight: 500; }
+
+    /* Busca */
+    .sp-search {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      background: #fafbfc;
+      flex-shrink: 0;
+    }
+    .sp-search-box {
+      display: flex; align-items: center;
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0 14px; gap: 8px;
+      transition: all 0.2s;
+    }
+    .sp-search-box:focus-within {
+      border-color: #0d7de0;
+      box-shadow: 0 0 0 3px rgba(13,125,224,0.10);
+    }
+    .sp-search-box > span { color: #94a3b8; font-size: 15px; flex-shrink: 0; }
+    .sp-search-input {
+      flex: 1; border: none; outline: none;
+      background: transparent;
+      padding: 11px 0; font-size: 13.5px;
+      color: #1e293b; font-family: inherit;
+    }
+    .sp-search-input::placeholder { color: #94a3b8; }
+    .sp-search-clear {
+      background: none; border: none; color: #94a3b8;
+      cursor: pointer; font-size: 13px;
+      padding: 3px 5px; border-radius: 4px;
+      display: none; transition: all 0.15s;
+    }
+    .sp-search-clear:hover { color: #475569; background: #f1f5f9; }
+    .sp-results-info { margin-top: 8px; font-size: 11.5px; color: #94a3b8; min-height: 16px; }
+
+    /* Lista */
+    .sp-list {
+      flex: 1; overflow-y: auto;
+      padding: 12px 14px 20px;
+      scrollbar-width: thin;
+      scrollbar-color: #e2e8f0 transparent;
+    }
+    .sp-list::-webkit-scrollbar { width: 4px; }
+    .sp-list::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+
+    /* Empty */
+    .sp-empty {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 50px 20px; color: #94a3b8;
+      text-align: center; gap: 12px;
+    }
+    .sp-empty-icon {
+      width: 64px; height: 64px;
+      background: #f8fafc;
+      border: 2px dashed #e2e8f0;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    .sp-empty h4 { margin: 0; font-size: 15px; color: #64748b; font-weight: 600; }
+    .sp-empty p  { margin: 0; font-size: 13px; }
+
+    /* Card */
+    .sp-card {
+      background: #fff;
+      border: 1.5px solid #e8edf5;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .sp-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #0d7de0, #0a5fb8);
+      border-radius: 3px 0 0 3px;
+      transform: scaleY(0);
+      transition: transform 0.22s;
+    }
+    .sp-card:hover {
+      border-color: #bfdbfe;
+      box-shadow: 0 4px 20px rgba(13,125,224,0.10);
+      transform: translateX(3px);
+    }
+    .sp-card:hover::before { transform: scaleY(1); }
+
+    .sp-card-top {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .sp-card-num {
+      font-size: 13px; font-weight: 700;
+      color: #0d7de0;
+    }
+    .sp-card-total {
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      color: #065f46; font-size: 12px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+      border: 1px solid #a7f3d0;
     }
 
-    /* Remove a seção antiga de orçamentos salvos do main */
+    .sp-card-parties { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .sp-card-party   { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+    .sp-card-party-label {
+      color: #94a3b8; font-size: 10.5px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px; min-width: 32px;
+    }
+    .sp-card-party-name {
+      color: #1e293b; font-weight: 500;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;
+    }
+
+    .sp-card-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .sp-card-date { font-size: 11px; color: #94a3b8; }
+    .sp-card-btns { display: flex; gap: 4px; }
+
+    .sp-card-btn {
+      padding: 5px 9px; font-size: 11px; font-weight: 600;
+      border-radius: 6px; border: 1px solid #e2e8f0;
+      background: #f8fafc; color: #475569;
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .sp-card-btn:hover { background: #e2e8f0; color: #1e293b; }
+    .sp-card-btn.view  { color: #0d7de0; border-color: #bfdbfe; background: #eff6ff; }
+    .sp-card-btn.view:hover { background: #dbeafe; }
+    .sp-card-btn.del   { color: #dc2626; border-color: #fecaca; background: #fff5f5; }
+    .sp-card-btn.del:hover { background: #fee2e2; }
+
+    /* Oculta seção antiga */
     .section-quotes-main { display: none !important; }
 
     @media (max-width: 600px) {
-      .sidebar { width: 100%; }
-      .sidebar-toggle.open { left: calc(100% - 36px); border-radius: 10px 0 0 10px; }
+      .sidebar-panel { width: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar overlay -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- Botão flutuante para abrir sidebar -->
-  <button class="sidebar-toggle" id="sidebarToggle" title="Ver Orçamentos Salvos">
-    <span class="toggle-icon">💾</span>
-    <span id="toggleBadge" class="toggle-badge" style="display:none;"></span>
-    Orçamentos
+  <!-- Botão lateral elegante -->
+  <button class="sidebar-fab" id="sidebarFab" title="Orçamentos Salvos" aria-label="Abrir orçamentos salvos">
+    <span class="sidebar-fab-line top"></span>
+    <div class="sidebar-fab-inner">
+      <span class="sidebar-fab-badge" id="fabBadge"></span>
+      <span class="sidebar-fab-icon">💼</span>
+      <span class="sidebar-fab-label">Orçamentos</span>
+    </div>
+    <span class="sidebar-fab-line"></span>
   </button>
 
-  <!-- Sidebar panel -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h3>
-        💾 Orçamentos Salvos
-        <span class="quote-count-badge" id="sidebarQuoteCount">0</span>
-      </h3>
-      <button class="sidebar-close" id="sidebarClose" title="Fechar">×</button>
-    </div>
-
-    <div class="sidebar-search">
-      <div class="sidebar-search-wrap">
-        <span class="sidebar-search-icon">🔍</span>
-        <input
-          type="text"
-          class="sidebar-search-input"
-          id="sidebarSearch"
-          placeholder="Pesquisar orçamentos..."
-          autocomplete="off"
-        />
-        <button class="sidebar-clear" id="sidebarClear">✕</button>
+  <!-- Painel lateral -->
+  <div class="sidebar-panel" id="sidebarPanel">
+    <div class="sp-header">
+      <div class="sp-header-top">
+        <div class="sp-header-title">
+          <div class="sp-header-icon">💼</div>
+          <div class="sp-header-text">
+            <h3>Orçamentos Salvos</h3>
+            <p>Gerencie todos os seus orçamentos</p>
+          </div>
+        </div>
+        <button class="sp-close-btn" id="spClose" aria-label="Fechar">✕</button>
+      </div>
+      <div class="sp-stats">
+        <div class="sp-stat">
+          <div class="sp-stat-value" id="spStatTotal">0</div>
+          <div class="sp-stat-label">Total gerados</div>
+        </div>
+        <div class="sp-stat">
+          <div class="sp-stat-value" id="spStatValue">R$ 0</div>
+          <div class="sp-stat-label">Valor acumulado</div>
+        </div>
       </div>
     </div>
 
-    <div class="sidebar-results-info" id="sidebarResultsInfo"></div>
+    <div class="sp-search">
+      <div class="sp-search-box">
+        <span>🔍</span>
+        <input type="text" class="sp-search-input" id="spSearch" placeholder="Pesquisar por número, cliente, emissor..." autocomplete="off" />
+        <button class="sp-search-clear" id="spClear">✕</button>
+      </div>
+      <div class="sp-results-info" id="spResultsInfo"></div>
+    </div>
 
-    <div class="sidebar-list" id="sidebarList">
-      <div class="sidebar-empty">
-        <span class="empty-icon">📭</span>
-        Nenhum orçamento salvo ainda
+    <div class="sp-list" id="spList">
+      <div class="sp-empty">
+        <div class="sp-empty-icon">📭</div>
+        <h4>Nenhum orçamento ainda</h4>
+        <p>Crie seu primeiro orçamento acima</p>
       </div>
     </div>
   </div>
 
-  <!-- ========== APLICAÇÃO PRINCIPAL ========== -->
+  <!-- APLICAÇÃO PRINCIPAL -->
   <div id="appScreen">
-
     <header class="header">
       <div class="header-row">
         <div class="brand">
@@ -413,7 +406,6 @@
     </header>
 
     <main class="wrap">
-      <!-- Logo do Emissor -->
       <section class="card">
         <div class="logo-section">
           <label for="issuerLogo">🖼️ Logotipo do Emissor (imagem até 4mb)</label>
@@ -428,150 +420,99 @@
           <div>
             <h4>📝 Dados do Emissor</h4>
             <form id="issuerForm" class="form-grid" autocomplete="off">
-              <div class="full">
-                <label for="issuerName" class="sr-only">Nome / Razão social</label>
-                <input id="issuerName" placeholder="Nome / Razão social *" required aria-label="Nome do emissor" />
-              </div>
-              <div class="half">
-                <label for="issuerCnpjCpf" class="sr-only">CPF / CNPJ</label>
-                <input id="issuerCnpjCpf" placeholder="CPF / CNPJ" aria-label="CPF ou CNPJ do emissor" />
-              </div>
-              <div class="half">
-                <label for="issuerPhone" class="sr-only">Telefone</label>
-                <input id="issuerPhone" placeholder="Telefone" type="tel" aria-label="Telefone do emissor" />
-              </div>
-              <div class="full">
-                <label for="issuerAddress" class="sr-only">Endereço completo</label>
-                <textarea id="issuerAddress" placeholder="Endereço completo" rows="2" aria-label="Endereço do emissor"></textarea>
-              </div>
+              <div class="full"><input id="issuerName" placeholder="Nome / Razão social *" required aria-label="Nome do emissor" /></div>
+              <div class="half"><input id="issuerCnpjCpf" placeholder="CPF / CNPJ" aria-label="CPF ou CNPJ do emissor" /></div>
+              <div class="half"><input id="issuerPhone" placeholder="Telefone" type="tel" aria-label="Telefone do emissor" /></div>
+              <div class="full"><textarea id="issuerAddress" placeholder="Endereço completo" rows="2" aria-label="Endereço do emissor"></textarea></div>
               <div class="form-actions">
                 <button id="issuerSubmitBtn" class="btn btn-primary full" type="submit">Adicionar Emissor</button>
                 <button id="issuerCancelBtn" class="btn btn-outline full" type="button">Cancelar</button>
               </div>
             </form>
-            <div id="issuerListContainer" style="margin-top:20px;">
-              <ul id="issuerList" class="list"></ul>
-            </div>
+            <div style="margin-top:20px;"><ul id="issuerList" class="list"></ul></div>
           </div>
-
           <div>
             <h4>👤 Dados do Cliente</h4>
             <form id="clientForm" class="form-grid" autocomplete="off">
-              <div class="full">
-                <label for="clientName" class="sr-only">Nome / Empresa</label>
-                <input id="clientName" placeholder="Nome / Empresa *" required aria-label="Nome do cliente" />
-              </div>
-              <div class="half">
-                <label for="clientCnpjCpf" class="sr-only">CPF / CNPJ</label>
-                <input id="clientCnpjCpf" placeholder="CPF / CNPJ" aria-label="CPF ou CNPJ do cliente" />
-              </div>
-              <div class="half">
-                <label for="clientPhone" class="sr-only">Telefone</label>
-                <input id="clientPhone" placeholder="Telefone" type="tel" aria-label="Telefone do cliente" />
-              </div>
-              <div class="full">
-                <label for="clientAddress" class="sr-only">Endereço completo</label>
-                <textarea id="clientAddress" placeholder="Endereço completo" rows="2" aria-label="Endereço do cliente"></textarea>
-              </div>
+              <div class="full"><input id="clientName" placeholder="Nome / Empresa *" required aria-label="Nome do cliente" /></div>
+              <div class="half"><input id="clientCnpjCpf" placeholder="CPF / CNPJ" aria-label="CPF ou CNPJ do cliente" /></div>
+              <div class="half"><input id="clientPhone" placeholder="Telefone" type="tel" aria-label="Telefone do cliente" /></div>
+              <div class="full"><textarea id="clientAddress" placeholder="Endereço completo" rows="2" aria-label="Endereço do cliente"></textarea></div>
               <div class="form-actions">
                 <button id="clientSubmitBtn" class="btn btn-primary full" type="submit">Adicionar Cliente</button>
                 <button id="clientCancelBtn" class="btn btn-outline full" type="button">Cancelar</button>
               </div>
             </form>
-            <div id="clientListContainer" style="margin-top:20px;">
-              <ul id="clientList" class="list"></ul>
-            </div>
+            <div style="margin-top:20px;"><ul id="clientList" class="list"></ul></div>
           </div>
         </div>
       </section>
 
-      <!-- Novo Orçamento -->
       <section class="card">
         <h4>💼 Novo Orçamento</h4>
         <div class="form-grid" style="margin-bottom:20px;">
           <div>
             <label for="selectIssuer" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Emissor *</label>
-            <select id="selectIssuer" required aria-label="Selecione o emissor">
-              <option value="">-- selecione o emissor --</option>
-            </select>
+            <select id="selectIssuer" required><option value="">-- selecione o emissor --</option></select>
           </div>
           <div>
             <label for="selectClient" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Cliente *</label>
-            <select id="selectClient" required aria-label="Selecione o cliente">
-              <option value="">-- selecione o cliente --</option>
-            </select>
+            <select id="selectClient" required><option value="">-- selecione o cliente --</option></select>
           </div>
         </div>
-
         <div class="form-grid" style="margin-bottom:20px;padding:16px;background:#f9fafb;border-radius:8px;">
           <div>
             <label for="quoteNumber" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Número do Orçamento</label>
-            <input id="quoteNumber" placeholder="Gerado automaticamente" readonly aria-label="Número do orçamento" />
+            <input id="quoteNumber" placeholder="Gerado automaticamente" readonly />
           </div>
           <div>
             <label for="quoteDate" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Data</label>
-            <input id="quoteDate" placeholder="Data atual" readonly aria-label="Data do orçamento" />
+            <input id="quoteDate" placeholder="Data atual" readonly />
           </div>
         </div>
-
         <div class="items-wrap">
           <h4 style="margin-bottom:12px;">📋 Itens do Orçamento</h4>
           <div style="overflow-x:auto;">
-            <table class="items-table" id="itemsTable" aria-label="Tabela de itens do orçamento">
-              <thead>
-                <tr>
-                  <th style="width:50%">Descrição</th>
-                  <th style="width:12%">Qtd</th>
-                  <th style="width:16%">Unit. (R$)</th>
-                  <th style="width:16%">Total (R$)</th>
-                  <th style="width:6%"></th>
-                </tr>
-              </thead>
+            <table class="items-table" id="itemsTable">
+              <thead><tr>
+                <th style="width:50%">Descrição</th>
+                <th style="width:12%">Qtd</th>
+                <th style="width:16%">Unit. (R$)</th>
+                <th style="width:16%">Total (R$)</th>
+                <th style="width:6%"></th>
+              </tr></thead>
               <tbody id="itemsBody"></tbody>
             </table>
           </div>
-
           <div class="row-between" style="margin-top:16px;">
-            <div>
-              <button id="addItemBtn" class="btn btn-add">+ Adicionar Item</button>
-            </div>
-            <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
-              <div class="total">Total: R$ <strong><span id="grandTotal">0.00</span></strong></div>
-            </div>
+            <button id="addItemBtn" class="btn btn-add">+ Adicionar Item</button>
+            <div class="total">Total: R$ <strong><span id="grandTotal">0.00</span></strong></div>
           </div>
         </div>
-
         <div style="margin-top:20px;">
           <label for="notes" style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#4b5563;">📌 Observações (opcional)</label>
-          <textarea id="notes" rows="4" placeholder="Adicione observações, condições de pagamento, prazo de validade, etc." aria-label="Observações do orçamento"></textarea>
+          <textarea id="notes" rows="4" placeholder="Adicione observações, condições de pagamento, prazo de validade, etc."></textarea>
         </div>
       </section>
 
-      <!-- Botões de Ação -->
       <div class="generate-wrap">
-        <button id="saveQuoteBtn" class="btn btn-primary btn-generate">
-          📄 Gerar Orçamento
-        </button>
-        <button id="cancelEditBtn" class="btn btn-outline" style="width:100%;margin-top:12px;">
-          Cancelar Edição
-        </button>
+        <button id="saveQuoteBtn" class="btn btn-primary btn-generate">📄 Gerar Orçamento</button>
+        <button id="cancelEditBtn" class="btn btn-outline" style="width:100%;margin-top:12px;">Cancelar Edição</button>
       </div>
 
-      <!-- Seção antiga oculta (mantida para compatibilidade com app.js) -->
-      <section class="card section-quotes-main" id="quotesMainSection">
-        <ul id="quotesList" class="list" aria-label="Lista de orçamentos salvos"></ul>
+      <!-- Seção oculta — mantida para compatibilidade com app.js -->
+      <section class="card section-quotes-main">
+        <ul id="quotesList" class="list"></ul>
         <input type="text" id="quotesSearch" style="display:none;" />
         <button id="clearSearch" style="display:none;"></button>
         <div id="filterResultsCount" style="display:none;"></div>
       </section>
-
     </main>
 
-    <!-- Modal de Preview -->
-    <div id="previewModal" class="modal hidden" aria-hidden="true" role="dialog" aria-labelledby="previewTitle">
+    <div id="previewModal" class="modal hidden" role="dialog">
       <div class="modal-box">
-        <button id="closePreview" class="modal-close" aria-label="Fechar visualização">×</button>
-        <h3 id="previewTitle" style="margin-bottom:20px;font-size:20px;">Visualização do Orçamento</h3>
+        <button id="closePreview" class="modal-close">×</button>
+        <h3 style="margin-bottom:20px;font-size:20px;">Visualização do Orçamento</h3>
         <div id="previewArea" style="border:1px solid #e5e7eb;padding:20px;border-radius:8px;background:#fff;"></div>
         <div class="modal-actions">
           <button id="printBtn" class="btn btn-primary">🖨️ Imprimir / Salvar PDF</button>
@@ -582,10 +523,8 @@
     <footer class="footer">
       <p>© 2026 Desenvolvido por <strong>SoftPrime</strong> - Todos os direitos reservados</p>
     </footer>
-
   </div>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script src="auth.js"></script>
@@ -608,189 +547,164 @@
   </script>
   <script src="app.js"></script>
   <script>
-    // ===== SIDEBAR LOGIC =====
-    const sidebar       = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebarClose  = document.getElementById('sidebarClose');
-    const sidebarOverlay= document.getElementById('sidebarOverlay');
-    const sidebarSearch = document.getElementById('sidebarSearch');
-    const sidebarClear  = document.getElementById('sidebarClear');
-    const sidebarList   = document.getElementById('sidebarList');
-    const sidebarResultsInfo = document.getElementById('sidebarResultsInfo');
-    const sidebarQuoteCount  = document.getElementById('sidebarQuoteCount');
-    const toggleBadge        = document.getElementById('toggleBadge');
+    // ===== SIDEBAR =====
+    const spPanel   = document.getElementById('sidebarPanel');
+    const spFab     = document.getElementById('sidebarFab');
+    const spClose   = document.getElementById('spClose');
+    const spOverlay = document.getElementById('sidebarOverlay');
+    const spSearch  = document.getElementById('spSearch');
+    const spClear   = document.getElementById('spClear');
+    const spList    = document.getElementById('spList');
+    const spInfo    = document.getElementById('spResultsInfo');
+    const fabBadge  = document.getElementById('fabBadge');
+    const spStatTotal = document.getElementById('spStatTotal');
+    const spStatValue = document.getElementById('spStatValue');
 
-    let sidebarQuery = '';
+    let spQuery = '';
 
-    function openSidebar() {
-      sidebar.classList.add('open');
-      sidebarToggle.classList.add('open');
-      sidebarOverlay.classList.add('visible');
-      renderSidebar();
-    }
+    const openPanel  = () => { spPanel.classList.add('open'); spOverlay.classList.add('visible'); renderPanel(); };
+    const closePanel = () => { spPanel.classList.remove('open'); spOverlay.classList.remove('visible'); };
 
-    function closeSidebar() {
-      sidebar.classList.remove('open');
-      sidebarToggle.classList.remove('open');
-      sidebarOverlay.classList.remove('visible');
-    }
+    spFab.addEventListener('click', () => spPanel.classList.contains('open') ? closePanel() : openPanel());
+    spClose.addEventListener('click', closePanel);
+    spOverlay.addEventListener('click', closePanel);
 
-    sidebarToggle.addEventListener('click', () => {
-      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    spSearch.addEventListener('input', () => {
+      spQuery = spSearch.value;
+      spClear.style.display = spQuery ? 'block' : 'none';
+      renderPanel();
     });
-    sidebarClose.addEventListener('click', closeSidebar);
-    sidebarOverlay.addEventListener('click', closeSidebar);
-
-    sidebarSearch.addEventListener('input', () => {
-      sidebarQuery = sidebarSearch.value;
-      sidebarClear.style.display = sidebarQuery ? 'block' : 'none';
-      renderSidebar();
+    spClear.addEventListener('click', () => {
+      spQuery = ''; spSearch.value = '';
+      spClear.style.display = 'none';
+      renderPanel();
     });
 
-    sidebarClear.addEventListener('click', () => {
-      sidebarQuery = '';
-      sidebarSearch.value = '';
-      sidebarClear.style.display = 'none';
-      renderSidebar();
-    });
-
-    function normalizeStr(str) {
-      return String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    function norm(s) {
+      return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    }
+    function fmtDate(iso) {
+      return iso ? new Date(iso).toLocaleDateString('pt-BR') : '';
+    }
+    function fmtMoney(v) {
+      return 'R$ ' + Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
     }
 
-    function formatDate(iso) {
-      if (!iso) return '';
-      return new Date(iso).toLocaleDateString('pt-BR');
-    }
-
-    function money(v) {
-      return Number(v || 0).toFixed(2).replace('.', ',');
-    }
-
-    function renderSidebar() {
-      // Usa o store do app.js (variável global)
+    function renderPanel() {
       if (typeof store === 'undefined') return;
 
-      const quotes = (store.quotes || []).slice().reverse();
-      const total  = quotes.length;
+      const quotes     = (store.quotes || []).slice().reverse();
+      const total      = quotes.length;
+      const totalValue = quotes.reduce((s,q) => s + Number(q.total||0), 0);
 
-      // Atualiza badge
-      sidebarQuoteCount.textContent = total;
-      if (total > 0) {
-        toggleBadge.textContent = total > 99 ? '99+' : total;
-        toggleBadge.style.display = 'flex';
-      } else {
-        toggleBadge.style.display = 'none';
-      }
+      // Badge
+      fabBadge.textContent = total > 99 ? '99+' : total;
+      fabBadge.style.display = total > 0 ? 'flex' : 'none';
 
-      // Filtra
-      const q = normalizeStr(sidebarQuery);
+      // Stats
+      spStatTotal.textContent = total;
+      spStatValue.textContent = totalValue > 0
+        ? 'R$ ' + totalValue.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})
+        : 'R$ 0,00';
+
+      const q = norm(spQuery);
       const filtered = q
-        ? quotes.filter(quote => {
-            const issuer = (store.issuers || []).find(i => i.id === quote.issuerId) || {};
-            const client = (store.clients || []).find(c => c.id === quote.clientId) || {};
-            return [
-              quote.numero || '',
-              issuer.name || '',
-              client.name || '',
-              formatDate(quote.createdAt),
-            ].some(f => normalizeStr(f).includes(q));
+        ? quotes.filter(qt => {
+            const iss = (store.issuers||[]).find(i=>i.id===qt.issuerId)||{};
+            const cli = (store.clients||[]).find(c=>c.id===qt.clientId)||{};
+            return [qt.numero||'', iss.name||'', cli.name||'', fmtDate(qt.createdAt)]
+              .some(f => norm(f).includes(q));
           })
         : quotes;
 
-      // Info
-      if (q && filtered.length !== total) {
-        sidebarResultsInfo.textContent = filtered.length === 0
-          ? 'Nenhum resultado encontrado'
-          : `${filtered.length} de ${total} orçamento${total !== 1 ? 's' : ''}`;
-      } else {
-        sidebarResultsInfo.textContent = '';
-      }
+      spInfo.textContent = q && filtered.length !== total
+        ? (filtered.length === 0 ? 'Nenhum resultado' : `${filtered.length} de ${total} orçamentos`)
+        : '';
 
-      // Renderiza cards
       if (filtered.length === 0) {
-        sidebarList.innerHTML = `<div class="sidebar-empty">
-          <span class="empty-icon">${q ? '🔍' : '📭'}</span>
-          ${q ? 'Nenhum orçamento encontrado' : 'Nenhum orçamento salvo ainda'}
+        spList.innerHTML = `<div class="sp-empty">
+          <div class="sp-empty-icon">${q ? '🔍' : '📭'}</div>
+          <h4>${q ? 'Nenhum resultado' : 'Nenhum orçamento ainda'}</h4>
+          <p>${q ? 'Tente outros termos' : 'Crie seu primeiro orçamento acima'}</p>
         </div>`;
         return;
       }
 
-      sidebarList.innerHTML = '';
-      filtered.forEach(q => {
-        const issuer = (store.issuers || []).find(i => i.id === q.issuerId) || {};
-        const client = (store.clients || []).find(c => c.id === q.clientId) || {};
+      spList.innerHTML = '';
+      filtered.forEach(qt => {
+        const iss = (store.issuers||[]).find(i=>i.id===qt.issuerId)||{};
+        const cli = (store.clients||[]).find(c=>c.id===qt.clientId)||{};
 
         const card = document.createElement('div');
-        card.className = 'sidebar-quote-card';
+        card.className = 'sp-card';
         card.innerHTML = `
-          <div class="card-header">
-            <span class="card-number">📄 ${q.numero || q.id}</span>
-            <span class="card-total">R$ ${money(q.total)}</span>
+          <div class="sp-card-top">
+            <span class="sp-card-num">📄 ${qt.numero || qt.id}</span>
+            <span class="sp-card-total">${fmtMoney(qt.total)}</span>
           </div>
-          <div class="card-from">De: ${issuer.name || '—'}</div>
-          <div class="card-to">Para: ${client.name || '—'}</div>
-          <div class="card-date">📅 ${formatDate(q.createdAt)}</div>
-          <div class="card-actions">
-            <button class="btn-view-card" data-id="${q.id}">👁️ Ver</button>
-            <button class="btn-word-card" data-id="${q.id}">📄 Word</button>
-            <button class="btn-pdf-card" data-id="${q.id}">📑 PDF</button>
-            <button class="btn-edit-card" data-id="${q.id}">✏️ Editar</button>
-            <button class="btn-del-card" data-id="${q.id}">🗑️</button>
+          <div class="sp-card-parties">
+            <div class="sp-card-party">
+              <span class="sp-card-party-label">De</span>
+              <span class="sp-card-party-name">${iss.name || '—'}</span>
+            </div>
+            <div class="sp-card-party">
+              <span class="sp-card-party-label">Para</span>
+              <span class="sp-card-party-name">${cli.name || '—'}</span>
+            </div>
           </div>
-        `;
+          <div class="sp-card-footer">
+            <span class="sp-card-date">📅 ${fmtDate(qt.createdAt)}</span>
+            <div class="sp-card-btns">
+              <button class="sp-card-btn view"        data-id="${qt.id}">👁 Ver</button>
+              <button class="sp-card-btn" data-action="word" data-id="${qt.id}" title="Word">📄</button>
+              <button class="sp-card-btn" data-action="pdf"  data-id="${qt.id}" title="PDF">📑</button>
+              <button class="sp-card-btn" data-action="edit" data-id="${qt.id}" title="Editar">✏️</button>
+              <button class="sp-card-btn del"         data-action="del"  data-id="${qt.id}" title="Excluir">🗑</button>
+            </div>
+          </div>`;
 
-        // Clique no card abre preview
-        card.addEventListener('click', (e) => {
-          if (e.target.tagName === 'BUTTON') return;
-          if (typeof openPreview === 'function') openPreview(q.id);
-          closeSidebar();
+        card.addEventListener('click', e => {
+          if (e.target.closest('.sp-card-btn')) return;
+          if (typeof openPreview === 'function') openPreview(qt.id);
+          closePanel();
         });
 
-        card.querySelector('.btn-view-card').addEventListener('click', () => {
-          if (typeof openPreview === 'function') openPreview(q.id);
-          closeSidebar();
+        card.querySelector('.sp-card-btn.view').addEventListener('click', () => {
+          if (typeof openPreview === 'function') openPreview(qt.id);
+          closePanel();
         });
-        card.querySelector('.btn-word-card').addEventListener('click', () => {
-          if (typeof exportQuoteDoc === 'function') exportQuoteDoc(q.id);
+        card.querySelector('[data-action="word"]').addEventListener('click', () => {
+          if (typeof exportQuoteDoc === 'function') exportQuoteDoc(qt.id);
         });
-        card.querySelector('.btn-pdf-card').addEventListener('click', () => {
-          if (typeof exportQuotePdf === 'function') exportQuotePdf(q.id);
+        card.querySelector('[data-action="pdf"]').addEventListener('click', () => {
+          if (typeof exportQuotePdf === 'function') exportQuotePdf(qt.id);
         });
-        card.querySelector('.btn-edit-card').addEventListener('click', () => {
-          if (typeof startEditMode === 'function') startEditMode(q.id);
-          closeSidebar();
+        card.querySelector('[data-action="edit"]').addEventListener('click', () => {
+          if (typeof startEditMode === 'function') startEditMode(qt.id);
+          closePanel();
         });
-        card.querySelector('.btn-del-card').addEventListener('click', () => {
-          if (!confirm('❓ Excluir este orçamento permanentemente?')) return;
-          store.quotes = store.quotes.filter(x => x.id !== q.id);
+        card.querySelector('[data-action="del"]').addEventListener('click', () => {
+          if (!confirm('❓ Excluir este orçamento?')) return;
+          store.quotes = store.quotes.filter(x => x.id !== qt.id);
           if (typeof saveStore === 'function') saveStore(store);
-          renderSidebar();
+          renderPanel();
           if (typeof renderQuotes === 'function') renderQuotes();
         });
 
-        sidebarList.appendChild(card);
+        spList.appendChild(card);
       });
     }
 
-    // Atualiza sidebar sempre que renderQuotes for chamado
-    const _origRenderQuotes = window.renderQuotes;
-    document.addEventListener('DOMContentLoaded', () => {
-      // Patch renderQuotes para também atualizar o badge
-      const patchInterval = setInterval(() => {
-        if (typeof renderQuotes !== 'undefined' && typeof store !== 'undefined') {
-          clearInterval(patchInterval);
-          renderSidebar();
-        }
-      }, 200);
+    document.addEventListener('click', e => {
+      if (e.target && e.target.id === 'saveQuoteBtn') setTimeout(renderPanel, 400);
     });
 
-    // Atualiza badge após salvar orçamento
-    document.addEventListener('click', (e) => {
-      if (e.target && e.target.id === 'saveQuoteBtn') {
-        setTimeout(renderSidebar, 400);
+    const _init = setInterval(() => {
+      if (typeof store !== 'undefined' && typeof renderQuotes !== 'undefined') {
+        clearInterval(_init);
+        renderPanel();
       }
-    });
+    }, 200);
   </script>
 </body>
 </html>
