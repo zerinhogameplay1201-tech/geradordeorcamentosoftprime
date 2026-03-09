@@ -749,14 +749,14 @@ if (printBtn) {
           <meta charset="utf-8">
           <title>Orçamento - SoftPrime</title>
           <style>
-            body{font-family:Arial,Helvetica,sans-serif;padding:30px 30px 70px 30px;color:#1a1a1a;max-width:800px;margin:0 auto}
+            body{font-family:Arial,Helvetica,sans-serif;padding:30px 30px 70px 30px;color:#1a1a1a;max-width:800px;margin:0 auto;min-height:calc(100vh - 100px);display:flex;flex-direction:column}
             table{width:100%;border-collapse:collapse;margin-top:16px;table-layout:auto}
             th,td{border:1px solid #e5e7eb;padding:10px;text-align:left;vertical-align:middle}
             th{background:#f9fafb;font-weight:600}
             th:first-child,td:first-child{word-break:break-word;min-width:200px}
             th:not(:first-child),td:not(:first-child){white-space:nowrap;width:1%;text-align:right}
             th:nth-child(2),td:nth-child(2){text-align:center}
-            .signature{margin-top:280px;display:flex;flex-direction:column;align-items:center;gap:8px;page-break-inside:avoid}
+            .signature{margin-top:160px;margin-bottom:40px;display:flex;flex-direction:column;align-items:center;gap:8px;page-break-inside:avoid}
             .signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}
             .signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a;margin-top:8px}
             .print-footer{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:0.85rem;color:#6b7280;padding:8px 16px;background:white;}
@@ -797,7 +797,7 @@ if (exportDocBtn) {
   exportDocBtn.addEventListener("click", ()=>{
     try {
       if (!lastPreviewHtml) { showNotification("Abra um orçamento primeiro (Visualizar/Imprimir) para exportar", "info"); return; }
-      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Orçamento - SoftPrime</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:30px;color:#1a1a1a;max-width:800px;margin:0 auto}table{width:100%;border-collapse:collapse;margin-top:16px;table-layout:auto}th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}th{background:#f9fafb;font-weight:600}td:first-child,th:first-child{word-break:break-word}td:not(:first-child),th:not(:first-child){white-space:nowrap;width:1%}.signature{margin-top:200px;display:flex;flex-direction:column;align-items:center;gap:8px}.signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}.signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a}.print-footer{margin-top:24px;font-size:0.85rem;color:#6b7280;text-align:center}</style></head><body>${lastPreviewHtml}</body></html>`;
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Orçamento - SoftPrime</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:30px;color:#1a1a1a;max-width:800px;margin:0 auto;min-height:calc(100vh - 60px);display:flex;flex-direction:column}table{width:100%;border-collapse:collapse;margin-top:16px;table-layout:auto}th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}th{background:#f9fafb;font-weight:600}td:first-child,th:first-child{word-break:break-word}td:not(:first-child),th:not(:first-child){white-space:nowrap;width:1%}.signature{margin-top:160px;margin-bottom:40px;display:flex;flex-direction:column;align-items:center;gap:8px}.signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}.signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a}.print-footer{margin-top:24px;font-size:0.85rem;color:#6b7280;text-align:center}</style></head><body>${lastPreviewHtml}</body></html>`;
       const blob = new Blob([html], { type: "application/msword" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = `orcamento_softprime_${new Date().getTime()}.doc`; a.click();
@@ -814,7 +814,7 @@ function exportQuoteDoc(quoteId){
     const issuer = store.issuers.find(i=>i.id===q.issuerId)||{};
     const client = store.clients.find(c=>c.id===q.clientId)||{};
     const html = renderQuoteHtml(q, issuer, client);
-    const doc = `<!doctype html><html><head><meta charset="utf-8"><title>Orçamento ${escapeHtml(q.numero || q.id)}</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:30px;color:#1a1a1a;max-width:800px;margin:0 auto}table{width:100%;border-collapse:collapse;margin-top:16px;table-layout:auto}th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}th{background:#f9fafb;font-weight:600}td:first-child,th:first-child{word-break:break-word}td:not(:first-child),th:not(:first-child){white-space:nowrap;width:1%}.signature{margin-top:200px;display:flex;flex-direction:column;align-items:center;gap:8px;page-break-inside:avoid}.signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}.signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a;margin-top:8px}.print-footer{margin-top:24px;font-size:0.85rem;color:#6b7280;text-align:center}</style></head><body>${html}</body></html>`;
+    const doc = `<!doctype html><html><head><meta charset="utf-8"><title>Orçamento ${escapeHtml(q.numero || q.id)}</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:30px;color:#1a1a1a;max-width:800px;margin:0 auto;min-height:calc(100vh - 60px);display:flex;flex-direction:column}table{width:100%;border-collapse:collapse;margin-top:16px;table-layout:auto}th,td{border:1px solid #e5e7eb;padding:10px;text-align:left}th{background:#f9fafb;font-weight:600}td:first-child,th:first-child{word-break:break-word}td:not(:first-child),th:not(:first-child){white-space:nowrap;width:1%}.signature{margin-top:160px;margin-bottom:40px;display:flex;flex-direction:column;align-items:center;gap:8px;page-break-inside:avoid}.signature .sig-line{width:60%;border-top:2px solid #1a1a1a;height:0}.signature .sig-name{font-weight:600;font-size:0.95rem;color:#1a1a1a;margin-top:8px}.print-footer{margin-top:24px;font-size:0.85rem;color:#6b7280;text-align:center}</style></head><body>${html}</body></html>`;
     const blob = new Blob([doc], { type: "application/msword" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = `orcamento_${q.numero || q.id}.doc`; a.click();
@@ -911,7 +911,7 @@ function renderQuoteHtml(q, issuer, client){
         <div style="margin-top:8px;color:#78350f;white-space:pre-wrap;">${escapeHtml(q.notes)}</div>
       </div>` : ''}
 
-      <div class="signature" style="margin-top:280px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div class="signature" style="margin-top:160px;margin-bottom:40px;display:flex;flex-direction:column;align-items:center;gap:8px;">
         <div class="sig-line" style="width:60%;border-top:2px solid #1a1a1a;"></div>
         <div class="sig-name" style="font-weight:600;font-size:0.95rem;margin-top:8px;">${escapeHtml(issuer.name || '')}</div>
       </div>
