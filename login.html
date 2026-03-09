@@ -244,11 +244,12 @@
 
     <div id="alertBox" class="alert"></div>
 
+    <!-- FORMULÁRIO DE LOGIN -->
     <div id="loginForm" class="form-container active">
       <form onsubmit="handleLogin(event)">
         <div class="form-group">
-          <label>Email ou Usuário</label>
-          <input type="text" id="loginIdentifier" placeholder="seu@email.com ou nome de usuário" autocomplete="off" spellcheck="false" required>
+          <label>E-mail ou Usuário</label>
+          <input type="text" id="loginIdentifier" placeholder="E-mail ou nome de usuário" autocomplete="off" spellcheck="false" required>
         </div>
         <div class="form-group">
           <label>Senha</label>
@@ -269,12 +270,13 @@
       </div>
     </div>
 
+    <!-- FORMULÁRIO DE CADASTRO -->
     <div id="cadastroForm" class="form-container">
       <form onsubmit="handleSignUp(event)">
         <div class="form-group">
           <label>Nome de Usuário</label>
-          <input type="text" id="signupUsername" placeholder="ex: joaosilva123 (sem espaços)" autocomplete="off" pattern="[a-zA-Z0-9_]+" title="Apenas letras, números e underscore" minlength="3" required>
-          <small style="color: rgba(255,255,255,0.5); font-size: 11px;">Será usado para fazer login. Apenas letras, números e _.</small>
+          <!-- ALTERADO: placeholder livre, sem restrições de formato, sem legenda -->
+          <input type="text" id="signupUsername" placeholder="ex: João Silva" autocomplete="off" minlength="3" required>
         </div>
         <div class="form-group">
           <label>Email</label>
@@ -366,7 +368,7 @@
       const btn = document.getElementById('loginBtn');
 
       if (!identifier) {
-        showAlert('Informe seu email ou nome de usuário.', 'error');
+        showAlert('Informe seu e-mail ou nome de usuário.', 'error');
         return;
       }
 
@@ -411,10 +413,9 @@
     async function handleForgotPassword(event) {
       event.preventDefault();
       const identifier = document.getElementById('loginIdentifier').value.trim();
-      // Se o campo tem um username (sem @), pede o email diretamente
       const email = (identifier && identifier.includes('@'))
         ? identifier
-        : prompt('Digite seu email para recuperação de senha:');
+        : prompt('Digite seu e-mail para recuperação de senha:');
       if (email) {
         const result = await window.authManager.resetPassword(email);
         showAlert(result.message, result.success ? 'success' : 'error');
