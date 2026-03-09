@@ -390,11 +390,16 @@
       btn.innerHTML = '<span class="loading"></span> Criando conta...';
       const result = await window.authManager.signUp(email, password, username);
       if (result.success) {
-        showAlert('✅ Conta criada com sucesso! Faça seu login agora.', 'success');
-        // Vai imediatamente para Login e preenche o email
-        showTab('login');
-        document.getElementById('loginIdentifier').value = email;
-        document.getElementById('loginPassword').focus();
+        if (result.autoLogin) {
+          // Login automático funcionou — auth.js vai redirecionar sozinho
+          showAlert('✅ Conta criada! Entrando automaticamente...', 'success');
+        } else {
+          // Vai para Login com email preenchido
+          showAlert('✅ Conta criada! Faça seu login agora.', 'success');
+          showTab('login');
+          document.getElementById('loginIdentifier').value = email;
+          document.getElementById('loginPassword').focus();
+        }
         btn.disabled = false;
         btn.innerHTML = 'Criar Conta';
       } else {

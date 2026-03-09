@@ -25,34 +25,23 @@ class AuthManager {
       const key = window.SUPABASE_ANON_KEY;
 
       if (!url || !key) {
-        console.error('❌ Credenciais não configuradas. URL:', url, 'KEY:', key ? 'OK' : 'VAZIA');
+        console.error('❌ Credenciais não configuradas.');
         return;
       }
 
-      console.log('🔄 Inicializando Supabase com URL:', url);
-
       this.supabase = window.supabase.createClient(url, key, {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true
-        }
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
       });
 
       const { data: { session }, error } = await this.supabase.auth.getSession();
-
-      if (error) {
-        console.error('❌ Erro ao verificar sessão:', error.message);
-      }
+      if (error) console.error('❌ Erro ao verificar sessão:', error.message);
 
       this._initialized = true;
 
       if (session) {
-        console.log('✅ Usuário já logado:', session.user.email);
         this.currentUser = session.user;
         this.showApp();
       } else {
-        console.log('ℹ️ Nenhum usuário logado');
         this.showAuth();
       }
 
@@ -74,14 +63,12 @@ class AuthManager {
 
   showAuth() {
     if (!window.location.pathname.endsWith('login.html') && window.location.pathname !== '/login.html') {
-      console.log('🔐 Redirecionando para login...');
       window.location.href = 'login.html';
     }
   }
 
   showApp() {
     if (window.location.pathname.endsWith('login.html') || window.location.pathname === '/login.html') {
-      console.log('✅ Redirecionando para o app...');
       window.location.href = 'index.html';
       return;
     }
@@ -94,135 +81,113 @@ class AuthManager {
         .eq('id', this.currentUser.id)
         .single()
         .then(({ data: profile }) => {
-          const displayName = profile?.username || profile?.full_name ||
-                              this.currentUser.email.split('@')[0];
-          userNameEl.textContent = displayName;
+          userNameEl.textContent =
+            profile?.username ||
+            profile?.full_name ||
+            this.currentUser.user_metadata?.username ||
+            this.currentUser.user_metadata?.full_name ||
+            this.currentUser.email.split('@')[0];
         })
         .catch(() => {
-          userNameEl.textContent = this.currentUser.email.split('@')[0];
+          userNameEl.textContent =
+            this.currentUser.user_metadata?.username ||
+            this.currentUser.user_metadata?.full_name ||
+            this.currentUser.email.split('@')[0];
         });
     }
 
-    if (typeof renderAll === 'function') {
-      console.log('🔄 Carregando dados do usuário...');
-      renderAll();
-    }
-
-    console.log('✅ App carregado para:', this.currentUser?.email);
+    if (typeof renderAll === 'function') renderAll();
   }
 
   async signUp(email, password, username) {
     try {
-      if (!this.supabase) {
+      if (!this.supabase)
         return { success: false, message: '❌ Sistema não inicializado. Recarregue a página.' };
-      }
 
-      // Validação mínima: apenas verifica comprimento
-      if (!username || username.trim().length < 2) {
+      if (!username || username.trim().length < 2)
         return { success: false, message: '❌ Nome de usuário deve ter pelo menos 2 caracteres.' };
-      }
 
       const cleanUsername = username.trim();
 
-      // Verificar se username já existe (busca case-insensitive)
+      // Verifica se username já existe
       const { data: existingUser } = await this.supabase
-        .from('profiles')
-        .select('id')
-        .ilike('username', cleanUsername)
-        .maybeSingle();
+        .from('profiles').select('id').ilike('username', cleanUsername).maybeSingle();
 
-      if (existingUser) {
+      if (existingUser)
         return { success: false, message: '❌ Este nome de usuário já está em uso. Escolha outro.' };
-      }
 
-      console.log('🔄 Cadastrando usuário:', email);
-
+      // Cadastra salvando username no metadata do Supabase Auth
       const { data, error } = await this.supabase.auth.signUp({
-        email,
-        password,
+        email, password,
         options: {
-          data: { username: cleanUsername },
-          emailRedirectTo: null
+          data: { username: cleanUsername, full_name: cleanUsername, display_name: cleanUsername }
         }
       });
 
       if (error) throw error;
+      if (!data.user) throw new Error('Usuário não foi criado. Tente novamente.');
 
-      // Salvar username na tabela de perfis
-      if (data.user) {
+      console.log('✅ Usuário criado no Auth:', data.user.id);
+
+      // Salva na tabela profiles com até 3 tentativas
+      let profileSaved = false;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        await new Promise(r => setTimeout(r, attempt * 400));
         const { error: profileError } = await this.supabase
           .from('profiles')
-          .upsert({
-            id: data.user.id,
-            email,
-            username: cleanUsername,
-            updated_at: new Date().toISOString()
-          });
-        if (profileError) {
-          console.error('❌ Erro ao salvar perfil:', profileError.message);
+          .upsert({ id: data.user.id, email, username: cleanUsername, full_name: cleanUsername, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+
+        if (!profileError) {
+          profileSaved = true;
+          console.log(`✅ Perfil salvo (tentativa ${attempt})`);
+          break;
         }
+        console.warn(`⚠️ Tentativa ${attempt} falhou:`, profileError.message);
       }
 
-      // Tenta fazer login automático após cadastro
-      // (funciona quando confirmação de email está desativada no Supabase)
-      const { error: signInError } = await this.supabase.auth.signInWithPassword({ email, password });
-      if (!signInError) {
+      if (!profileSaved)
+        console.warn('⚠️ Username salvo apenas no metadata do Auth (tabela profiles indisponível).');
+
+      // Login automático (funciona se "Confirm email" estiver DESATIVADO no Supabase)
+      const { data: signInData, error: signInError } = await this.supabase.auth.signInWithPassword({ email, password });
+
+      if (!signInError && signInData?.session) {
         console.log('✅ Login automático após cadastro');
+        return { success: true, autoLogin: true, message: '✅ Conta criada e login realizado!' };
       }
 
-      console.log('✅ Cadastro realizado');
-      return {
-        success: true,
-        message: '✅ Conta criada! Você já pode fazer login.'
-      };
+      return { success: true, autoLogin: false, message: '✅ Conta criada! Faça login agora.' };
 
     } catch (error) {
       console.error('❌ Erro no cadastro:', error);
       let msg = error.message || 'Erro desconhecido';
       if (msg.includes('Failed to fetch')) msg = 'Erro de conexão. Verifique sua internet.';
       if (msg.includes('User already registered')) msg = 'Este email já está cadastrado.';
+      if (msg.includes('Password should be at least')) msg = 'A senha deve ter pelo menos 6 caracteres.';
       return { success: false, message: `❌ ${msg}` };
     }
   }
 
   async signIn(identifier, password) {
     try {
-      if (!this.supabase) {
+      if (!this.supabase)
         return { success: false, message: '❌ Sistema não inicializado. Recarregue a página.' };
-      }
 
       let email = identifier.trim();
 
-      // Se não contém '@', trata como username e busca o email correspondente
       if (!email.includes('@')) {
         console.log('🔄 Buscando email por username:', email);
-
-        // Busca case-insensitive pelo username
         const { data: profile, error: profileError } = await this.supabase
-          .from('profiles')
-          .select('email')
-          .ilike('username', email)
-          .maybeSingle();
+          .from('profiles').select('email').ilike('username', email).maybeSingle();
 
-        if (profileError) {
-          console.error('❌ Erro ao buscar perfil:', profileError.message);
-        }
-
-        if (!profile || !profile.email) {
+        if (profileError) console.error('❌ Erro ao buscar perfil:', profileError.message);
+        if (!profile?.email)
           return { success: false, message: '❌ Usuário não encontrado. Verifique seu email ou nome de usuário.' };
-        }
 
         email = profile.email;
-        console.log('✅ Email encontrado para o username:', email);
       }
 
-      console.log('🔄 Fazendo login com email:', email);
-
-      const { data, error } = await this.supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
+      const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
 
       console.log('✅ Login realizado');
@@ -240,12 +205,10 @@ class AuthManager {
 
   async signOut() {
     try {
-      const { error } = await this.supabase.auth.signOut();
-      if (error) throw error;
+      await this.supabase.auth.signOut();
       window.location.href = 'login.html';
-      return { success: true, message: '✅ Você saiu com sucesso!' };
+      return { success: true };
     } catch (error) {
-      console.error('❌ Erro no logout:', error);
       return { success: false, message: `❌ ${error.message}` };
     }
   }
@@ -258,7 +221,6 @@ class AuthManager {
       if (error) throw error;
       return { success: true, message: '✅ Email de recuperação enviado!' };
     } catch (error) {
-      console.error('❌ Erro ao recuperar senha:', error);
       return { success: false, message: `❌ ${error.message}` };
     }
   }
