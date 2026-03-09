@@ -21,9 +21,9 @@
        HEADER FIXO
     ============================================================ */
     .header {
-      background: #fff;
-      border-bottom: 1px solid rgba(20,30,40,0.12);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      background: linear-gradient(135deg, #020b18 0%, #0a1628 60%, #0d2b5e 100%);
+      border-bottom: 1px solid rgba(0,180,255,0.15);
+      box-shadow: 0 2px 20px rgba(0,100,255,0.15);
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 200;
@@ -36,33 +36,49 @@
       padding: 0 20px;
       height: 100%;
     }
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
     .logo {
-      background: linear-gradient(135deg,#0d7de0,#0a5fb8);
-      color: #fff; padding: 8px 14px; border-radius: 8px;
-      font-weight: 700; font-size: 15px;
+      background: linear-gradient(135deg, #0078d4, #00c8ff);
+      color: #fff;
+      padding: 7px 16px;
+      border-radius: 9px;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px rgba(0,200,255,0.45), 0 0 24px rgba(0,120,255,0.2);
+      text-shadow: 0 0 10px rgba(255,255,255,0.4);
+      border: 1px solid rgba(0,200,255,0.3);
     }
-    .site-title { font-weight: 600; color: #1a1a1a; font-size: 17px; }
+    .site-title {
+      font-weight: 600;
+      color: rgba(180,220,255,0.9);
+      font-size: 16px;
+      letter-spacing: 0.3px;
+    }
     .header-actions { display: flex; align-items: center; gap: 10px; }
-    #userName { color: #4b5563; font-weight: 500; font-size: 14px; white-space: nowrap; }
+    #userName { color: rgba(180,220,255,0.85); font-weight: 500; font-size: 14px; white-space: nowrap; }
 
     /* ---- Botão de perfil ---- */
     .profile-btn {
       display: inline-flex; align-items: center; gap: 9px;
       padding: 6px 12px 6px 6px;
-      background: #f8fafc; border: 1.5px solid #e2e8f0;
+      background: rgba(0,30,70,0.6); border: 1.5px solid rgba(0,180,255,0.25);
       border-radius: 30px; cursor: pointer; font-family: inherit;
-      transition: all 0.2s; color: #374151;
+      transition: all 0.2s; color: rgba(180,220,255,0.9);
     }
-    .profile-btn:hover { background: #eff6ff; border-color: #bfdbfe; color: #0d7de0; }
+    .profile-btn:hover { background: rgba(0,60,120,0.7); border-color: rgba(0,200,255,0.5); color: #00c8ff; }
     .profile-avatar {
       width: 32px; height: 32px; border-radius: 50%;
-      background: linear-gradient(135deg, #0d7de0, #0a5fb8);
+      background: linear-gradient(135deg, #0078d4, #00c8ff);
       color: #fff; font-size: 13px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; letter-spacing: -0.5px;
+      box-shadow: 0 0 8px rgba(0,200,255,0.4);
     }
     .profile-btn span#userName { font-size: 13.5px; font-weight: 600; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-ghost { color: rgba(180,220,255,0.8) !important; }
+    .btn-ghost:hover { background: rgba(0,60,120,0.5) !important; color: #fff !important; }
 
     /* ---- Toggle senha no modal de perfil ---- */
     .pwd-toggle {
@@ -686,19 +702,14 @@
   <script src="auth.js"></script>
 
   <script>
-    window.addEventListener('DOMContentLoaded', async () => {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      if (!window.authManager || !window.authManager.isAuthenticated()) {
-        window.location.href = 'login.html';
-      } else {
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-          logoutBtn.onclick = async (e) => {
-            e.preventDefault();
-            if (!confirm('Deseja realmente sair?')) return;
-            await window.authManager.signOut();
-          };
-        }
+    window.addEventListener('DOMContentLoaded', () => {
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.onclick = async (e) => {
+          e.preventDefault();
+          if (!confirm('Deseja realmente sair?')) return;
+          await window.authManager.signOut();
+        };
       }
     });
   </script>
