@@ -12,750 +12,669 @@
 
   <style>
     /* ============================================================
-       BOTÃO ORÇAMENTOS SALVOS — dentro do header, estilo link
+       RESET E BASE
     ============================================================ */
-
-    .header-center {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-    }
-
-    .sidebar-fab {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 4px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-      color: #1e293b;
-      font-size: 14.5px;
-      font-weight: 500;
-      text-decoration: none;
-      border-bottom: 2px solid transparent;
-      transition: color 0.18s, border-color 0.18s;
-      position: relative;
-    }
-    .sidebar-fab:hover {
-      color: #0d7de0;
-      border-bottom-color: transparent;
-      text-decoration: none;
-    }
-    .sidebar-fab.active {
-      color: #0d7de0;
-      border-bottom-color: transparent;
-      font-weight: 600;
-    }
-
-    .sidebar-fab-badge {
-      background: #ef4444;
-      color: #fff;
-      border-radius: 20px;
-      min-width: 20px;
-      height: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-family: inherit;
-      padding: 0 5px;
-    }
-
-    /* Painel antigo desativado */
-    .sidebar-overlay { display: none !important; }
-    .sidebar-panel   { display: none !important; }
+    * { box-sizing: border-box; }
 
     /* ============================================================
-       TELA DE ORÇAMENTOS SALVOS — substitui o conteúdo principal
+       HEADER FIXO
     ============================================================ */
-    #quotesScreen {
-      display: none;
-      flex-direction: column;
-      min-height: calc(100vh - 65px);
-      background: #f6f8fb;
+    .header {
+      background: #fff;
+      border-bottom: 1px solid rgba(20,30,40,0.12);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 64px;
     }
-    #quotesScreen.active { display: flex; }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 100%;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      background: linear-gradient(135deg,#0d7de0,#0a5fb8);
+      color: #fff; padding: 8px 14px; border-radius: 8px;
+      font-weight: 700; font-size: 15px;
+    }
+    .site-title { font-weight: 600; color: #1a1a1a; font-size: 17px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    #userName { color: #4b5563; font-weight: 500; font-size: 14px; white-space: nowrap; }
 
-    .qs-hero {
-      background: linear-gradient(135deg, #0a1628 0%, #0d2b5e 55%, #0d7de0 100%);
-      padding: 36px 32px 28px;
-      position: relative;
-      overflow: hidden;
-      flex-shrink: 0;
+    /* ---- Botão de perfil ---- */
+    .profile-btn {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 6px 12px 6px 6px;
+      background: #f8fafc; border: 1.5px solid #e2e8f0;
+      border-radius: 30px; cursor: pointer; font-family: inherit;
+      transition: all 0.2s; color: #374151;
     }
-    .qs-hero::before {
-      content: '';
-      position: absolute;
-      top: -40px; right: -40px;
-      width: 200px; height: 200px;
+    .profile-btn:hover { background: #eff6ff; border-color: #bfdbfe; color: #0d7de0; }
+    .profile-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #0d7de0, #0a5fb8);
+      color: #fff; font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; letter-spacing: -0.5px;
+    }
+    .profile-btn span#userName { font-size: 13.5px; font-weight: 600; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* ---- Toggle senha no modal de perfil ---- */
+    .pwd-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: #9ca3af;
+      padding: 4px; display: flex; align-items: center; transition: color 0.2s;
+    }
+    .pwd-toggle:hover { color: #374151; }
+
+    /* ============================================================
+       LAYOUT PRINCIPAL COM SIDEBAR
+    ============================================================ */
+    .app-layout {
+      display: flex;
+      padding-top: 64px;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: #fff;
+      border-right: 1px solid rgba(20,30,40,0.10);
+      position: fixed;
+      top: 64px; left: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+    }
+    .sidebar-nav { padding: 20px 12px; flex: 1; }
+    .sidebar-section-label {
+      font-size: 10px; font-weight: 700; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      padding: 0 8px; margin-bottom: 8px; margin-top: 4px;
+    }
+    .sidebar-btn {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 11px 12px; border-radius: 8px;
+      border: none; background: transparent; color: #4b5563;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      font-family: inherit; transition: all 0.18s; text-align: left;
+      margin-bottom: 3px;
+    }
+    .sidebar-btn:hover { background: #f0f7ff; color: #0d7de0; }
+    .sidebar-btn.active {
+      background: #eff6ff; color: #0d7de0; font-weight: 600;
+      box-shadow: inset 3px 0 0 #0d7de0;
+    }
+    .nav-icon { font-size: 17px; width: 22px; text-align: center; flex-shrink: 0; }
+
+    /* CONTEÚDO */
+    .main-content { margin-left: 220px; flex: 1; min-width: 0; }
+
+    /* TELAS (SPA) */
+    .screen { display: none; padding: 24px 20px 48px; max-width: 1100px; margin: 0 auto; }
+    .screen.active { display: block; }
+
+    /* ============================================================
+       BOTÕES
+    ============================================================ */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 16px; border-radius: 7px; border: 1px solid rgba(20,30,40,0.12);
+      background: #fff; color: #1a1a1a; font-weight: 600; font-size: 14px;
+      cursor: pointer; transition: all 0.2s ease; font-family: inherit; white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(20,30,40,0.12); }
+    .btn-ghost  { background: transparent; }
+    .btn-ghost:hover { background: #f9fafb; }
+    .btn-outline:hover { border-color: #0d7de0; color: #0d7de0; }
+    .btn-primary { background: #0d7de0; color: #fff; border: none; box-shadow: 0 4px 12px rgba(13,125,224,0.25); }
+    .btn-primary:hover { background: #0a5fb8; box-shadow: 0 6px 20px rgba(13,125,224,0.35); }
+
+    /* ============================================================
+       CARDS
+    ============================================================ */
+    .card {
+      background: #fff; border-radius: 10px; padding: 24px;
+      border: 1px solid rgba(20,30,40,0.12);
+      box-shadow: 0 2px 12px rgba(20,30,40,0.08); margin-bottom: 20px;
+    }
+    .card h4 { margin: 0 0 16px; font-size: 17px; font-weight: 600; color: #1a1a1a; }
+
+    /* ============================================================
+       FORMULÁRIOS
+    ============================================================ */
+    .form-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+    .form-grid > div { position: relative; }
+    .form-grid .full { grid-column: 1 / -1; }
+
+    input, textarea, select {
+      width: 100%; padding: 11px 14px; border-radius: 7px;
+      border: 1.5px solid rgba(20,30,40,0.12); background: #fff;
+      color: #1a1a1a; font-size: 14px; font-family: inherit; transition: all 0.2s ease;
+    }
+    input::placeholder, textarea::placeholder { color: #9ca3af; }
+    input:focus, textarea:focus, select:focus {
+      outline: none; border-color: #0d7de0;
+      box-shadow: 0 0 0 3px rgba(13,125,224,0.10);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .form-actions { grid-column: 1/-1; display: flex; gap: 10px; margin-top: 8px; }
+    .form-actions .btn { flex: 1; }
+
+    .logo-section { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
+    .logo-section label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+
+    /* ============================================================
+       DOIS FORMULÁRIOS LADO A LADO (tela início)
+    ============================================================ */
+    .two-col-forms { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    /* ============================================================
+       HEADER AZUL (Cadastro e Orçamentos)
+    ============================================================ */
+    .screen-hero {
+      background: linear-gradient(135deg, #0a1628 0%, #0d2b5e 55%, #0d7de0 100%);
+      border-radius: 12px; padding: 28px 28px 24px; margin-bottom: 24px;
+      position: relative; overflow: hidden;
+    }
+    .screen-hero::before {
+      content: ''; position: absolute; top: -30px; right: -30px;
+      width: 160px; height: 160px;
       background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
       border-radius: 50%;
     }
-    .qs-hero-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-    .qs-back-btn {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.20);
-      color: rgba(200,225,255,0.9);
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      margin-bottom: 18px;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.2s;
-    }
-    .qs-back-btn:hover {
-      background: rgba(255,255,255,0.22);
-      color: #fff;
-    }
-    .qs-hero-title {
-      display: flex; align-items: center; gap: 14px;
-      margin-bottom: 4px;
-    }
-    .qs-hero-icon {
-      width: 50px; height: 50px;
-      background: rgba(255,255,255,0.14);
-      border-radius: 13px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 26px;
-    }
-    .qs-hero-title h1 {
-      color: #fff; font-size: 26px; font-weight: 800; margin: 0;
-      letter-spacing: -0.3px;
-    }
-    .qs-hero-sub {
-      color: rgba(180,210,255,0.8); font-size: 14px;
-      margin: 0 0 22px 64px;
-    }
-    .qs-stats {
-      display: flex; gap: 12px; margin-left: 64px;
-      flex-wrap: wrap;
-    }
-    .qs-stat {
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.13);
-      border-radius: 10px;
-      padding: 10px 22px;
-      min-width: 130px;
-    }
-    .qs-stat-value { color: #fff; font-size: 22px; font-weight: 700; }
-    .qs-stat-label { color: rgba(180,210,255,0.7); font-size: 11px; margin-top: 2px; }
+    .screen-hero h2 { color: #fff; font-size: 22px; font-weight: 700; margin: 0 0 4px; position: relative; z-index: 1; }
+    .screen-hero p  { color: rgba(180,210,255,0.8); font-size: 13px; margin: 0; position: relative; z-index: 1; }
+    .hero-stats { display: flex; gap: 12px; margin-top: 18px; position: relative; z-index: 1; flex-wrap: wrap; }
+    .hero-stat { background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.13); border-radius: 10px; padding: 10px 20px; }
+    .hero-stat-value { color: #fff; font-size: 20px; font-weight: 700; }
+    .hero-stat-label { color: rgba(180,210,255,0.7); font-size: 11px; margin-top: 2px; }
 
-    .qs-body {
-      display: flex;
-      flex: 1;
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
-      padding: 24px 16px 40px;
-      gap: 20px;
-      align-items: flex-start;
-    }
-    .qs-sidebar {
-      width: 260px;
-      min-width: 220px;
-      flex-shrink: 0;
-    }
-    .qs-sidebar-card {
-      background: #fff;
-      border: 1px solid rgba(20,30,40,0.12);
-      border-radius: 10px;
-      padding: 18px;
-      box-shadow: 0 2px 12px rgba(20,30,40,0.08);
-      margin-bottom: 14px;
-    }
-    .qs-sidebar-title {
-      font-size: 11px; font-weight: 700;
-      color: #64748b; text-transform: uppercase;
-      letter-spacing: 0.6px; margin-bottom: 10px;
-    }
-    .qs-main { flex: 1; min-width: 0; }
+    /* ============================================================
+       LISTAS DE CADASTRO
+    ============================================================ */
+    .cadastro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-    @media (max-width: 768px) {
-      .qs-body { flex-direction: column; padding: 16px 12px 32px; }
-      .qs-sidebar { width: 100%; min-width: unset; }
-      .qs-hero { padding: 24px 16px 20px; }
-      .qs-hero-title h1 { font-size: 20px; }
-      .qs-hero-sub { margin-left: 0; margin-top: 8px; }
-      .qs-stats { margin-left: 0; margin-top: 8px; }
+    .list { list-style: none; padding: 0; margin: 0; }
+    .list li {
+      padding: 14px 16px; border-radius: 8px;
+      border: 1px solid rgba(20,30,40,0.10); margin-bottom: 10px;
+      background: #fff; display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 12px; transition: all 0.2s ease;
     }
+    .list li:hover { box-shadow: 0 2px 12px rgba(20,30,40,0.08); border-color: #d1d5db; }
+    .list li strong { display: block; font-size: 14px; margin-bottom: 3px; color: #1a1a1a; }
+    .list li .meta { color: #6b7278; font-size: 13px; }
+    .list li .quote-actions { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; }
+    .list li button { font-size: 13px; padding: 6px 11px; }
 
-    /* Layout interno em duas colunas */
-    .sp-body {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
+    /* ============================================================
+       TELA ORÇAMENTOS — layout dois cols
+    ============================================================ */
+    .quotes-layout { display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: flex-start; }
 
-    /* Coluna esquerda: stats + filtros */
-    .sp-left {
-      width: 280px;
-      min-width: 240px;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid #e8edf5;
-      overflow-y: auto;
+    .qs-filters-card {
+      background: #fff; border: 1px solid rgba(20,30,40,0.12);
+      border-radius: 10px; padding: 18px;
+      box-shadow: 0 2px 12px rgba(20,30,40,0.08); margin-bottom: 14px;
     }
+    .qs-filter-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
 
-    /* Coluna direita: busca + lista */
-    .sp-right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    /* Filtros */
-    .sp-filters {
-      padding: 14px 16px 16px;
-      background: #f8fafc;
-      flex: 1;
-      overflow-y: auto;
-    }
-    .sp-filter-section { margin-bottom: 16px; }
-    .sp-filter-label {
-      font-size: 11px; font-weight: 700;
-      color: #64748b; text-transform: uppercase;
-      letter-spacing: 0.6px; margin-bottom: 8px;
-    }
     .sp-filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .sp-chip {
-      padding: 5px 12px;
-      background: #fff;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 20px;
-      font-size: 12px; font-weight: 500;
-      color: #475569; cursor: pointer;
-      transition: all 0.15s; font-family: inherit;
-      white-space: nowrap;
+      padding: 5px 12px; background: #fff; border: 1.5px solid #e2e8f0;
+      border-radius: 20px; font-size: 12px; font-weight: 500; color: #475569;
+      cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap;
     }
     .sp-chip:hover { border-color: #0d7de0; color: #0d7de0; }
-    .sp-chip.active {
-      background: #0d7de0; color: #fff;
-      border-color: #0d7de0;
-      box-shadow: 0 2px 8px rgba(13,125,224,0.25);
-    }
+    .sp-chip.active { background: #0d7de0; color: #fff; border-color: #0d7de0; box-shadow: 0 2px 8px rgba(13,125,224,0.25); }
+
     .sp-filter-clear {
-      margin-top: 4px; padding: 6px 14px;
-      background: #fee2e2; color: #dc2626;
-      border: 1px solid #fecaca; border-radius: 8px;
-      font-size: 12px; font-weight: 600;
-      cursor: pointer; font-family: inherit;
-      transition: all 0.15s;
+      margin-top: 10px; padding: 7px 14px; background: #fee2e2; color: #dc2626;
+      border: 1px solid #fecaca; border-radius: 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; font-family: inherit; width: 100%;
     }
     .sp-filter-clear:hover { background: #fecaca; }
 
-    /* Header */
-    .sp-header {
-      background: linear-gradient(135deg, #0a1628 0%, #0d2b5e 55%, #0d7de0 100%);
-      padding: 24px 20px 20px;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-    .sp-header::before {
-      content: '';
-      position: absolute;
-      top: -30px; right: -30px;
-      width: 120px; height: 120px;
-      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-    .sp-header-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
-    }
-    .sp-header-title { display: flex; align-items: center; gap: 12px; }
-    .sp-header-icon {
-      width: 42px; height: 42px;
-      background: rgba(255,255,255,0.14);
-      border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 21px;
-    }
-    .sp-header-text h3 { color: #fff; font-size: 17px; font-weight: 700; margin: 0 0 3px; }
-    .sp-header-text p  { color: rgba(180,210,255,0.75); font-size: 12px; margin: 0; }
-
-    .sp-close-btn {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: rgba(255,255,255,0.8);
-      width: 34px; height: 34px;
-      border-radius: 8px; font-size: 16px;
-      cursor: pointer; display: flex;
-      align-items: center; justify-content: center;
-      transition: all 0.2s;
-    }
-    .sp-close-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
-
-    /* Stats principais */
-    .sp-stats {
-      display: flex; gap: 10px;
-      position: relative; z-index: 1;
-      margin-bottom: 0;
-    }
-    .sp-stat {
-      flex: 1;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 10px;
-      padding: 10px 14px;
-    }
-    .sp-stat-value { color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 3px; }
-    .sp-stat-label { color: rgba(180,210,255,0.7); font-size: 11px; font-weight: 500; }
-
-    /* Busca */
-    .sp-search {
-      padding: 14px 16px 10px;
-      border-bottom: 1px solid #f1f5f9;
-      background: #fafbfc;
-      flex-shrink: 0;
+    .qs-search-card {
+      background: #fff; border: 1px solid rgba(20,30,40,0.12);
+      border-radius: 10px; padding: 14px 16px 10px; margin-bottom: 14px;
+      box-shadow: 0 2px 12px rgba(20,30,40,0.08);
     }
     .sp-search-box {
-      display: flex; align-items: center;
-      background: #fff;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 0 14px; gap: 8px;
-      transition: all 0.2s;
+      display: flex; align-items: center; background: #f9fafb;
+      border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 0 14px; gap: 8px; transition: all 0.2s;
     }
-    .sp-search-box:focus-within {
-      border-color: #0d7de0;
-      box-shadow: 0 0 0 3px rgba(13,125,224,0.10);
-    }
+    .sp-search-box:focus-within { border-color: #0d7de0; box-shadow: 0 0 0 3px rgba(13,125,224,0.10); background: #fff; }
     .sp-search-box > span { color: #94a3b8; font-size: 15px; flex-shrink: 0; }
     .sp-search-input {
-      flex: 1; border: none; outline: none;
-      background: transparent;
-      padding: 11px 0; font-size: 13.5px;
-      color: #1e293b; font-family: inherit;
+      flex: 1; border: none; outline: none; background: transparent;
+      padding: 11px 0; font-size: 13.5px; color: #1e293b; font-family: inherit;
     }
     .sp-search-input::placeholder { color: #94a3b8; }
-    .sp-search-clear {
-      background: none; border: none; color: #94a3b8;
-      cursor: pointer; font-size: 13px;
-      padding: 3px 5px; border-radius: 4px;
-      display: none; transition: all 0.15s;
-    }
+    .sp-search-clear { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 13px; padding: 3px 5px; border-radius: 4px; display: none; }
     .sp-search-clear:hover { color: #475569; background: #f1f5f9; }
     .sp-results-info { margin-top: 8px; font-size: 11.5px; color: #94a3b8; min-height: 16px; }
 
-    /* Lista */
-    .sp-list {
-      flex: 1; overflow-y: auto;
-      padding: 12px 14px 20px;
-      scrollbar-width: thin;
-      scrollbar-color: #e2e8f0 transparent;
-    }
-    .sp-list::-webkit-scrollbar { width: 4px; }
-    .sp-list::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
-
-    /* Empty */
     .sp-empty {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 50px 20px; color: #94a3b8;
-      text-align: center; gap: 12px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 60px 20px; color: #94a3b8; text-align: center; gap: 12px;
+      background: #fff; border-radius: 10px; border: 1px solid rgba(20,30,40,0.10);
     }
-    .sp-empty-icon {
-      width: 64px; height: 64px;
-      background: #f8fafc;
-      border: 2px dashed #e2e8f0;
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px;
-    }
+    .sp-empty-icon { width: 64px; height: 64px; background: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
     .sp-empty h4 { margin: 0; font-size: 15px; color: #64748b; font-weight: 600; }
     .sp-empty p  { margin: 0; font-size: 13px; }
 
-    /* Card */
     .sp-card {
-      background: #fff;
-      border: 1.5px solid #e8edf5;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
-      position: relative;
-      overflow: hidden;
+      background: #fff; border: 1.5px solid #e8edf5; border-radius: 12px;
+      padding: 16px 18px; margin-bottom: 10px; cursor: pointer;
+      transition: all 0.22s; position: relative; overflow: hidden;
     }
-    .sp-card::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px;
-      background: linear-gradient(180deg, #0d7de0, #0a5fb8);
-      border-radius: 3px 0 0 3px;
-      transform: scaleY(0);
-      transition: transform 0.22s;
-    }
-    .sp-card:hover {
-      border-color: #bfdbfe;
-      box-shadow: 0 4px 20px rgba(13,125,224,0.10);
-      transform: translateX(3px);
-    }
+    .sp-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg,#0d7de0,#0a5fb8); border-radius: 3px 0 0 3px; transform: scaleY(0); transition: transform 0.22s; }
+    .sp-card:hover { border-color: #bfdbfe; box-shadow: 0 4px 20px rgba(13,125,224,0.10); transform: translateX(3px); }
     .sp-card:hover::before { transform: scaleY(1); }
-
-    .sp-card-top {
-      display: flex; align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    .sp-card-num {
-      font-size: 13px; font-weight: 700;
-      color: #0d7de0;
-    }
-    .sp-card-total {
-      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-      color: #065f46; font-size: 12px; font-weight: 700;
-      padding: 3px 10px; border-radius: 20px;
-      border: 1px solid #a7f3d0;
-    }
-
+    .sp-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .sp-card-num { font-size: 13px; font-weight: 700; color: #0d7de0; }
+    .sp-card-total { background: linear-gradient(135deg,#ecfdf5,#d1fae5); color: #065f46; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; border: 1px solid #a7f3d0; }
     .sp-card-parties { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-    .sp-card-party   { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
-    .sp-card-party-label {
-      color: #94a3b8; font-size: 10.5px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px; min-width: 32px;
-    }
-    .sp-card-party-name {
-      color: #1e293b; font-weight: 500;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px;
-    }
-
-    .sp-card-footer {
-      display: flex; align-items: center;
-      justify-content: space-between;
-    }
+    .sp-card-party { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+    .sp-card-party-label { color: #94a3b8; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; min-width: 32px; }
+    .sp-card-party-name { color: #1e293b; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px; }
+    .sp-card-footer { display: flex; align-items: center; justify-content: space-between; }
     .sp-card-date { font-size: 11px; color: #94a3b8; }
     .sp-card-btns { display: flex; gap: 4px; }
-
-    .sp-card-btn {
-      padding: 5px 9px; font-size: 11px; font-weight: 600;
-      border-radius: 6px; border: 1px solid #e2e8f0;
-      background: #f8fafc; color: #475569;
-      cursor: pointer; transition: all 0.15s; font-family: inherit;
-    }
+    .sp-card-btn { padding: 5px 9px; font-size: 11px; font-weight: 600; border-radius: 6px; border: 1px solid #e2e8f0; background: #f8fafc; color: #475569; cursor: pointer; transition: all 0.15s; font-family: inherit; }
     .sp-card-btn:hover { background: #e2e8f0; color: #1e293b; }
-    .sp-card-btn.view  { color: #0d7de0; border-color: #bfdbfe; background: #eff6ff; }
+    .sp-card-btn.view { color: #0d7de0; border-color: #bfdbfe; background: #eff6ff; }
     .sp-card-btn.view:hover { background: #dbeafe; }
-    .sp-card-btn.del   { color: #dc2626; border-color: #fecaca; background: #fff5f5; }
+    .sp-card-btn.del { color: #dc2626; border-color: #fecaca; background: #fff5f5; }
     .sp-card-btn.del:hover { background: #fee2e2; }
 
-    /* Oculta seção antiga */
+    /* ============================================================
+       ITENS DO ORÇAMENTO
+    ============================================================ */
+    .items-wrap { margin-top: 16px; }
+    .items-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    .items-table thead th { font-weight: 600; text-align: left; padding: 12px 10px; color: #6b7278; border-bottom: 2px solid #f3f4f6; font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .items-table td { padding: 12px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+    .items-table input { padding: 9px 12px; font-size: 14px; }
+    .items-table td:nth-child(4) { text-align: right; font-weight: 600; }
+    .items-table .del-item { background: #fee; color: #dc2626; border: 1px solid #fecaca; padding: 6px 10px; border-radius: 5px; cursor: pointer; font-weight: 600; }
+    .items-table .del-item:hover { background: #fecaca; }
+
+    .row-between { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; gap: 16px; flex-wrap: wrap; }
+    .total { font-size: 18px; font-weight: 700; color: #0d7de0; }
+
+    .generate-wrap { margin: 24px 0 32px; }
+    .btn-generate { width: 100%; padding: 16px 24px; border-radius: 10px; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 8px 24px rgba(13,125,224,0.3); }
+    .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(13,125,224,0.4); }
+
+    /* Oculta seção legada */
     .section-quotes-main { display: none !important; }
+    #issuerCancelBtn, #clientCancelBtn, #cancelEditBtn { display: none; }
 
-    /* ---- Analytics expansível ---- */
-    .sp-analytics {
-      background: #f8fafc;
-      border-bottom: 1px solid #e8edf5;
-      flex-shrink: 0;
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height 0.42s cubic-bezier(0.4,0,0.2,1);
+    /* ============================================================
+       MODAL
+    ============================================================ */
+    .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); z-index: 1000; padding: 20px; }
+    .modal.hidden { display: none; }
+    .modal-box { width: 100%; max-width: 900px; max-height: 90vh; overflow-y: auto; background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; }
+    .modal-close { position: absolute; right: 16px; top: 16px; border: none; background: #f3f4f6; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .modal-close:hover { background: #e5e7eb; }
+    .modal-actions { margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer { text-align: center; color: #6b7278; padding: 24px 16px; font-size: 14px; border-top: 1px solid rgba(20,30,40,0.10); margin-top: 40px; }
+
+    /* ============================================================
+       RESPONSIVO
+    ============================================================ */
+    @media (max-width: 960px) {
+      .sidebar { width: 64px; min-width: 64px; }
+      .sidebar-btn span:not(.nav-icon) { display: none; }
+      .sidebar-section-label { display: none; }
+      .sidebar-btn { justify-content: center; padding: 10px; }
+      .main-content { margin-left: 64px; }
+      .two-col-forms, .cadastro-grid { grid-template-columns: 1fr; }
+      .quotes-layout { grid-template-columns: 1fr; }
     }
-    .sp-analytics.open { max-height: 700px; overflow-y: auto; }
-    .sp-analytics-inner { padding: 14px 16px 16px; }
-
-    .sp-analytics-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
-    .sp-tab-btn {
-      flex: 1; padding: 7px 4px;
-      border: 1.5px solid #e2e8f0; border-radius: 8px;
-      background: #fff; color: #64748b;
-      font-size: 11px; font-weight: 600;
-      cursor: pointer; transition: all 0.18s;
-      font-family: inherit; text-align: center;
-    }
-    .sp-tab-btn.active { background: #0d7de0; color: #fff; border-color: #0d7de0; box-shadow: 0 2px 8px rgba(13,125,224,0.25); }
-    .sp-tab-btn:hover:not(.active) { border-color: #0d7de0; color: #0d7de0; }
-    .sp-tab-pane { display: none; }
-    .sp-tab-pane.active { display: block; }
-
-    .sp-rank-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 10px; background: #fff;
-      border: 1px solid #e8edf5; border-radius: 8px; margin-bottom: 6px;
-      transition: all 0.15s;
-    }
-    .sp-rank-row:hover { border-color: #bfdbfe; box-shadow: 0 2px 8px rgba(13,125,224,0.08); }
-    .sp-rank-pos {
-      width: 22px; height: 22px; border-radius: 50%;
-      background: linear-gradient(135deg,#0d7de0,#0a5fb8);
-      color:#fff; font-size:10px; font-weight:700;
-      display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    }
-    .sp-rank-pos.gold   { background: linear-gradient(135deg,#f59e0b,#d97706); }
-    .sp-rank-pos.silver { background: linear-gradient(135deg,#94a3b8,#64748b); }
-    .sp-rank-pos.bronze { background: linear-gradient(135deg,#d97706,#92400e); }
-    .sp-rank-info { flex: 1; min-width: 0; }
-    .sp-rank-name { font-size:12.5px; font-weight:600; color:#1e293b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .sp-rank-sub  { font-size:11px; color:#94a3b8; margin-top:1px; }
-    .sp-rank-right { text-align:right; flex-shrink:0; }
-    .sp-rank-val   { font-size:12px; font-weight:700; color:#059669; }
-    .sp-rank-count { font-size:10.5px; color:#94a3b8; background:#f1f5f9; border-radius:20px; padding:1px 7px; display:inline-block; margin-top:2px; }
-
-    /* Clientes do emissor / emissores do cliente — sub-lista colapsável */
-    .sp-rank-detail { display:none; padding: 6px 0 2px 32px; }
-    .sp-rank-detail.open { display:block; }
-    .sp-rank-detail-row { font-size:11.5px; color:#475569; padding: 4px 8px; border-left:2px solid #bfdbfe; margin-bottom:3px; display:flex; justify-content:space-between; }
-    .sp-rank-detail-row span:last-child { color:#059669; font-weight:600; }
-    .sp-rank-toggle { cursor:pointer; font-size:10px; color:#0d7de0; margin-left:6px; user-select:none; }
-
-    .sp-analytics-toggle {
-      width:100%; padding:9px 16px;
-      background: rgba(255,255,255,0.08);
-      border: none; border-top: 1px solid rgba(255,255,255,0.10);
-      color: rgba(200,225,255,0.85);
-      font-size:11.5px; font-weight:600;
-      cursor:pointer; font-family:inherit;
-      display:flex; align-items:center; justify-content:center; gap:6px;
-      transition: background 0.2s; position:relative; z-index:1;
-    }
-    .sp-analytics-toggle:hover { background: rgba(255,255,255,0.15); }
-    .sp-analytics-toggle .toggle-arrow { transition: transform 0.3s; font-size:10px; }
-    .sp-analytics-toggle.open .toggle-arrow { transform: rotate(180deg); }
-
-    /* Ticket médio extra stat */
-    .sp-stat-value { color:#fff; font-size:18px; font-weight:700; margin-bottom:3px; }
-
-    /* ---- Analytics — no novo layout ocupa a coluna esquerda inteira ---- */
-    .sp-analytics {
-      background: #f8fafc;
-      border-top: 1px solid #e8edf5;
-      flex-shrink: 0;
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height 0.42s cubic-bezier(0.4,0,0.2,1);
-    }
-    .sp-analytics.open { max-height: 9999px; overflow-y: auto; }
-
-    @media (max-width: 768px) {
-      .sp-body { flex-direction: column; }
-      .sp-left { width: 100%; min-width: unset; border-right: none; border-bottom: 1px solid #e8edf5; }
+    @media (max-width: 600px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .form-grid { grid-template-columns: 1fr; }
+      .screen { padding: 16px 12px 40px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TELA DE ORÇAMENTOS SALVOS -->
-  <div id="quotesScreen">
-    <div class="qs-hero">
-      <div class="qs-hero-inner">
-        <button class="qs-back-btn" id="qsBackBtn">← Voltar ao início</button>
-        <div class="qs-hero-title">
-          <div class="qs-hero-icon">💼</div>
-          <h1>Orçamentos Salvos</h1>
-        </div>
-        <p class="qs-hero-sub">Gerencie todos os seus orçamentos</p>
-        <div class="qs-stats">
-          <div class="qs-stat">
-            <div class="qs-stat-value" id="spStatTotal">0</div>
-            <div class="qs-stat-label">Total gerados</div>
-          </div>
-          <div class="qs-stat">
-            <div class="qs-stat-value" id="spStatValue">R$ 0,00</div>
-            <div class="qs-stat-label">Valor acumulado</div>
-          </div>
-        </div>
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="header-row">
+      <div class="brand">
+        <div class="logo">SoftPrime</div>
+        <div class="site-title">Gerador de Orçamentos</div>
+      </div>
+      <div class="header-actions">
+        <!-- Botão de perfil clicável -->
+        <button class="profile-btn" id="profileBtn" title="Meu Perfil">
+          <div class="profile-avatar" id="profileAvatar">?</div>
+          <span id="userName"></span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="opacity:0.5;flex-shrink:0;">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button id="logoutBtn" class="btn btn-ghost">🚪 Sair</button>
       </div>
     </div>
+  </header>
 
-    <div class="qs-body">
-      <!-- Sidebar de filtros -->
-      <div class="qs-sidebar">
-        <div class="qs-sidebar-card">
-          <div class="qs-sidebar-title">🏢 Filtrar por Emissor</div>
-          <div class="sp-filter-chips" id="spIssuerChips"></div>
+  <!-- ========== APP LAYOUT ========== -->
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-nav">
+        <div class="sidebar-section-label">Menu</div>
+
+        <button class="sidebar-btn active" id="navHome" onclick="showScreen('home')">
+          <span class="nav-icon">🏠</span>
+          <span>Início</span>
+        </button>
+
+        <button class="sidebar-btn" id="navCadastro" onclick="showScreen('cadastro')">
+          <span class="nav-icon">📋</span>
+          <span>Cadastro</span>
+        </button>
+
+        <button class="sidebar-btn" id="navOrcamentos" onclick="showScreen('orcamentos')">
+          <span class="nav-icon">💼</span>
+          <span>Orçamentos Salvos</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- CONTEÚDO -->
+    <div class="main-content">
+
+      <!-- ====================================================
+           TELA: INÍCIO
+      ==================================================== -->
+      <div id="screenHome" class="screen active">
+
+        <!-- Card: Novo Orçamento -->
+        <div class="card">
+          <h4>💼 Novo Orçamento</h4>
+          <div class="form-grid" style="margin-bottom:20px;">
+            <div>
+              <label for="selectIssuer" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Emissor *</label>
+              <select id="selectIssuer" required><option value="">-- selecione o emissor --</option></select>
+            </div>
+            <div>
+              <label for="selectClient" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Cliente *</label>
+              <select id="selectClient" required><option value="">-- selecione o cliente --</option></select>
+            </div>
+          </div>
+          <div class="form-grid" style="margin-bottom:20px;padding:16px;background:#f9fafb;border-radius:8px;">
+            <div>
+              <label for="quoteNumber" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Número do Orçamento</label>
+              <input id="quoteNumber" placeholder="Gerado automaticamente" readonly />
+            </div>
+            <div>
+              <label for="quoteDate" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Data</label>
+              <input id="quoteDate" placeholder="Data atual" readonly />
+            </div>
+          </div>
+          <div class="items-wrap">
+            <h4 style="margin-bottom:12px;">📋 Itens do Orçamento</h4>
+            <div style="overflow-x:auto;">
+              <table class="items-table" id="itemsTable">
+                <thead><tr>
+                  <th style="width:50%">Descrição</th>
+                  <th style="width:12%">Qtd</th>
+                  <th style="width:16%">Unit. (R$)</th>
+                  <th style="width:16%">Total (R$)</th>
+                  <th style="width:6%"></th>
+                </tr></thead>
+                <tbody id="itemsBody"></tbody>
+              </table>
+            </div>
+            <div class="row-between" style="margin-top:16px;">
+              <button id="addItemBtn" class="btn" style="border-color:#d1e7ff;color:#0d7de0;background:#f0f7ff;">+ Adicionar Item</button>
+              <div class="total">Total: R$ <strong><span id="grandTotal">0.00</span></strong></div>
+            </div>
+          </div>
+          <div style="margin-top:20px;">
+            <label for="notes" style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#4b5563;">📌 Observações (opcional)</label>
+            <textarea id="notes" rows="4" placeholder="Adicione observações, condições de pagamento, prazo de validade, etc."></textarea>
+          </div>
         </div>
-        <div class="qs-sidebar-card">
-          <div class="qs-sidebar-title">👤 Filtrar por Cliente</div>
-          <div class="sp-filter-chips" id="spClientChips"></div>
+
+        <div class="generate-wrap">
+          <button id="saveQuoteBtn" class="btn btn-primary btn-generate">📄 Gerar Orçamento</button>
+          <button id="cancelEditBtn" class="btn btn-outline" style="width:100%;margin-top:12px;">Cancelar Edição</button>
         </div>
-        <button class="sp-filter-clear" id="spFilterClear" style="display:none;">✕ Limpar filtros</button>
+
+        <!-- Seção oculta — mantida para compatibilidade com app.js -->
+        <section class="card section-quotes-main">
+          <ul id="quotesList" class="list"></ul>
+          <input type="text" id="quotesSearch" style="display:none;" />
+          <button id="clearSearch" style="display:none;"></button>
+          <div id="filterResultsCount" style="display:none;"></div>
+        </section>
       </div>
 
-      <!-- Conteúdo principal: busca + lista -->
-      <div class="qs-main">
-        <div style="background:#fff;border:1px solid rgba(20,30,40,0.12);border-radius:10px;padding:14px 16px;margin-bottom:16px;box-shadow:0 2px 12px rgba(20,30,40,0.08);">
-          <div class="sp-search-box">
-            <span>🔍</span>
-            <input type="text" class="sp-search-input" id="spSearch" placeholder="Pesquisar por número, cliente, emissor..." autocomplete="off" />
-            <button class="sp-search-clear" id="spClear">✕</button>
+      <!-- ====================================================
+           TELA: CADASTRO
+      ==================================================== -->
+      <div id="screenCadastro" class="screen">
+        <div class="screen-hero">
+          <h2>📋 Cadastro</h2>
+          <p>Gerencie seus emissores e clientes cadastrados</p>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-value" id="totalIssuers">0</div>
+              <div class="hero-stat-label">Emissores</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-value" id="totalClients">0</div>
+              <div class="hero-stat-label">Clientes</div>
+            </div>
           </div>
-          <div class="sp-results-info" id="spResultsInfo"></div>
         </div>
-        <div id="spList">
-          <div class="sp-empty">
-            <div class="sp-empty-icon">📭</div>
-            <h4>Nenhum orçamento ainda</h4>
-            <p>Crie seu primeiro orçamento acima</p>
+
+        <div class="cadastro-grid">
+          <!-- Coluna Emissor: form + lista -->
+          <div>
+            <!-- Logo do Emissor -->
+            <div class="card" style="margin-bottom:16px;">
+              <h4>🖼️ Logotipo do Emissor</h4>
+              <div class="logo-section" style="margin-top:8px;">
+                <label for="issuerLogo" style="font-size:13px;color:#6b7280;">Imagem até 4mb (PNG, JPG)</label>
+                <input type="file" id="issuerLogo" accept="image/*" aria-label="Logotipo do emissor" style="margin-top:8px;" />
+                <div id="issuerLogoPreview" style="margin-top:10px;display:none;">
+                  <img id="issuerLogoImg" src="" alt="Logo preview" style="max-height:80px;max-width:200px;border-radius:6px;border:1px solid #e5e7eb;padding:4px;" />
+                  <button type="button" id="removeLogoBtn" style="margin-left:10px;color:#dc2626;background:none;border:none;cursor:pointer;font-size:13px;">✕ Remover</button>
+                </div>
+              </div>
+            </div>
+            <!-- Form Emissor -->
+            <div class="card" style="margin-bottom:16px;">
+              <h4>📝 Dados do Emissor</h4>
+              <form id="issuerForm" class="form-grid" autocomplete="off" style="margin-top:12px;">
+                <div class="full"><input id="issuerName" placeholder="Nome / Razão social *" required aria-label="Nome do emissor" /></div>
+                <div><input id="issuerCnpjCpf" placeholder="CPF / CNPJ" aria-label="CPF ou CNPJ do emissor" /></div>
+                <div><input id="issuerPhone" placeholder="Telefone" type="tel" aria-label="Telefone do emissor" /></div>
+                <div class="full"><textarea id="issuerAddress" placeholder="Endereço completo" rows="2" aria-label="Endereço do emissor"></textarea></div>
+                <div class="form-actions">
+                  <button id="issuerSubmitBtn" class="btn btn-primary" type="submit">Adicionar Emissor</button>
+                  <button id="issuerCancelBtn" class="btn btn-outline" type="button">Cancelar</button>
+                </div>
+              </form>
+            </div>
+            <!-- Lista Emissores -->
+            <div class="card" style="margin-bottom:0;">
+              <h4>🏢 Emissores Cadastrados</h4>
+              <ul id="issuerList" class="list"></ul>
+            </div>
+          </div>
+
+          <!-- Coluna Cliente: form + lista -->
+          <div>
+            <!-- Form Cliente -->
+            <div class="card" style="margin-bottom:16px;">
+              <h4>👤 Dados do Cliente</h4>
+              <form id="clientForm" class="form-grid" autocomplete="off" style="margin-top:12px;">
+                <div class="full"><input id="clientName" placeholder="Nome / Empresa *" required aria-label="Nome do cliente" /></div>
+                <div><input id="clientCnpjCpf" placeholder="CPF / CNPJ" aria-label="CPF ou CNPJ do cliente" /></div>
+                <div><input id="clientPhone" placeholder="Telefone" type="tel" aria-label="Telefone do cliente" /></div>
+                <div class="full"><textarea id="clientAddress" placeholder="Endereço completo" rows="2" aria-label="Endereço do cliente"></textarea></div>
+                <div class="form-actions">
+                  <button id="clientSubmitBtn" class="btn btn-primary" type="submit">Adicionar Cliente</button>
+                  <button id="clientCancelBtn" class="btn btn-outline" type="button">Cancelar</button>
+                </div>
+              </form>
+            </div>
+            <!-- Lista Clientes -->
+            <div class="card" style="margin-bottom:0;">
+              <h4>👤 Clientes Cadastrados</h4>
+              <ul id="clientList" class="list"></ul>
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- ====================================================
+           TELA: ORÇAMENTOS SALVOS
+      ==================================================== -->
+      <div id="screenOrcamentos" class="screen">
+        <div class="screen-hero">
+          <h2>💼 Orçamentos Salvos</h2>
+          <p>Gerencie todos os seus orçamentos</p>
+        </div>
+
+        <div class="quotes-layout">
+          <!-- Sidebar filtros -->
+          <div>
+            <div class="qs-filters-card">
+              <div class="qs-filter-title">🏢 Filtrar por Emissor</div>
+              <div class="sp-filter-chips" id="spIssuerChips"></div>
+            </div>
+            <div class="qs-filters-card">
+              <div class="qs-filter-title">👤 Filtrar por Cliente</div>
+              <div class="sp-filter-chips" id="spClientChips"></div>
+            </div>
+            <button class="sp-filter-clear" id="spFilterClear" style="display:none;">✕ Limpar filtros</button>
+          </div>
+
+          <!-- Lista -->
+          <div>
+            <div class="qs-search-card">
+              <div class="sp-search-box">
+                <span>🔍</span>
+                <input type="text" class="sp-search-input" id="spSearch" placeholder="Pesquisar por número, cliente, emissor, valor (ex: 250)..." autocomplete="off" />
+                <button class="sp-search-clear" id="spClear">✕</button>
+              </div>
+              <div class="sp-results-info" id="spResultsInfo"></div>
+            </div>
+            <div id="spList">
+              <div class="sp-empty">
+                <div class="sp-empty-icon">📭</div>
+                <h4>Nenhum orçamento ainda</h4>
+                <p>Crie seu primeiro orçamento na tela Início</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>© 2026 Desenvolvido por <strong>SoftPrime</strong> - Todos os direitos reservados</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ========== MODAL DE PERFIL ========== -->
+  <div id="profileModal" class="modal hidden" role="dialog" aria-label="Meu Perfil">
+    <div class="modal-box" style="max-width:460px;">
+      <button class="modal-close" id="closeProfileModal">×</button>
+
+      <!-- Header do perfil -->
+      <div style="text-align:center;padding:10px 0 24px;">
+        <div id="profileModalAvatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#0d7de0,#0a5fb8);color:#fff;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 4px 16px rgba(13,125,224,0.35);">?</div>
+        <div id="profileModalName" style="font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:4px;">Carregando...</div>
+        <div id="profileModalEmail" style="font-size:13px;color:#6b7278;"></div>
+      </div>
+
+      <!-- Divider -->
+      <div style="border-top:1px solid #f1f5f9;margin-bottom:24px;"></div>
+
+      <!-- Seção: Alterar Nome de Usuário -->
+      <div style="margin-bottom:24px;">
+        <h4 style="font-size:14px;font-weight:700;color:#374151;margin:0 0 12px;display:flex;align-items:center;gap:8px;">
+          ✏️ Alterar Nome de Usuário
+        </h4>
+        <div style="display:flex;gap:10px;">
+          <input type="text" id="newUsernameInput" placeholder="Novo nome de usuário" style="flex:1;" />
+          <button class="btn btn-primary" id="saveUsernameBtn" style="white-space:nowrap;padding:10px 16px;">Salvar</button>
+        </div>
+        <div id="usernameMsg" style="margin-top:8px;font-size:13px;display:none;padding:8px 12px;border-radius:6px;"></div>
+      </div>
+
+      <!-- Divider -->
+      <div style="border-top:1px solid #f1f5f9;margin-bottom:24px;"></div>
+
+      <!-- Seção: Alterar Senha -->
+      <div style="margin-bottom:8px;">
+        <h4 style="font-size:14px;font-weight:700;color:#374151;margin:0 0 12px;display:flex;align-items:center;gap:8px;">
+          🔑 Alterar Senha
+        </h4>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="position:relative;">
+            <input type="password" id="newPasswordInput" placeholder="Nova senha (mínimo 6 caracteres)" style="width:100%;padding-right:44px;" />
+            <button type="button" class="pwd-toggle" onclick="togglePwd('newPasswordInput',this)" title="Mostrar/ocultar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div style="position:relative;">
+            <input type="password" id="confirmPasswordInput" placeholder="Confirmar nova senha" style="width:100%;padding-right:44px;" />
+            <button type="button" class="pwd-toggle" onclick="togglePwd('confirmPasswordInput',this)" title="Mostrar/ocultar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <button class="btn btn-primary" id="savePasswordBtn" style="width:100%;padding:12px;">🔒 Alterar Senha</button>
+        </div>
+        <div id="passwordMsg" style="margin-top:10px;font-size:13px;display:none;padding:8px 12px;border-radius:6px;"></div>
       </div>
     </div>
   </div>
 
-  <!-- APLICAÇÃO PRINCIPAL -->
-  <div id="appScreen">
-    <header class="header">
-      <div class="header-row">
-        <div class="brand">
-          <div class="logo">SoftPrime</div>
-          <div class="site-title">Gerador de Orçamentos</div>
-        </div>
-        <div class="header-center">
-          <button class="sidebar-fab" id="sidebarFab" title="Orçamentos Salvos" aria-label="Abrir orçamentos salvos">
-            <span class="sidebar-fab-label">Orçamentos Salvos</span>
-            <span class="sidebar-fab-badge" id="fabBadge"></span>
-          </button>
-        </div>
-        <div class="header-actions">
-          <span id="userName"></span>
-          <button id="logoutBtn" class="btn btn-ghost">🚪 Sair</button>
-        </div>
-      </div>
-    </header>
 
-    <main class="wrap">
-      <section class="card">
-        <div class="logo-section">
-          <label for="issuerLogo">🖼️ Logotipo do Emissor (imagem até 4mb)</label>
-          <input type="file" id="issuerLogo" accept="image/*" aria-label="Logotipo do emissor" />
-          <div id="issuerLogoPreview" style="margin-top:10px;display:none;">
-            <img id="issuerLogoImg" src="" alt="Logo preview" style="max-height:80px;max-width:200px;border-radius:6px;border:1px solid #e5e7eb;padding:4px;" />
-            <button type="button" id="removeLogoBtn" style="margin-left:10px;color:#dc2626;background:none;border:none;cursor:pointer;font-size:13px;">✕ Remover</button>
-          </div>
-        </div>
-
-        <div class="two-col">
-          <div>
-            <h4>📝 Dados do Emissor</h4>
-            <form id="issuerForm" class="form-grid" autocomplete="off">
-              <div class="full"><input id="issuerName" placeholder="Nome / Razão social *" required aria-label="Nome do emissor" /></div>
-              <div class="half"><input id="issuerCnpjCpf" placeholder="CPF / CNPJ" aria-label="CPF ou CNPJ do emissor" /></div>
-              <div class="half"><input id="issuerPhone" placeholder="Telefone" type="tel" aria-label="Telefone do emissor" /></div>
-              <div class="full"><textarea id="issuerAddress" placeholder="Endereço completo" rows="2" aria-label="Endereço do emissor"></textarea></div>
-              <div class="form-actions">
-                <button id="issuerSubmitBtn" class="btn btn-primary full" type="submit">Adicionar Emissor</button>
-                <button id="issuerCancelBtn" class="btn btn-outline full" type="button">Cancelar</button>
-              </div>
-            </form>
-            <div style="margin-top:20px;"><ul id="issuerList" class="list"></ul></div>
-          </div>
-          <div>
-            <h4>👤 Dados do Cliente</h4>
-            <form id="clientForm" class="form-grid" autocomplete="off">
-              <div class="full"><input id="clientName" placeholder="Nome / Empresa *" required aria-label="Nome do cliente" /></div>
-              <div class="half"><input id="clientCnpjCpf" placeholder="CPF / CNPJ" aria-label="CPF ou CNPJ do cliente" /></div>
-              <div class="half"><input id="clientPhone" placeholder="Telefone" type="tel" aria-label="Telefone do cliente" /></div>
-              <div class="full"><textarea id="clientAddress" placeholder="Endereço completo" rows="2" aria-label="Endereço do cliente"></textarea></div>
-              <div class="form-actions">
-                <button id="clientSubmitBtn" class="btn btn-primary full" type="submit">Adicionar Cliente</button>
-                <button id="clientCancelBtn" class="btn btn-outline full" type="button">Cancelar</button>
-              </div>
-            </form>
-            <div style="margin-top:20px;"><ul id="clientList" class="list"></ul></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
-        <h4>💼 Novo Orçamento</h4>
-        <div class="form-grid" style="margin-bottom:20px;">
-          <div>
-            <label for="selectIssuer" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Emissor *</label>
-            <select id="selectIssuer" required><option value="">-- selecione o emissor --</option></select>
-          </div>
-          <div>
-            <label for="selectClient" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Cliente *</label>
-            <select id="selectClient" required><option value="">-- selecione o cliente --</option></select>
-          </div>
-        </div>
-        <div class="form-grid" style="margin-bottom:20px;padding:16px;background:#f9fafb;border-radius:8px;">
-          <div>
-            <label for="quoteNumber" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Número do Orçamento</label>
-            <input id="quoteNumber" placeholder="Gerado automaticamente" readonly />
-          </div>
-          <div>
-            <label for="quoteDate" style="display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:#4b5563;">Data</label>
-            <input id="quoteDate" placeholder="Data atual" readonly />
-          </div>
-        </div>
-        <div class="items-wrap">
-          <h4 style="margin-bottom:12px;">📋 Itens do Orçamento</h4>
-          <div style="overflow-x:auto;">
-            <table class="items-table" id="itemsTable">
-              <thead><tr>
-                <th style="width:50%">Descrição</th>
-                <th style="width:12%">Qtd</th>
-                <th style="width:16%">Unit. (R$)</th>
-                <th style="width:16%">Total (R$)</th>
-                <th style="width:6%"></th>
-              </tr></thead>
-              <tbody id="itemsBody"></tbody>
-            </table>
-          </div>
-          <div class="row-between" style="margin-top:16px;">
-            <button id="addItemBtn" class="btn btn-add">+ Adicionar Item</button>
-            <div class="total">Total: R$ <strong><span id="grandTotal">0.00</span></strong></div>
-          </div>
-        </div>
-        <div style="margin-top:20px;">
-          <label for="notes" style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#4b5563;">📌 Observações (opcional)</label>
-          <textarea id="notes" rows="4" placeholder="Adicione observações, condições de pagamento, prazo de validade, etc."></textarea>
-        </div>
-      </section>
-
-      <div class="generate-wrap">
-        <button id="saveQuoteBtn" class="btn btn-primary btn-generate">📄 Gerar Orçamento</button>
-        <button id="cancelEditBtn" class="btn btn-outline" style="width:100%;margin-top:12px;">Cancelar Edição</button>
-      </div>
-
-      <!-- Seção oculta — mantida para compatibilidade com app.js -->
-      <section class="card section-quotes-main">
-        <ul id="quotesList" class="list"></ul>
-        <input type="text" id="quotesSearch" style="display:none;" />
-        <button id="clearSearch" style="display:none;"></button>
-        <div id="filterResultsCount" style="display:none;"></div>
-      </section>
-    </main>
-
-    <div id="previewModal" class="modal hidden" role="dialog">
-      <div class="modal-box">
-        <button id="closePreview" class="modal-close">×</button>
-        <h3 style="margin-bottom:20px;font-size:20px;">Visualização do Orçamento</h3>
-        <div id="previewArea" style="border:1px solid #e5e7eb;padding:20px;border-radius:8px;background:#fff;"></div>
-        <div class="modal-actions">
-          <button id="printBtn" class="btn btn-primary">🖨️ Imprimir / Salvar PDF</button>
-        </div>
+  <div id="previewModal" class="modal hidden" role="dialog">
+    <div class="modal-box">
+      <button id="closePreview" class="modal-close">×</button>
+      <h3 style="margin-bottom:20px;font-size:20px;">Visualização do Orçamento</h3>
+      <div id="previewArea" style="border:1px solid #e5e7eb;padding:20px;border-radius:8px;background:#fff;"></div>
+      <div class="modal-actions">
+        <button id="printBtn" class="btn btn-primary">🖨️ Imprimir / Salvar PDF</button>
       </div>
     </div>
-
-    <footer class="footer">
-      <p>© 2026 Desenvolvido por <strong>SoftPrime</strong> - Todos os direitos reservados</p>
-    </footer>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script src="auth.js"></script>
+
   <script>
     window.addEventListener('DOMContentLoaded', async () => {
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -773,22 +692,74 @@
       }
     });
   </script>
-  <script src="app.js"></script>
-  <script>
-    // ===== NAVEGAÇÃO ENTRE TELAS (SPA) =====
-    const appScreen    = document.getElementById('appScreen');
-    const quotesScreen = document.getElementById('quotesScreen');
-    const spFab        = document.getElementById('sidebarFab');
-    const qsBackBtn    = document.getElementById('qsBackBtn');
-    const fabBadge     = document.getElementById('fabBadge');
 
-    // Elementos do painel de orçamentos
-    const spSearch  = document.getElementById('spSearch');
-    const spClear   = document.getElementById('spClear');
-    const spList    = document.getElementById('spList');
-    const spInfo    = document.getElementById('spResultsInfo');
-    const spStatTotal = document.getElementById('spStatTotal');
-    const spStatValue = document.getElementById('spStatValue');
+  <script src="app.js"></script>
+
+  <script>
+    // ===================================================
+    // NAVEGAÇÃO SPA
+    // ===================================================
+    function showScreen(name) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+
+      const id = 'screen' + name.charAt(0).toUpperCase() + name.slice(1);
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+
+      const navId = 'nav' + name.charAt(0).toUpperCase() + name.slice(1);
+      const navEl = document.getElementById(navId);
+      if (navEl) navEl.classList.add('active');
+
+      window.scrollTo(0, 0);
+
+      if (name === 'orcamentos') renderPanel();
+      if (name === 'cadastro')   renderCadastroStats();
+    }
+
+    // ===================================================
+    // ESTATÍSTICAS DO CADASTRO
+    // ===================================================
+    function renderCadastroStats() {
+      if (typeof store === 'undefined') return;
+      const ti = document.getElementById('totalIssuers');
+      const tc = document.getElementById('totalClients');
+      if (ti) ti.textContent = (store.issuers || []).length;
+      if (tc) tc.textContent = (store.clients || []).length;
+    }
+
+    // Após adicionar emissor ou cliente, atualiza stats
+    document.addEventListener('click', e => {
+      if (e.target && (e.target.id === 'issuerSubmitBtn' || e.target.id === 'clientSubmitBtn')) {
+        setTimeout(renderCadastroStats, 300);
+      }
+    });
+
+    // Ao clicar em Editar emissor ou cliente: garante que a tela Cadastro está ativa
+    // e depois faz scroll até o formulário correspondente
+    document.addEventListener('click', e => {
+      const btn = e.target.closest ? e.target.closest('.edit-issuer, .edit-client') : null;
+      if (!btn) return;
+      const isCadastroActive = document.getElementById('screenCadastro')?.classList.contains('active');
+      if (!isCadastroActive) {
+        showScreen('cadastro');
+      }
+      // Scroll suave até o formulário após breve delay
+      setTimeout(() => {
+        const formEl = btn.classList.contains('edit-issuer')
+          ? document.getElementById('issuerForm')
+          : document.getElementById('clientForm');
+        if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 150);
+    }, true); // capture phase — roda antes do listener do app.js
+
+    // ===================================================
+    // ORÇAMENTOS SALVOS
+    // ===================================================
+    const spSearch       = document.getElementById('spSearch');
+    const spClear        = document.getElementById('spClear');
+    const spList         = document.getElementById('spList');
+    const spInfo         = document.getElementById('spResultsInfo');
     const spIssuerChips  = document.getElementById('spIssuerChips');
     const spClientChips  = document.getElementById('spClientChips');
     const spFilterClear  = document.getElementById('spFilterClear');
@@ -796,35 +767,10 @@
     let spQuery = '';
     let activeIssuerId = null;
     let activeClientId = null;
-    let onQuotesScreen = false;
 
     function norm(s) { return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
     function fmtDate(iso) { return iso ? new Date(iso).toLocaleDateString('pt-BR') : ''; }
     function fmtMoney(v) { return 'R$ ' + Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-
-    function showQuotesScreen() {
-      onQuotesScreen = true;
-      appScreen.style.display = 'none';
-      quotesScreen.classList.add('active');
-      spFab.classList.add('active');
-      window.scrollTo(0, 0);
-      renderPanel();
-    }
-
-    function showAppScreen() {
-      onQuotesScreen = false;
-      appScreen.style.display = '';
-      quotesScreen.classList.remove('active');
-      spFab.classList.remove('active');
-      window.scrollTo(0, 0);
-    }
-
-    spFab.addEventListener('click', () => {
-      if (onQuotesScreen) showAppScreen();
-      else showQuotesScreen();
-    });
-
-    if (qsBackBtn) qsBackBtn.addEventListener('click', showAppScreen);
 
     spSearch.addEventListener('input', () => {
       spQuery = spSearch.value;
@@ -836,92 +782,69 @@
       spClear.style.display = 'none';
       renderList();
     });
-
     if (spFilterClear) {
       spFilterClear.addEventListener('click', () => {
-        activeIssuerId = null;
-        activeClientId = null;
+        activeIssuerId = null; activeClientId = null;
         document.querySelectorAll('.sp-chip').forEach(c => c.classList.remove('active'));
         spFilterClear.style.display = 'none';
         renderList();
       });
     }
 
-    // ---- Chips de filtro ----
     function renderFilterChips() {
       if (!spIssuerChips || !spClientChips || typeof store === 'undefined') return;
-
-      const issuerCounts = {};
-      const clientCounts = {};
-      (store.quotes||[]).forEach(q => {
-        issuerCounts[q.issuerId] = (issuerCounts[q.issuerId]||0)+1;
-        clientCounts[q.clientId] = (clientCounts[q.clientId]||0)+1;
-      });
+      const ic = {}, cc = {};
+      (store.quotes||[]).forEach(q => { ic[q.issuerId]=(ic[q.issuerId]||0)+1; cc[q.clientId]=(cc[q.clientId]||0)+1; });
 
       spIssuerChips.innerHTML = '';
       (store.issuers||[]).forEach(iss => {
-        const count = issuerCounts[iss.id] || 0;
-        if (!count) return;
+        if (!ic[iss.id]) return;
         const chip = document.createElement('button');
         chip.className = 'sp-chip' + (activeIssuerId === iss.id ? ' active' : '');
-        chip.textContent = `${iss.name} (${count})`;
-        chip.addEventListener('click', () => {
-          activeIssuerId = activeIssuerId === iss.id ? null : iss.id;
-          renderFilterChips();
-          renderList();
-        });
+        chip.textContent = `${iss.name} (${ic[iss.id]})`;
+        chip.addEventListener('click', () => { activeIssuerId = activeIssuerId === iss.id ? null : iss.id; renderFilterChips(); renderList(); });
         spIssuerChips.appendChild(chip);
       });
 
       spClientChips.innerHTML = '';
       (store.clients||[]).forEach(cli => {
-        const count = clientCounts[cli.id] || 0;
-        if (!count) return;
+        if (!cc[cli.id]) return;
         const chip = document.createElement('button');
         chip.className = 'sp-chip' + (activeClientId === cli.id ? ' active' : '');
-        chip.textContent = `${cli.name} (${count})`;
-        chip.addEventListener('click', () => {
-          activeClientId = activeClientId === cli.id ? null : cli.id;
-          renderFilterChips();
-          renderList();
-        });
+        chip.textContent = `${cli.name} (${cc[cli.id]})`;
+        chip.addEventListener('click', () => { activeClientId = activeClientId === cli.id ? null : cli.id; renderFilterChips(); renderList(); });
         spClientChips.appendChild(chip);
       });
 
-      const hasFilter = activeIssuerId || activeClientId;
-      if (spFilterClear) spFilterClear.style.display = hasFilter ? 'inline-block' : 'none';
+      if (spFilterClear) spFilterClear.style.display = (activeIssuerId||activeClientId) ? 'block' : 'none';
     }
 
-    // ---- Lista de orçamentos ----
     function renderList() {
       if (typeof store === 'undefined') return;
-      const all = (store.quotes || []).slice().reverse();
+      const all = (store.quotes||[]).slice().reverse();
       const total = all.length;
-
       const q = norm(spQuery);
+
       let filtered = all.filter(qt => {
         if (activeIssuerId && qt.issuerId !== activeIssuerId) return false;
         if (activeClientId && qt.clientId !== activeClientId) return false;
         if (q) {
           const iss = (store.issuers||[]).find(i=>i.id===qt.issuerId)||{};
           const cli = (store.clients||[]).find(c=>c.id===qt.clientId)||{};
-          return [qt.numero||'', iss.name||'', cli.name||'', fmtDate(qt.createdAt)]
+          const totalStr = Number(qt.total||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+          return [qt.numero||'', iss.name||'', cli.name||'', fmtDate(qt.createdAt), totalStr, String(qt.total||'')]
             .some(f => norm(f).includes(q));
         }
         return true;
       });
 
-      const activeFilters = (activeIssuerId||activeClientId||q);
-      spInfo.textContent = activeFilters && filtered.length !== total
+      const af = activeIssuerId || activeClientId || q;
+      spInfo.textContent = af && filtered.length !== total
         ? (filtered.length === 0 ? 'Nenhum resultado' : `${filtered.length} de ${total} orçamentos`)
         : (total > 0 ? `${total} orçamento${total!==1?'s':''}` : '');
 
       if (filtered.length === 0) {
-        spList.innerHTML = `<div class="sp-empty">
-          <div class="sp-empty-icon">${activeFilters ? '🔍' : '📭'}</div>
-          <h4>${activeFilters ? 'Nenhum resultado' : 'Nenhum orçamento ainda'}</h4>
-          <p>${activeFilters ? 'Tente outros filtros' : 'Crie seu primeiro orçamento'}</p>
-        </div>`;
+        spList.innerHTML = `<div class="sp-empty"><div class="sp-empty-icon">${af?'🔍':'📭'}</div><h4>${af?'Nenhum resultado':'Nenhum orçamento ainda'}</h4><p>${af?'Tente outros filtros':'Crie seu primeiro orçamento na tela Início'}</p></div>`;
         return;
       }
 
@@ -931,10 +854,9 @@
         const cli = (store.clients||[]).find(c=>c.id===qt.clientId)||{};
         const card = document.createElement('div');
         card.className = 'sp-card';
-        card.style.cssText = 'background:#fff;border:1.5px solid #e8edf5;border-radius:12px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:all 0.22s;position:relative;overflow:hidden;';
         card.innerHTML = `
           <div class="sp-card-top">
-            <span class="sp-card-num">📄 ${qt.numero || qt.id}</span>
+            <span class="sp-card-num">📄 ${qt.numero||qt.id}</span>
             <span class="sp-card-total">${fmtMoney(qt.total)}</span>
           </div>
           <div class="sp-card-parties">
@@ -951,24 +873,14 @@
               <button class="sp-card-btn del" data-action="del" data-id="${qt.id}" title="Excluir">🗑</button>
             </div>
           </div>`;
-        card.addEventListener('click', e => {
-          if (e.target.closest('.sp-card-btn')) return;
-          if (typeof openPreview==='function') openPreview(qt.id);
-          showAppScreen();
-        });
-        card.querySelector('.sp-card-btn.view').addEventListener('click', () => {
-          if (typeof openPreview==='function') openPreview(qt.id);
-          showAppScreen();
-        });
+        card.addEventListener('click', e => { if (e.target.closest('.sp-card-btn')) return; if (typeof openPreview==='function') openPreview(qt.id); showScreen('home'); });
+        card.querySelector('.sp-card-btn.view').addEventListener('click', () => { if (typeof openPreview==='function') openPreview(qt.id); showScreen('home'); });
         card.querySelector('[data-action="word"]').addEventListener('click', () => { if (typeof exportQuoteDoc==='function') exportQuoteDoc(qt.id); });
         card.querySelector('[data-action="pdf"]').addEventListener('click',  () => { if (typeof exportQuotePdf==='function') exportQuotePdf(qt.id); });
-        card.querySelector('[data-action="edit"]').addEventListener('click', () => {
-          if (typeof startEditMode==='function') startEditMode(qt.id);
-          showAppScreen();
-        });
+        card.querySelector('[data-action="edit"]').addEventListener('click', () => { if (typeof startEditMode==='function') startEditMode(qt.id); showScreen('home'); });
         card.querySelector('[data-action="del"]').addEventListener('click', () => {
           if (!confirm('❓ Excluir este orçamento?')) return;
-          store.quotes = store.quotes.filter(x=>x.id!==qt.id);
+          store.quotes = store.quotes.filter(x => x.id !== qt.id);
           if (typeof saveStore==='function') saveStore(store);
           renderPanel();
           if (typeof renderQuotes==='function') renderQuotes();
@@ -977,31 +889,196 @@
       });
     }
 
-    // ---- Render completo ----
     function renderPanel() {
       if (typeof store === 'undefined') return;
-      const quotes = store.quotes || [];
-      const total  = quotes.length;
-      const totalValue = quotes.reduce((s,q)=>s+Number(q.total||0),0);
-
-      fabBadge.textContent = total > 99 ? '99+' : total;
-      fabBadge.style.display = total > 0 ? 'flex' : 'none';
-      if (spStatTotal) spStatTotal.textContent = total;
-      if (spStatValue) spStatValue.textContent = fmtMoney(totalValue);
-
       renderFilterChips();
       renderList();
+      renderCadastroStats();
     }
 
+    // Ao salvar orçamento → vai para a tela de orçamentos
     document.addEventListener('click', e => {
-      if (e.target && e.target.id === 'saveQuoteBtn') setTimeout(renderPanel, 400);
+      if (e.target && e.target.id === 'saveQuoteBtn') {
+        setTimeout(() => { renderPanel(); showScreen('orcamentos'); }, 400);
+      }
     });
+
+    // ===================================================
+    // PATCH: Editar emissor/cliente → navega para Cadastro
+    // app.js faz window.scrollTo({top:0}) mas agora os forms
+    // estão na tela Cadastro, então precisamos trocar de tela.
+    // ===================================================
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      if (btn.classList.contains('edit-issuer') || btn.classList.contains('edit-client')) {
+        // Deixa app.js preencher os campos primeiro, depois muda de tela
+        setTimeout(() => {
+          showScreen('cadastro');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 50);
+      }
+    }, true); // capture=true para rodar antes do app.js
 
     const _init = setInterval(() => {
       if (typeof store !== 'undefined' && typeof renderQuotes !== 'undefined') {
-        clearInterval(_init); renderPanel();
+        clearInterval(_init);
+        renderPanel();
       }
     }, 200);
+
+    // ===================================================
+    // MODAL DE PERFIL
+    // ===================================================
+    const profileBtn   = document.getElementById('profileBtn');
+    const profileModal = document.getElementById('profileModal');
+    const closeProfileModal = document.getElementById('closeProfileModal');
+
+    function getInitials(name) {
+      if (!name) return '?';
+      const parts = name.trim().split(/\s+/);
+      if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+      return (parts[0].charAt(0) + parts[parts.length-1].charAt(0)).toUpperCase();
+    }
+
+    function showMsg(elId, msg, success) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.textContent = msg;
+      el.style.display = 'block';
+      el.style.background = success ? '#d1fae5' : '#fee2e2';
+      el.style.color      = success ? '#065f46' : '#991b1b';
+      el.style.border     = '1px solid ' + (success ? '#6ee7b7' : '#fca5a5');
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
+    function openProfileModal() {
+      profileModal.classList.remove('hidden');
+
+      const auth = window.authManager;
+      if (!auth || !auth.currentUser) return;
+
+      const user = auth.currentUser;
+      const email = user.email || '';
+
+      // Busca username/nome do perfil
+      auth.getSupabase()
+        .from('profiles')
+        .select('username, full_name')
+        .eq('id', user.id)
+        .single()
+        .then(({ data: profile }) => {
+          const displayName = profile?.username || profile?.full_name || email.split('@')[0];
+          const initials = getInitials(displayName);
+
+          document.getElementById('profileModalAvatar').textContent = initials;
+          document.getElementById('profileModalName').textContent   = displayName;
+          document.getElementById('profileModalEmail').textContent  = email;
+          document.getElementById('newUsernameInput').value         = displayName;
+
+          // Atualiza avatar no header também
+          document.getElementById('profileAvatar').textContent = initials;
+        })
+        .catch(() => {
+          const fallback = email.split('@')[0];
+          document.getElementById('profileModalAvatar').textContent = getInitials(fallback);
+          document.getElementById('profileModalName').textContent   = fallback;
+          document.getElementById('profileModalEmail').textContent  = email;
+          document.getElementById('newUsernameInput').value         = fallback;
+        });
+    }
+
+    profileBtn.addEventListener('click', openProfileModal);
+    closeProfileModal.addEventListener('click', () => profileModal.classList.add('hidden'));
+    profileModal.addEventListener('click', e => { if (e.target === profileModal) profileModal.classList.add('hidden'); });
+
+    // Salvar novo username
+    document.getElementById('saveUsernameBtn').addEventListener('click', async () => {
+      const newName = document.getElementById('newUsernameInput').value.trim();
+      if (!newName || newName.length < 2) {
+        showMsg('usernameMsg', '❌ Nome deve ter pelo menos 2 caracteres.', false); return;
+      }
+      const auth = window.authManager;
+      if (!auth || !auth.currentUser) return;
+
+      const btn = document.getElementById('saveUsernameBtn');
+      btn.disabled = true; btn.textContent = 'Salvando...';
+
+      try {
+        const { error } = await auth.getSupabase()
+          .from('profiles')
+          .upsert({ id: auth.currentUser.id, email: auth.currentUser.email, username: newName, updated_at: new Date().toISOString() });
+
+        if (error) throw error;
+
+        // Atualiza header
+        document.getElementById('userName').textContent = newName;
+        document.getElementById('profileAvatar').textContent = getInitials(newName);
+        document.getElementById('profileModalAvatar').textContent = getInitials(newName);
+        document.getElementById('profileModalName').textContent   = newName;
+
+        showMsg('usernameMsg', '✅ Nome de usuário atualizado!', true);
+      } catch(err) {
+        showMsg('usernameMsg', '❌ ' + (err.message || 'Erro ao salvar.'), false);
+      } finally {
+        btn.disabled = false; btn.textContent = 'Salvar';
+      }
+    });
+
+    // Salvar nova senha
+    document.getElementById('savePasswordBtn').addEventListener('click', async () => {
+      const newPwd  = document.getElementById('newPasswordInput').value;
+      const confPwd = document.getElementById('confirmPasswordInput').value;
+
+      if (!newPwd || newPwd.length < 6) {
+        showMsg('passwordMsg', '❌ A senha deve ter pelo menos 6 caracteres.', false); return;
+      }
+      if (newPwd !== confPwd) {
+        showMsg('passwordMsg', '❌ As senhas não coincidem.', false); return;
+      }
+
+      const auth = window.authManager;
+      if (!auth || !auth.getSupabase) return;
+
+      const btn = document.getElementById('savePasswordBtn');
+      btn.disabled = true; btn.textContent = '🔄 Alterando...';
+
+      try {
+        const { error } = await auth.getSupabase().auth.updateUser({ password: newPwd });
+        if (error) throw error;
+
+        document.getElementById('newPasswordInput').value    = '';
+        document.getElementById('confirmPasswordInput').value = '';
+        showMsg('passwordMsg', '✅ Senha alterada com sucesso!', true);
+      } catch(err) {
+        let msg = err.message || 'Erro ao alterar senha.';
+        if (msg.includes('same password')) msg = 'A nova senha deve ser diferente da atual.';
+        showMsg('passwordMsg', '❌ ' + msg, false);
+      } finally {
+        btn.disabled = false; btn.textContent = '🔒 Alterar Senha';
+      }
+    });
+
+    // Toggle show/hide password
+    function togglePwd(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      const svg = btn.querySelector('svg');
+      svg.innerHTML = isHidden
+        ? `<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
+        : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+    }
+
+    // Popula o avatar no header assim que o auth.js carrega o nome
+    const _avatarInit = setInterval(() => {
+      const nameEl = document.getElementById('userName');
+      const avatarEl = document.getElementById('profileAvatar');
+      if (nameEl && nameEl.textContent && nameEl.textContent.trim().length > 0) {
+        avatarEl.textContent = getInitials(nameEl.textContent.trim());
+        clearInterval(_avatarInit);
+      }
+    }, 300);
   </script>
 </body>
 </html>
