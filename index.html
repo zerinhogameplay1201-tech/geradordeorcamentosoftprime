@@ -171,9 +171,11 @@
     }
     .sp-close-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
 
+    /* Stats principais */
     .sp-stats {
       display: flex; gap: 10px;
       position: relative; z-index: 1;
+      margin-bottom: 0;
     }
     .sp-stat {
       flex: 1;
@@ -184,6 +186,96 @@
     }
     .sp-stat-value { color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 3px; }
     .sp-stat-label { color: rgba(180,210,255,0.7); font-size: 11px; font-weight: 500; }
+
+    /* Painel de analytics expandido */
+    .sp-analytics {
+      background: #f8fafc;
+      border-bottom: 1px solid #e8edf5;
+      flex-shrink: 0;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .sp-analytics.open { max-height: 600px; }
+    .sp-analytics-inner { padding: 14px 16px 16px; }
+
+    .sp-analytics-tabs {
+      display: flex; gap: 4px; margin-bottom: 12px;
+    }
+    .sp-tab-btn {
+      flex: 1; padding: 7px 6px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      background: #fff; color: #64748b;
+      font-size: 11.5px; font-weight: 600;
+      cursor: pointer; transition: all 0.18s;
+      font-family: inherit; text-align: center;
+    }
+    .sp-tab-btn.active {
+      background: #0d7de0; color: #fff;
+      border-color: #0d7de0;
+      box-shadow: 0 2px 8px rgba(13,125,224,0.25);
+    }
+    .sp-tab-btn:hover:not(.active) { border-color: #0d7de0; color: #0d7de0; }
+
+    .sp-tab-pane { display: none; }
+    .sp-tab-pane.active { display: block; }
+
+    /* Row de ranking */
+    .sp-rank-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px;
+      background: #fff;
+      border: 1px solid #e8edf5;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      transition: all 0.15s;
+    }
+    .sp-rank-row:hover { border-color: #bfdbfe; box-shadow: 0 2px 8px rgba(13,125,224,0.08); }
+    .sp-rank-pos {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0d7de0, #0a5fb8);
+      color: #fff; font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sp-rank-pos.gold   { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .sp-rank-pos.silver { background: linear-gradient(135deg, #94a3b8, #64748b); }
+    .sp-rank-pos.bronze { background: linear-gradient(135deg, #d97706, #92400e); }
+
+    .sp-rank-info { flex: 1; min-width: 0; }
+    .sp-rank-name {
+      font-size: 12.5px; font-weight: 600; color: #1e293b;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sp-rank-sub { font-size: 11px; color: #94a3b8; margin-top: 1px; }
+
+    .sp-rank-right { text-align: right; flex-shrink: 0; }
+    .sp-rank-val { font-size: 12px; font-weight: 700; color: #059669; }
+    .sp-rank-count {
+      font-size: 10.5px; color: #94a3b8; margin-top: 1px;
+      background: #f1f5f9; border-radius: 20px;
+      padding: 1px 6px; display: inline-block;
+    }
+
+    /* Toggle btn */
+    .sp-analytics-toggle {
+      width: 100%; padding: 9px 16px;
+      background: rgba(255,255,255,0.08);
+      border: none; border-top: 1px solid rgba(255,255,255,0.10);
+      color: rgba(200,225,255,0.85);
+      font-size: 11.5px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.2s;
+      position: relative; z-index: 1;
+    }
+    .sp-analytics-toggle:hover { background: rgba(255,255,255,0.14); }
+    .sp-analytics-toggle .toggle-arrow {
+      transition: transform 0.3s; font-size: 10px;
+    }
+    .sp-analytics-toggle.open .toggle-arrow { transform: rotate(180deg); }
 
     /* Busca */
     .sp-search {
@@ -327,6 +419,79 @@
     /* Oculta seção antiga */
     .section-quotes-main { display: none !important; }
 
+    /* ---- Analytics expansível ---- */
+    .sp-analytics {
+      background: #f8fafc;
+      border-bottom: 1px solid #e8edf5;
+      flex-shrink: 0;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.42s cubic-bezier(0.4,0,0.2,1);
+    }
+    .sp-analytics.open { max-height: 700px; overflow-y: auto; }
+    .sp-analytics-inner { padding: 14px 16px 16px; }
+
+    .sp-analytics-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+    .sp-tab-btn {
+      flex: 1; padding: 7px 4px;
+      border: 1.5px solid #e2e8f0; border-radius: 8px;
+      background: #fff; color: #64748b;
+      font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.18s;
+      font-family: inherit; text-align: center;
+    }
+    .sp-tab-btn.active { background: #0d7de0; color: #fff; border-color: #0d7de0; box-shadow: 0 2px 8px rgba(13,125,224,0.25); }
+    .sp-tab-btn:hover:not(.active) { border-color: #0d7de0; color: #0d7de0; }
+    .sp-tab-pane { display: none; }
+    .sp-tab-pane.active { display: block; }
+
+    .sp-rank-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px; background: #fff;
+      border: 1px solid #e8edf5; border-radius: 8px; margin-bottom: 6px;
+      transition: all 0.15s;
+    }
+    .sp-rank-row:hover { border-color: #bfdbfe; box-shadow: 0 2px 8px rgba(13,125,224,0.08); }
+    .sp-rank-pos {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(135deg,#0d7de0,#0a5fb8);
+      color:#fff; font-size:10px; font-weight:700;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .sp-rank-pos.gold   { background: linear-gradient(135deg,#f59e0b,#d97706); }
+    .sp-rank-pos.silver { background: linear-gradient(135deg,#94a3b8,#64748b); }
+    .sp-rank-pos.bronze { background: linear-gradient(135deg,#d97706,#92400e); }
+    .sp-rank-info { flex: 1; min-width: 0; }
+    .sp-rank-name { font-size:12.5px; font-weight:600; color:#1e293b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sp-rank-sub  { font-size:11px; color:#94a3b8; margin-top:1px; }
+    .sp-rank-right { text-align:right; flex-shrink:0; }
+    .sp-rank-val   { font-size:12px; font-weight:700; color:#059669; }
+    .sp-rank-count { font-size:10.5px; color:#94a3b8; background:#f1f5f9; border-radius:20px; padding:1px 7px; display:inline-block; margin-top:2px; }
+
+    /* Clientes do emissor / emissores do cliente — sub-lista colapsável */
+    .sp-rank-detail { display:none; padding: 6px 0 2px 32px; }
+    .sp-rank-detail.open { display:block; }
+    .sp-rank-detail-row { font-size:11.5px; color:#475569; padding: 4px 8px; border-left:2px solid #bfdbfe; margin-bottom:3px; display:flex; justify-content:space-between; }
+    .sp-rank-detail-row span:last-child { color:#059669; font-weight:600; }
+    .sp-rank-toggle { cursor:pointer; font-size:10px; color:#0d7de0; margin-left:6px; user-select:none; }
+
+    .sp-analytics-toggle {
+      width:100%; padding:9px 16px;
+      background: rgba(255,255,255,0.08);
+      border: none; border-top: 1px solid rgba(255,255,255,0.10);
+      color: rgba(200,225,255,0.85);
+      font-size:11.5px; font-weight:600;
+      cursor:pointer; font-family:inherit;
+      display:flex; align-items:center; justify-content:center; gap:6px;
+      transition: background 0.2s; position:relative; z-index:1;
+    }
+    .sp-analytics-toggle:hover { background: rgba(255,255,255,0.15); }
+    .sp-analytics-toggle .toggle-arrow { transition: transform 0.3s; font-size:10px; }
+    .sp-analytics-toggle.open .toggle-arrow { transform: rotate(180deg); }
+
+    /* Ticket médio extra stat */
+    .sp-stat-value { color:#fff; font-size:18px; font-weight:700; margin-bottom:3px; }
+
     @media (max-width: 600px) {
       .sidebar-panel { width: 100%; }
     }
@@ -369,6 +534,29 @@
           <div class="sp-stat-value" id="spStatValue">R$ 0</div>
           <div class="sp-stat-label">Valor acumulado</div>
         </div>
+        <div class="sp-stat">
+          <div class="sp-stat-value" id="spStatAvg">R$ 0</div>
+          <div class="sp-stat-label">Ticket médio</div>
+        </div>
+      </div>
+      <!-- Botão para expandir analytics -->
+      <button class="sp-analytics-toggle" id="spAnalyticsToggle">
+        <span>📊 Ver análise detalhada</span>
+        <span class="toggle-arrow">▼</span>
+      </button>
+    </div>
+
+    <!-- Painel analytics expansível -->
+    <div class="sp-analytics" id="spAnalytics">
+      <div class="sp-analytics-inner">
+        <div class="sp-analytics-tabs">
+          <button class="sp-tab-btn active" data-tab="issuers">🏢 Por Emissor</button>
+          <button class="sp-tab-btn" data-tab="clients">👤 Por Cliente</button>
+          <button class="sp-tab-btn" data-tab="pairs">🔗 Pares</button>
+        </div>
+        <div class="sp-tab-pane active" id="tabIssuers"></div>
+        <div class="sp-tab-pane" id="tabClients"></div>
+        <div class="sp-tab-pane" id="tabPairs"></div>
       </div>
     </div>
 
@@ -547,7 +735,7 @@
   </script>
   <script src="app.js"></script>
   <script>
-    // ===== SIDEBAR =====
+    // ===== SIDEBAR + ANALYTICS =====
     const spPanel   = document.getElementById('sidebarPanel');
     const spFab     = document.getElementById('sidebarFab');
     const spClose   = document.getElementById('spClose');
@@ -559,8 +747,13 @@
     const fabBadge  = document.getElementById('fabBadge');
     const spStatTotal = document.getElementById('spStatTotal');
     const spStatValue = document.getElementById('spStatValue');
+    const spStatAvg   = document.getElementById('spStatAvg');
+    const spAnalytics       = document.getElementById('spAnalytics');
+    const spAnalyticsToggle = document.getElementById('spAnalyticsToggle');
 
     let spQuery = '';
+    let analyticsOpen = false;
+    let activeTab = 'issuers';
 
     const openPanel  = () => { spPanel.classList.add('open'); spOverlay.classList.add('visible'); renderPanel(); };
     const closePanel = () => { spPanel.classList.remove('open'); spOverlay.classList.remove('visible'); };
@@ -568,6 +761,28 @@
     spFab.addEventListener('click', () => spPanel.classList.contains('open') ? closePanel() : openPanel());
     spClose.addEventListener('click', closePanel);
     spOverlay.addEventListener('click', closePanel);
+
+    // Toggle analytics
+    spAnalyticsToggle.addEventListener('click', () => {
+      analyticsOpen = !analyticsOpen;
+      spAnalytics.classList.toggle('open', analyticsOpen);
+      spAnalyticsToggle.classList.toggle('open', analyticsOpen);
+      spAnalyticsToggle.querySelector('span:first-child').textContent =
+        analyticsOpen ? '📊 Fechar análise' : '📊 Análise detalhada';
+      if (analyticsOpen) renderAnalytics();
+    });
+
+    // Tabs
+    document.querySelectorAll('.sp-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sp-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.sp-tab-pane').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        activeTab = btn.dataset.tab;
+        document.getElementById('tab' + activeTab.charAt(0).toUpperCase() + activeTab.slice(1)).classList.add('active');
+        renderAnalytics();
+      });
+    });
 
     spSearch.addEventListener('input', () => {
       spQuery = spSearch.value;
@@ -580,22 +795,137 @@
       renderPanel();
     });
 
-    function norm(s) {
-      return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    }
-    function fmtDate(iso) {
-      return iso ? new Date(iso).toLocaleDateString('pt-BR') : '';
-    }
-    function fmtMoney(v) {
-      return 'R$ ' + Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    function norm(s) { return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+    function fmtDate(iso) { return iso ? new Date(iso).toLocaleDateString('pt-BR') : ''; }
+    function fmtMoney(v) { return 'R$ ' + Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+    function posClass(i) { return i===0?'gold':i===1?'silver':i===2?'bronze':''; }
+
+    // ---- ANALYTICS ----
+    function buildAnalyticsData() {
+      const quotes = store.quotes || [];
+
+      // Por emissor
+      const issuerMap = {};
+      quotes.forEach(q => {
+        const iss = (store.issuers||[]).find(i=>i.id===q.issuerId) || { name: '(sem emissor)' };
+        const cli = (store.clients||[]).find(c=>c.id===q.clientId) || { name: '(sem cliente)' };
+        if (!issuerMap[q.issuerId]) issuerMap[q.issuerId] = { name: iss.name, count:0, total:0, clients:{} };
+        issuerMap[q.issuerId].count++;
+        issuerMap[q.issuerId].total += Number(q.total||0);
+        if (!issuerMap[q.issuerId].clients[q.clientId])
+          issuerMap[q.issuerId].clients[q.clientId] = { name: cli.name, count:0, total:0 };
+        issuerMap[q.issuerId].clients[q.clientId].count++;
+        issuerMap[q.issuerId].clients[q.clientId].total += Number(q.total||0);
+      });
+
+      // Por cliente
+      const clientMap = {};
+      quotes.forEach(q => {
+        const iss = (store.issuers||[]).find(i=>i.id===q.issuerId) || { name: '(sem emissor)' };
+        const cli = (store.clients||[]).find(c=>c.id===q.clientId) || { name: '(sem cliente)' };
+        if (!clientMap[q.clientId]) clientMap[q.clientId] = { name: cli.name, count:0, total:0, issuers:{} };
+        clientMap[q.clientId].count++;
+        clientMap[q.clientId].total += Number(q.total||0);
+        if (!clientMap[q.clientId].issuers[q.issuerId])
+          clientMap[q.clientId].issuers[q.issuerId] = { name: iss.name, count:0, total:0 };
+        clientMap[q.clientId].issuers[q.issuerId].count++;
+        clientMap[q.clientId].issuers[q.issuerId].total += Number(q.total||0);
+      });
+
+      // Pares emissor→cliente
+      const pairMap = {};
+      quotes.forEach(q => {
+        const iss = (store.issuers||[]).find(i=>i.id===q.issuerId)||{ name:'(sem emissor)' };
+        const cli = (store.clients||[]).find(c=>c.id===q.clientId)||{ name:'(sem cliente)' };
+        const key = q.issuerId + '|' + q.clientId;
+        if (!pairMap[key]) pairMap[key] = { issuer: iss.name, client: cli.name, count:0, total:0 };
+        pairMap[key].count++;
+        pairMap[key].total += Number(q.total||0);
+      });
+
+      const sortByTotal = obj => Object.values(obj).sort((a,b) => b.total - a.total);
+      return {
+        issuers: sortByTotal(issuerMap),
+        clients: sortByTotal(clientMap),
+        pairs:   sortByTotal(pairMap),
+      };
     }
 
+    function renderRankRows(items, detailKey, detailLabel) {
+      if (!items.length) return '<p style="color:#94a3b8;font-size:13px;padding:8px 0;">Nenhum dado ainda.</p>';
+      return items.map((item, i) => {
+        const detailItems = Object.values(item[detailKey]||{}).sort((a,b)=>b.total-a.total);
+        const detailId = 'detail_' + detailKey + '_' + i;
+        const detailHtml = detailItems.map(d =>
+          `<div class="sp-rank-detail-row">
+            <span>${d.name}</span>
+            <span>${d.count} orç. · ${fmtMoney(d.total)}</span>
+          </div>`
+        ).join('');
+        return `
+          <div class="sp-rank-row">
+            <div class="sp-rank-pos ${posClass(i)}">${i+1}</div>
+            <div class="sp-rank-info">
+              <div class="sp-rank-name">
+                ${item.name}
+                ${detailItems.length ? `<span class="sp-rank-toggle" data-detail="${detailId}">▶ ${detailItems.length} ${detailLabel}</span>` : ''}
+              </div>
+              <div class="sp-rank-sub">${item.count} orçamento${item.count!==1?'s':''}</div>
+            </div>
+            <div class="sp-rank-right">
+              <div class="sp-rank-val">${fmtMoney(item.total)}</div>
+              <div class="sp-rank-count">ticket: ${fmtMoney(item.total/item.count)}</div>
+            </div>
+          </div>
+          <div class="sp-rank-detail" id="${detailId}">${detailHtml}</div>`;
+      }).join('');
+    }
+
+    function renderAnalytics() {
+      if (typeof store === 'undefined') return;
+      const data = buildAnalyticsData();
+
+      document.getElementById('tabIssuers').innerHTML = renderRankRows(data.issuers, 'clients', 'cliente(s)');
+      document.getElementById('tabClients').innerHTML = renderRankRows(data.clients, 'issuers', 'emissor(es)');
+
+      // Pares
+      const pairsHtml = data.pairs.length ? data.pairs.map((p,i) => `
+        <div class="sp-rank-row">
+          <div class="sp-rank-pos ${posClass(i)}">${i+1}</div>
+          <div class="sp-rank-info">
+            <div class="sp-rank-name" style="white-space:normal;">🏢 ${p.issuer}</div>
+            <div class="sp-rank-sub">→ 👤 ${p.client} · ${p.count} orç.</div>
+          </div>
+          <div class="sp-rank-right">
+            <div class="sp-rank-val">${fmtMoney(p.total)}</div>
+            <div class="sp-rank-count">ticket: ${fmtMoney(p.total/p.count)}</div>
+          </div>
+        </div>`).join('')
+        : '<p style="color:#94a3b8;font-size:13px;padding:8px 0;">Nenhum par ainda.</p>';
+      document.getElementById('tabPairs').innerHTML = pairsHtml;
+
+      // Bind toggle detalhes
+      document.querySelectorAll('.sp-rank-toggle').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          const el = document.getElementById(btn.dataset.detail);
+          if (!el) return;
+          el.classList.toggle('open');
+          btn.textContent = el.classList.contains('open')
+            ? btn.textContent.replace('▶','▼')
+            : btn.textContent.replace('▼','▶');
+        });
+      });
+    }
+
+    // ---- RENDER PANEL (lista de orçamentos) ----
     function renderPanel() {
       if (typeof store === 'undefined') return;
 
       const quotes     = (store.quotes || []).slice().reverse();
       const total      = quotes.length;
       const totalValue = quotes.reduce((s,q) => s + Number(q.total||0), 0);
+      const avg        = total > 0 ? totalValue / total : 0;
 
       // Badge
       fabBadge.textContent = total > 99 ? '99+' : total;
@@ -603,9 +933,11 @@
 
       // Stats
       spStatTotal.textContent = total;
-      spStatValue.textContent = totalValue > 0
-        ? 'R$ ' + totalValue.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})
-        : 'R$ 0,00';
+      spStatValue.textContent = fmtMoney(totalValue);
+      if (spStatAvg) spStatAvg.textContent = avg > 0 ? fmtMoney(avg) : 'R$ 0,00';
+
+      // Analytics (re-render se aberto)
+      if (analyticsOpen) renderAnalytics();
 
       const q = norm(spQuery);
       const filtered = q
@@ -655,11 +987,11 @@
           <div class="sp-card-footer">
             <span class="sp-card-date">📅 ${fmtDate(qt.createdAt)}</span>
             <div class="sp-card-btns">
-              <button class="sp-card-btn view"        data-id="${qt.id}">👁 Ver</button>
+              <button class="sp-card-btn view"              data-id="${qt.id}">👁 Ver</button>
               <button class="sp-card-btn" data-action="word" data-id="${qt.id}" title="Word">📄</button>
               <button class="sp-card-btn" data-action="pdf"  data-id="${qt.id}" title="PDF">📑</button>
               <button class="sp-card-btn" data-action="edit" data-id="${qt.id}" title="Editar">✏️</button>
-              <button class="sp-card-btn del"         data-action="del"  data-id="${qt.id}" title="Excluir">🗑</button>
+              <button class="sp-card-btn del" data-action="del" data-id="${qt.id}" title="Excluir">🗑</button>
             </div>
           </div>`;
 
@@ -668,22 +1000,11 @@
           if (typeof openPreview === 'function') openPreview(qt.id);
           closePanel();
         });
-
-        card.querySelector('.sp-card-btn.view').addEventListener('click', () => {
-          if (typeof openPreview === 'function') openPreview(qt.id);
-          closePanel();
-        });
-        card.querySelector('[data-action="word"]').addEventListener('click', () => {
-          if (typeof exportQuoteDoc === 'function') exportQuoteDoc(qt.id);
-        });
-        card.querySelector('[data-action="pdf"]').addEventListener('click', () => {
-          if (typeof exportQuotePdf === 'function') exportQuotePdf(qt.id);
-        });
-        card.querySelector('[data-action="edit"]').addEventListener('click', () => {
-          if (typeof startEditMode === 'function') startEditMode(qt.id);
-          closePanel();
-        });
-        card.querySelector('[data-action="del"]').addEventListener('click', () => {
+        card.querySelector('.sp-card-btn.view').addEventListener('click', () => { if (typeof openPreview === 'function') openPreview(qt.id); closePanel(); });
+        card.querySelector('[data-action="word"]').addEventListener('click', () => { if (typeof exportQuoteDoc === 'function') exportQuoteDoc(qt.id); });
+        card.querySelector('[data-action="pdf"]').addEventListener('click',  () => { if (typeof exportQuotePdf === 'function') exportQuotePdf(qt.id); });
+        card.querySelector('[data-action="edit"]').addEventListener('click', () => { if (typeof startEditMode === 'function') startEditMode(qt.id); closePanel(); });
+        card.querySelector('[data-action="del"]').addEventListener('click',  () => {
           if (!confirm('❓ Excluir este orçamento?')) return;
           store.quotes = store.quotes.filter(x => x.id !== qt.id);
           if (typeof saveStore === 'function') saveStore(store);
@@ -701,8 +1022,7 @@
 
     const _init = setInterval(() => {
       if (typeof store !== 'undefined' && typeof renderQuotes !== 'undefined') {
-        clearInterval(_init);
-        renderPanel();
+        clearInterval(_init); renderPanel();
       }
     }, 200);
   </script>
