@@ -493,21 +493,24 @@
           </div>
         </div>
 
+        <!-- Logo do Emissor — largura total, acima dos dois formulários -->
+        <div class="card" style="margin-bottom:20px;">
+          <h4>🖼️ Logotipo do Emissor</h4>
+          <div class="logo-section" style="margin-top:8px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+            <div>
+              <label for="issuerLogo" style="font-size:13px;color:#6b7280;">Imagem até 4mb (PNG, JPG)</label>
+              <input type="file" id="issuerLogo" accept="image/*" aria-label="Logotipo do emissor" style="margin-top:8px;display:block;" />
+            </div>
+            <div id="issuerLogoPreview" style="display:none;align-items:center;gap:10px;">
+              <img id="issuerLogoImg" src="" alt="Logo preview" style="max-height:72px;max-width:220px;border-radius:6px;border:1px solid #e5e7eb;padding:4px;" />
+              <button type="button" id="removeLogoBtn" style="color:#dc2626;background:none;border:none;cursor:pointer;font-size:13px;white-space:nowrap;">✕ Remover</button>
+            </div>
+          </div>
+        </div>
+
         <div class="cadastro-grid">
           <!-- Coluna Emissor: form + lista -->
           <div>
-            <!-- Logo do Emissor -->
-            <div class="card" style="margin-bottom:16px;">
-              <h4>🖼️ Logotipo do Emissor</h4>
-              <div class="logo-section" style="margin-top:8px;">
-                <label for="issuerLogo" style="font-size:13px;color:#6b7280;">Imagem até 4mb (PNG, JPG)</label>
-                <input type="file" id="issuerLogo" accept="image/*" aria-label="Logotipo do emissor" style="margin-top:8px;" />
-                <div id="issuerLogoPreview" style="margin-top:10px;display:none;">
-                  <img id="issuerLogoImg" src="" alt="Logo preview" style="max-height:80px;max-width:200px;border-radius:6px;border:1px solid #e5e7eb;padding:4px;" />
-                  <button type="button" id="removeLogoBtn" style="margin-left:10px;color:#dc2626;background:none;border:none;cursor:pointer;font-size:13px;">✕ Remover</button>
-                </div>
-              </div>
-            </div>
             <!-- Form Emissor -->
             <div class="card" style="margin-bottom:16px;">
               <h4>📝 Dados do Emissor</h4>
