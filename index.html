@@ -233,11 +233,13 @@
     }
     .qs-filter-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
 
-    .sp-filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sp-filter-chips { display: flex; flex-direction: column; gap: 6px; }
     .sp-chip {
       padding: 5px 12px; background: #fff; border: 1.5px solid #e2e8f0;
       border-radius: 20px; font-size: 12px; font-weight: 500; color: #475569;
-      cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap;
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+      white-space: normal; word-break: break-word; text-align: left;
+      width: 100%; display: block;
     }
     .sp-chip:hover { border-color: #0d7de0; color: #0d7de0; }
     .sp-chip.active { background: #0d7de0; color: #fff; border-color: #0d7de0; box-shadow: 0 2px 8px rgba(13,125,224,0.25); }
