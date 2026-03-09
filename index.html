@@ -15,6 +15,7 @@
        RESET E BASE
     ============================================================ */
     * { box-sizing: border-box; }
+    body { background: #f3f6fb; margin: 0; font-family: 'Inter', sans-serif; }
 
     /* ============================================================
        HEADER FIXO
@@ -82,40 +83,44 @@
 
     /* SIDEBAR */
     .sidebar {
-      width: 220px;
-      min-width: 220px;
-      background: #fff;
-      border-right: 1px solid rgba(20,30,40,0.10);
+      width: 200px;
+      min-width: 200px;
+      background: transparent;
+      border-right: none;
       position: fixed;
       top: 64px; left: 0; bottom: 0;
       display: flex;
       flex-direction: column;
       z-index: 100;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+      box-shadow: none;
     }
-    .sidebar-nav { padding: 20px 12px; flex: 1; }
+    .sidebar-nav { padding: 24px 10px 20px; flex: 1; }
     .sidebar-section-label {
-      font-size: 10px; font-weight: 700; color: #9ca3af;
+      font-size: 10px; font-weight: 700; color: #b0b8c5;
       text-transform: uppercase; letter-spacing: 0.8px;
-      padding: 0 8px; margin-bottom: 8px; margin-top: 4px;
+      padding: 0 10px; margin-bottom: 6px; margin-top: 4px;
     }
     .sidebar-btn {
       display: flex; align-items: center; gap: 10px;
-      width: 100%; padding: 11px 12px; border-radius: 8px;
-      border: none; background: transparent; color: #4b5563;
-      font-size: 14px; font-weight: 500; cursor: pointer;
+      width: 100%; padding: 10px 12px; border-radius: 9px;
+      border: none; background: transparent; color: #64748b;
+      font-size: 13.5px; font-weight: 500; cursor: pointer;
       font-family: inherit; transition: all 0.18s; text-align: left;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
-    .sidebar-btn:hover { background: #f0f7ff; color: #0d7de0; }
+    .sidebar-btn:hover {
+      background: rgba(13,125,224,0.07);
+      color: #0d7de0;
+    }
     .sidebar-btn.active {
-      background: #eff6ff; color: #0d7de0; font-weight: 600;
+      background: rgba(13,125,224,0.10);
+      color: #0d7de0; font-weight: 600;
       box-shadow: inset 3px 0 0 #0d7de0;
     }
     .nav-icon { font-size: 17px; width: 22px; text-align: center; flex-shrink: 0; }
 
     /* CONTEÚDO */
-    .main-content { margin-left: 220px; flex: 1; min-width: 0; }
+    .main-content { margin-left: 200px; flex: 1; min-width: 0; }
 
     /* TELAS (SPA) */
     .screen { display: none; padding: 24px 20px 48px; max-width: 1100px; margin: 0 auto; }
@@ -334,17 +339,17 @@
     /* ============================================================
        FOOTER
     ============================================================ */
-    .footer { text-align: center; color: #6b7278; padding: 24px 16px; font-size: 14px; border-top: 1px solid rgba(20,30,40,0.10); margin-top: 40px; }
+    .footer { text-align: center; color: #6b7278; padding: 24px 16px; font-size: 14px; margin-top: 40px; }
 
     /* ============================================================
        RESPONSIVO
     ============================================================ */
     @media (max-width: 960px) {
-      .sidebar { width: 64px; min-width: 64px; }
+      .sidebar { width: 60px; min-width: 60px; }
       .sidebar-btn span:not(.nav-icon) { display: none; }
       .sidebar-section-label { display: none; }
       .sidebar-btn { justify-content: center; padding: 10px; }
-      .main-content { margin-left: 64px; }
+      .main-content { margin-left: 60px; }
       .two-col-forms, .cadastro-grid { grid-template-columns: 1fr; }
       .quotes-layout { grid-template-columns: 1fr; }
     }
