@@ -1,0 +1,31 @@
+/* background-suggestion.css
+   Coloque este CSS e adicione <div id="bg-futuristic"></div> como primeiro filho de <body>
+*/
+#bg-futuristic{
+  position:fixed;
+  inset:0;
+  z-index: -1; /* atrás do conteúdo */
+  background: linear-gradient(120deg, #071021 0%, #00122b 40%, #07203a 60%, #050b14 100%);
+  background-size: 300% 300%;
+  filter: saturate(120%) blur(6px);
+  animation: moveGradient 12s ease infinite;
+  pointer-events: none;
+}
+
+/* sutil movimento do gradiente */
+@keyframes moveGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* overlay neon / grid opcional */
+#bg-futuristic::after{
+  content: "";
+  position: absolute;
+  inset:0;
+  background: radial-gradient(circle at 10% 10%, rgba(13,125,224,0.08), transparent 6%),
+              radial-gradient(circle at 90% 80%, rgba(10,95,184,0.06), transparent 8%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
