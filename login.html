@@ -67,7 +67,7 @@
       0%,100% { box-shadow: 0 4px 16px rgba(var(--primary-rgb),0.4); }
       50% { box-shadow: 0 4px 28px rgba(var(--primary-rgb),0.7); }
     }
-    .logo-name { font-size:22px; font-weight:700; color:#fff; letter-spacing:1px; text-transform:uppercase; }
+    .logo-name { font-size:34px; font-weight:800; color:#fff; letter-spacing:2px; text-transform:uppercase; }
     .logo-name span { color: var(--primary); }
     .login-subtitle { font-size:13px; color: var(--accent-muted); letter-spacing:0.5px; }
 
@@ -195,7 +195,6 @@
   <div class="login-wrap">
     <div class="login-header">
       <div class="login-logo">
-        <div class="logo-icon">🔷</div>
         <div class="logo-name">Soft<span>Prime</span></div>
       </div>
       <p class="login-subtitle">Gerador de Orçamentos — Faça login ou crie sua conta</p>
@@ -217,7 +216,7 @@
           <label for="loginIdentifier">E-mail ou Usuário</label>
           <div class="field-inner">
             <span class="field-icon">👤</span>
-            <input type="text" id="loginIdentifier" placeholder="seu@email.com ou usuário" autocomplete="username" required />
+            <input type="text" id="loginIdentifier" placeholder="Email ou usuário" autocomplete="username" required />
           </div>
         </div>
         <div class="field">
@@ -262,14 +261,14 @@
           <label for="signupEmail">E-mail</label>
           <div class="field-inner">
             <span class="field-icon">✉️</span>
-            <input type="email" id="signupEmail" placeholder="seu@email.com" autocomplete="email" required />
+            <input type="email" id="signupEmail" placeholder="Email" autocomplete="email" required />
           </div>
         </div>
         <div class="field">
           <label for="signupPassword">Senha</label>
           <div class="field-inner">
             <span class="field-icon">🔒</span>
-            <input type="password" id="signupPassword" placeholder="mínimo 6 caracteres" autocomplete="new-password" required />
+            <input type="password" id="signupPassword" placeholder="••••••••" autocomplete="new-password" required />
             <button type="button" class="field-btn" onclick="togglePass('signupPassword', this)" title="Mostrar/ocultar senha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
           </div>
         </div>
@@ -283,7 +282,7 @@
       </div>
     </form>
 
-    <div class="login-footer">© 2025 SoftPrime — Todos os direitos reservados</div>
+    <div class="login-footer">© 2026 SoftPrime — Todos os direitos reservados</div>
   </div>
 
   <!-- Supabase SDK -->
