@@ -45,12 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function switchToLogin() {
     console.log('[AUTH] Alternando para Login');
     if (tabLogin) {
-      tabLogin.style.color = '#0d7de0';
-      tabLogin.style.borderBottom = '3px solid #0d7de0';
+      tabLogin.classList.add('active');
+      tabLogin.style.color = '';
+      tabLogin.style.borderBottom = '';
     }
     if (tabSignup) {
-      tabSignup.style.color = '#6b7280';
-      tabSignup.style.borderBottom = '3px solid transparent';
+      tabSignup.classList.remove('active');
+      tabSignup.style.color = '';
+      tabSignup.style.borderBottom = '';
     }
     if (loginForm) loginForm.style.display = 'block';
     if (signupForm) signupForm.style.display = 'none';
@@ -60,12 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function switchToSignup() {
     console.log('[AUTH] Alternando para Cadastro');
     if (tabSignup) {
-      tabSignup.style.color = '#0d7de0';
-      tabSignup.style.borderBottom = '3px solid #0d7de0';
+      tabSignup.classList.add('active');
+      tabSignup.style.color = '';
+      tabSignup.style.borderBottom = '';
     }
     if (tabLogin) {
-      tabLogin.style.color = '#6b7280';
-      tabLogin.style.borderBottom = '3px solid transparent';
+      tabLogin.classList.remove('active');
+      tabLogin.style.color = '';
+      tabLogin.style.borderBottom = '';
     }
     if (signupForm) signupForm.style.display = 'block';
     if (loginForm) loginForm.style.display = 'none';
@@ -110,9 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      showMessage('🔄 Entrando...', 'info');
+
       const result = await window.authManager.signIn(identifier, password);
       
       if (result.success) {
+        showMessage(result.message, 'success');
         loginForm.reset();
       } else {
         showMessage(result.message, 'error');
