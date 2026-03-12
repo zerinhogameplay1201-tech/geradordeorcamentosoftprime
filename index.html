@@ -18,67 +18,52 @@
     body { background: #f3f6fb; margin: 0; font-family: 'Inter', sans-serif; }
 
     /* ============================================================
-       HEADER FIXO
+       HEADER FIXO (topo fino — só no mobile / área de conteúdo)
     ============================================================ */
     .header {
-      background: linear-gradient(135deg, #020b18 0%, #0a1628 60%, #0d2b5e 100%);
-      border-bottom: 1px solid rgba(0,180,255,0.15);
-      box-shadow: 0 2px 20px rgba(0,100,255,0.15);
+      background: #111827;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0; left: 240px; right: 0;
       z-index: 200;
-      height: 64px;
+      height: 60px;
     }
     .header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
+      padding: 0 24px;
       height: 100%;
     }
-    .brand { display: flex; align-items: center; gap: 14px; }
-    .logo {
-      background: linear-gradient(135deg, #0078d4, #00c8ff);
-      color: #fff;
-      padding: 7px 16px;
-      border-radius: 9px;
-      font-weight: 800;
-      font-size: 15px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      box-shadow: 0 0 12px rgba(0,200,255,0.45), 0 0 24px rgba(0,120,255,0.2);
-      text-shadow: 0 0 10px rgba(255,255,255,0.4);
-      border: 1px solid rgba(0,200,255,0.3);
-    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo { display: none; } /* logo fica na sidebar */
     .site-title {
       font-weight: 600;
-      color: rgba(180,220,255,0.9);
-      font-size: 16px;
-      letter-spacing: 0.3px;
+      color: rgba(255,255,255,0.75);
+      font-size: 15px;
     }
     .header-actions { display: flex; align-items: center; gap: 10px; }
-    #userName { color: rgba(180,220,255,0.85); font-weight: 500; font-size: 14px; white-space: nowrap; }
+    #userName { color: rgba(255,255,255,0.85); font-weight: 500; font-size: 14px; white-space: nowrap; }
 
     /* ---- Botão de perfil ---- */
     .profile-btn {
       display: inline-flex; align-items: center; gap: 9px;
       padding: 6px 12px 6px 6px;
-      background: rgba(0,30,70,0.6); border: 1.5px solid rgba(0,180,255,0.25);
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10);
       border-radius: 30px; cursor: pointer; font-family: inherit;
-      transition: all 0.2s; color: rgba(180,220,255,0.9);
+      transition: all 0.2s; color: rgba(255,255,255,0.85);
     }
-    .profile-btn:hover { background: rgba(0,60,120,0.7); border-color: rgba(0,200,255,0.5); color: #00c8ff; }
+    .profile-btn:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.2); }
     .profile-avatar {
       width: 32px; height: 32px; border-radius: 50%;
-      background: linear-gradient(135deg, #0078d4, #00c8ff);
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
       color: #fff; font-size: 13px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; letter-spacing: -0.5px;
-      box-shadow: 0 0 8px rgba(0,200,255,0.4);
     }
     .profile-btn span#userName { font-size: 13.5px; font-weight: 600; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .btn-ghost { color: rgba(180,220,255,0.8) !important; }
-    .btn-ghost:hover { background: rgba(0,60,120,0.5) !important; color: #fff !important; }
+    .btn-ghost { background: transparent !important; color: rgba(255,255,255,0.6) !important; border: none !important; }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
 
     /* ---- Toggle senha no modal de perfil ---- */
     .pwd-toggle {
@@ -89,54 +74,116 @@
     .pwd-toggle:hover { color: #374151; }
 
     /* ============================================================
-       LAYOUT PRINCIPAL COM SIDEBAR
+       LAYOUT PRINCIPAL COM SIDEBAR ESTILO VISITECH
     ============================================================ */
     .app-layout {
       display: flex;
-      padding-top: 64px;
+      padding-top: 60px;
       min-height: 100vh;
     }
 
-    /* SIDEBAR */
+    /* SIDEBAR — dark, fixa, estilo Visitech */
     .sidebar {
-      width: 200px;
-      min-width: 200px;
-      background: transparent;
-      border-right: none;
+      width: 240px;
+      min-width: 240px;
+      background: #111827;
+      border-right: 1px solid rgba(255,255,255,0.06);
       position: fixed;
-      top: 64px; left: 0; bottom: 0;
+      top: 0; left: 0; bottom: 0;
       display: flex;
       flex-direction: column;
-      z-index: 100;
-      box-shadow: none;
+      z-index: 300;
+      overflow-y: auto;
     }
-    .sidebar-nav { padding: 24px 10px 20px; flex: 1; }
+
+    /* Logo dentro da sidebar */
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+    .sidebar-logo-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+      flex-shrink: 0;
+    }
+    .sidebar-logo-text { line-height: 1.2; }
+    .sidebar-logo-text strong {
+      display: block; font-size: 15px; font-weight: 800;
+      color: #fff; letter-spacing: 0.5px;
+    }
+    .sidebar-logo-text small {
+      font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 400;
+    }
+
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
     .sidebar-section-label {
-      font-size: 10px; font-weight: 700; color: #b0b8c5;
-      text-transform: uppercase; letter-spacing: 0.8px;
-      padding: 0 10px; margin-bottom: 6px; margin-top: 4px;
+      font-size: 10px; font-weight: 700;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 0 8px; margin-bottom: 6px; margin-top: 16px;
     }
+    .sidebar-section-label:first-child { margin-top: 0; }
+
     .sidebar-btn {
-      display: flex; align-items: center; gap: 10px;
-      width: 100%; padding: 10px 12px; border-radius: 9px;
-      border: none; background: transparent; color: #64748b;
+      display: flex; align-items: center; gap: 11px;
+      width: 100%; padding: 10px 12px; border-radius: 8px;
+      border: none; background: transparent;
+      color: rgba(255,255,255,0.55);
       font-size: 13.5px; font-weight: 500; cursor: pointer;
       font-family: inherit; transition: all 0.18s; text-align: left;
       margin-bottom: 2px;
     }
     .sidebar-btn:hover {
-      background: rgba(13,125,224,0.07);
-      color: #0d7de0;
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.9);
     }
     .sidebar-btn.active {
-      background: rgba(13,125,224,0.10);
-      color: #0d7de0; font-weight: 600;
-      box-shadow: inset 3px 0 0 #0d7de0;
+      background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.15));
+      color: #a5b4fc;
+      font-weight: 600;
+      border: 1px solid rgba(99,102,241,0.25);
     }
     .nav-icon { font-size: 17px; width: 22px; text-align: center; flex-shrink: 0; }
 
+    /* Perfil na base da sidebar */
+    .sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .sidebar-footer-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff; font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-footer-info { flex: 1; min-width: 0; }
+    .sidebar-footer-name {
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sidebar-footer-role {
+      font-size: 11px; color: rgba(255,255,255,0.35);
+    }
+    .sidebar-logout-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.35); font-size: 16px; padding: 4px;
+      transition: color 0.2s; border-radius: 6px; flex-shrink: 0;
+    }
+    .sidebar-logout-btn:hover { color: #f87171; background: rgba(248,113,113,0.1); }
+
     /* CONTEÚDO */
-    .main-content { margin-left: 200px; flex: 1; min-width: 0; }
+    .main-content { margin-left: 240px; flex: 1; min-width: 0; }
 
     /* TELAS (SPA) */
     .screen { display: none; padding: 24px 20px 48px; max-width: 1100px; margin: 0 auto; }
@@ -363,15 +410,20 @@
        RESPONSIVO
     ============================================================ */
     @media (max-width: 960px) {
-      .sidebar { width: 60px; min-width: 60px; }
+      .header { left: 72px; }
+      .sidebar { width: 72px; min-width: 72px; }
       .sidebar-btn span:not(.nav-icon) { display: none; }
       .sidebar-section-label { display: none; }
       .sidebar-btn { justify-content: center; padding: 10px; }
-      .main-content { margin-left: 60px; }
+      .sidebar-brand { padding: 14px; justify-content: center; }
+      .sidebar-logo-text { display: none; }
+      .sidebar-footer-info { display: none; }
+      .main-content { margin-left: 72px; }
       .two-col-forms, .cadastro-grid { grid-template-columns: 1fr; }
       .quotes-layout { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
+      .header { left: 0; }
       .sidebar { display: none; }
       .main-content { margin-left: 0; }
       .form-grid { grid-template-columns: 1fr; }
@@ -381,23 +433,18 @@
 </head>
 <body>
 
-  <!-- ========== HEADER ========== -->
+  <!-- ========== HEADER (barra topo do conteúdo) ========== -->
   <header class="header">
     <div class="header-row">
-      <div class="brand">
-        <div class="logo">SoftPrime</div>
-        <div class="site-title">Gerador de Orçamentos</div>
-      </div>
+      <div class="brand"></div>
       <div class="header-actions">
-        <!-- Botão de perfil clicável -->
         <button class="profile-btn" id="profileBtn" title="Meu Perfil">
           <div class="profile-avatar" id="profileAvatar">?</div>
           <span id="userName"></span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="opacity:0.5;flex-shrink:0;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="opacity:0.4;flex-shrink:0;">
             <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
-        <button id="logoutBtn" class="btn btn-ghost">🚪 Sair</button>
       </div>
     </div>
   </header>
@@ -405,8 +452,18 @@
   <!-- ========== APP LAYOUT ========== -->
   <div class="app-layout">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR ESTILO VISITECH -->
     <nav class="sidebar">
+
+      <!-- Logo / Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-logo-text">
+          <strong style="font-size:24px;letter-spacing:0.5px;">SoftPrime</strong>
+          <small style="font-size:13px;">Gerador de Orçamentos</small>
+        </div>
+      </div>
+
+      <!-- Navegação -->
       <div class="sidebar-nav">
         <div class="sidebar-section-label">Menu</div>
 
@@ -425,6 +482,7 @@
           <span>Orçamentos Salvos</span>
         </button>
       </div>
+
     </nav>
 
     <!-- CONTEÚDO -->
@@ -630,41 +688,85 @@
     </div>
   </div>
 
+  <!-- ========== DROPDOWN MENU PERFIL (estilo Visitech) ========== -->
+  <div id="profileDropdown" style="
+    display:none; position:fixed; top:60px; right:16px; z-index:9999;
+    background:#1f2937; border:1px solid rgba(255,255,255,0.10);
+    border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.45);
+    min-width:220px; overflow:hidden;
+    animation: dropIn 0.18s cubic-bezier(0.22,1,0.36,1) both;
+  ">
+    <style>
+      @keyframes dropIn { from { opacity:0; transform:translateY(-8px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+      .pd-header { padding:14px 16px; background:linear-gradient(135deg,#6366f1,#8b5cf6); display:flex; align-items:center; gap:10px; }
+      .pd-avatar { width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid rgba(255,255,255,0.3); }
+      .pd-name { font-size:13.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+      .pd-email { font-size:11px;color:rgba(255,255,255,0.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px; }
+      .pd-divider { height:1px;background:rgba(255,255,255,0.07);margin:0; }
+      .pd-item { display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;background:none;border:none;font-family:inherit;font-size:13.5px;font-weight:500;color:rgba(255,255,255,0.75);cursor:pointer;transition:all 0.15s;text-align:left; }
+      .pd-item:hover { background:rgba(255,255,255,0.06);color:#fff; }
+      .pd-item svg { flex-shrink:0;opacity:0.6; }
+      .pd-item:hover svg { opacity:1; }
+      .pd-item.danger { color:#f87171; }
+      .pd-item.danger:hover { background:rgba(248,113,113,0.08);color:#fca5a5; }
+      .pd-item.danger svg { opacity:0.7; }
+    </style>
+
+    <!-- Cabeçalho com gradiente -->
+    <div class="pd-header">
+      <div class="pd-avatar" id="pdAvatar">?</div>
+      <div style="min-width:0;">
+        <div class="pd-name" id="pdName">Carregando...</div>
+        <div class="pd-email" id="pdEmail"></div>
+      </div>
+    </div>
+
+    <div class="pd-divider"></div>
+
+    <!-- Opção: Meu Perfil -->
+    <button class="pd-item" id="pdProfileBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Meu Perfil
+    </button>
+
+    <div class="pd-divider"></div>
+
+    <!-- Opção: Sair -->
+    <button class="pd-item danger" id="logoutBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sair da conta
+    </button>
+  </div>
+
   <!-- ========== MODAL DE PERFIL ========== -->
   <div id="profileModal" class="modal hidden" role="dialog" aria-label="Meu Perfil">
-    <div class="modal-box" style="max-width:460px;">
+    <div class="modal-box" style="max-width:480px;">
       <button class="modal-close" id="closeProfileModal">×</button>
 
-      <!-- Header do perfil -->
-      <div style="text-align:center;padding:10px 0 24px;">
-        <div id="profileModalAvatar" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#0d7de0,#0a5fb8);color:#fff;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 4px 16px rgba(13,125,224,0.35);">?</div>
-        <div id="profileModalName" style="font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:4px;">Carregando...</div>
-        <div id="profileModalEmail" style="font-size:13px;color:#6b7278;"></div>
+      <!-- Header do perfil com gradiente -->
+      <div style="margin:-24px -24px 24px;padding:28px 24px 24px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:12px 12px 0 0;display:flex;align-items:center;gap:16px;">
+        <div id="profileModalAvatar" style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.2);color:#fff;font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid rgba(255,255,255,0.35);">?</div>
+        <div>
+          <div id="profileModalName" style="font-size:18px;font-weight:700;color:#fff;margin-bottom:3px;">Carregando...</div>
+          <div id="profileModalEmail" style="font-size:13px;color:rgba(255,255,255,0.7);"></div>
+        </div>
       </div>
 
-      <!-- Divider -->
-      <div style="border-top:1px solid #f1f5f9;margin-bottom:24px;"></div>
-
       <!-- Seção: Alterar Nome de Usuário -->
-      <div style="margin-bottom:24px;">
-        <h4 style="font-size:14px;font-weight:700;color:#374151;margin:0 0 12px;display:flex;align-items:center;gap:8px;">
-          ✏️ Alterar Nome de Usuário
-        </h4>
+      <div style="margin-bottom:20px;">
+        <h4 style="font-size:13px;font-weight:700;color:#6366f1;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.5px;">✏️ Nome de Usuário</h4>
         <div style="display:flex;gap:10px;">
           <input type="text" id="newUsernameInput" placeholder="Novo nome de usuário" style="flex:1;" />
-          <button class="btn btn-primary" id="saveUsernameBtn" style="white-space:nowrap;padding:10px 16px;">Salvar</button>
+          <button class="btn btn-primary" id="saveUsernameBtn" style="white-space:nowrap;padding:10px 16px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;">Salvar</button>
         </div>
         <div id="usernameMsg" style="margin-top:8px;font-size:13px;display:none;padding:8px 12px;border-radius:6px;"></div>
       </div>
 
-      <!-- Divider -->
-      <div style="border-top:1px solid #f1f5f9;margin-bottom:24px;"></div>
+      <div style="border-top:1px solid #f1f5f9;margin-bottom:20px;"></div>
 
       <!-- Seção: Alterar Senha -->
       <div style="margin-bottom:8px;">
-        <h4 style="font-size:14px;font-weight:700;color:#374151;margin:0 0 12px;display:flex;align-items:center;gap:8px;">
-          🔑 Alterar Senha
-        </h4>
+        <h4 style="font-size:13px;font-weight:700;color:#6366f1;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.5px;">🔑 Alterar Senha</h4>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div style="position:relative;">
             <input type="password" id="newPasswordInput" placeholder="Nova senha (mínimo 6 caracteres)" style="width:100%;padding-right:44px;" />
@@ -965,9 +1067,11 @@
     // ===================================================
     // MODAL DE PERFIL
     // ===================================================
-    const profileBtn   = document.getElementById('profileBtn');
-    const profileModal = document.getElementById('profileModal');
+    const profileBtn    = document.getElementById('profileBtn');
+    const profileModal  = document.getElementById('profileModal');
+    const profileDropdown = document.getElementById('profileDropdown');
     const closeProfileModal = document.getElementById('closeProfileModal');
+    const pdProfileBtn  = document.getElementById('pdProfileBtn');
 
     function getInitials(name) {
       if (!name) return '?';
@@ -987,32 +1091,78 @@
       setTimeout(() => { el.style.display = 'none'; }, 4000);
     }
 
+    // Abre/fecha dropdown ao clicar no botão de perfil
+    profileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = profileDropdown.style.display === 'block';
+      profileDropdown.style.display = isOpen ? 'none' : 'block';
+
+      if (!isOpen) {
+        // Posiciona o dropdown alinhado abaixo do botão
+        const rect = profileBtn.getBoundingClientRect();
+        profileDropdown.style.top   = (rect.bottom + 8) + 'px';
+        profileDropdown.style.right = (window.innerWidth - rect.right) + 'px';
+        profileDropdown.style.left  = 'auto';
+        profileDropdown.style.width = rect.width + 'px';
+        // Preenche dados no dropdown
+        const auth = window.authManager;
+        if (auth && auth.currentUser) {
+          const email = auth.currentUser.email || '';
+          auth.getSupabase()
+            .from('profiles').select('username, full_name').eq('id', auth.currentUser.id).single()
+            .then(({ data: profile }) => {
+              const name = profile?.username || profile?.full_name || email.split('@')[0];
+              document.getElementById('pdAvatar').textContent = getInitials(name);
+              document.getElementById('pdName').textContent   = name;
+              document.getElementById('pdEmail').textContent  = email;
+            }).catch(() => {
+              const name = email.split('@')[0];
+              document.getElementById('pdAvatar').textContent = getInitials(name);
+              document.getElementById('pdName').textContent   = name;
+              document.getElementById('pdEmail').textContent  = email;
+            });
+        }
+      }
+    });
+
+    // Fecha dropdown ao clicar fora
+    document.addEventListener('click', () => {
+      profileDropdown.style.display = 'none';
+    });
+    profileDropdown.addEventListener('click', e => e.stopPropagation());
+
+    // Botão "Sair da conta" no dropdown
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      profileDropdown.style.display = 'none';
+      if (!window.authManager) return;
+      await window.authManager.signOut();
+    });
+
+    // Botão "Meu Perfil" no dropdown → abre modal
+    pdProfileBtn.addEventListener('click', () => {
+      profileDropdown.style.display = 'none';
+      openProfileModal();
+    });
+
     function openProfileModal() {
       profileModal.classList.remove('hidden');
 
       const auth = window.authManager;
       if (!auth || !auth.currentUser) return;
 
-      const user = auth.currentUser;
+      const user  = auth.currentUser;
       const email = user.email || '';
 
-      // Busca username/nome do perfil
       auth.getSupabase()
-        .from('profiles')
-        .select('username, full_name')
-        .eq('id', user.id)
-        .single()
+        .from('profiles').select('username, full_name').eq('id', user.id).single()
         .then(({ data: profile }) => {
           const displayName = profile?.username || profile?.full_name || email.split('@')[0];
           const initials = getInitials(displayName);
-
           document.getElementById('profileModalAvatar').textContent = initials;
           document.getElementById('profileModalName').textContent   = displayName;
           document.getElementById('profileModalEmail').textContent  = email;
           document.getElementById('newUsernameInput').value         = displayName;
-
-          // Atualiza avatar no header também
-          document.getElementById('profileAvatar').textContent = initials;
+          document.getElementById('profileAvatar').textContent      = initials;
         })
         .catch(() => {
           const fallback = email.split('@')[0];
@@ -1023,7 +1173,6 @@
         });
     }
 
-    profileBtn.addEventListener('click', openProfileModal);
     closeProfileModal.addEventListener('click', () => profileModal.classList.add('hidden'));
     profileModal.addEventListener('click', e => { if (e.target === profileModal) profileModal.classList.add('hidden'); });
 
@@ -1105,12 +1254,18 @@
         : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
     }
 
-    // Popula o avatar no header assim que o auth.js carrega o nome
+    // Popula o avatar no header e sidebar assim que o auth.js carrega o nome
     const _avatarInit = setInterval(() => {
       const nameEl = document.getElementById('userName');
       const avatarEl = document.getElementById('profileAvatar');
+      const sidebarAvatarEl = document.getElementById('sidebarAvatar');
+      const sidebarNameEl = document.getElementById('sidebarName');
       if (nameEl && nameEl.textContent && nameEl.textContent.trim().length > 0) {
-        avatarEl.textContent = getInitials(nameEl.textContent.trim());
+        const name = nameEl.textContent.trim();
+        const initials = getInitials(name);
+        avatarEl.textContent = initials;
+        if (sidebarAvatarEl) sidebarAvatarEl.textContent = initials;
+        if (sidebarNameEl) sidebarNameEl.textContent = name;
         clearInterval(_avatarInit);
       }
     }, 300);
