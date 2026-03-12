@@ -32,12 +32,12 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Canvas background (preserved) */
     #bgCanvas {
       position: fixed; inset: 0; width: 100%; height: 100%;
       z-index: 0; pointer-events: none;
     }
-    .scanlines { position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    .scanlines {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px);
     }
 
@@ -71,13 +71,29 @@
     .logo-name span { color: var(--primary); }
     .login-subtitle { font-size:13px; color: var(--accent-muted); letter-spacing:0.5px; }
 
+    /* Tabs */
     .login-tabs { display:flex; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px; }
     .tab-btn {
       flex:1; background:none; border:none; padding:10px; font-family:inherit; font-size:14px; font-weight:600;
       color: rgba(255,255,255,0.4); cursor:pointer; position:relative; letter-spacing:0.3px;
+      transition: color 0.2s;
     }
     .tab-btn.active { color: var(--primary); }
-    .tab-btn.active::after { content:''; position:absolute; bottom:-1px; left:15%; right:15%; height:2px; background:var(--primary); border-radius:2px; box-shadow:0 0 8px var(--glow); }
+    .tab-btn::after {
+      content:''; position:absolute; bottom:-1px; left:15%; right:15%; height:2px;
+      border-radius:2px; background: var(--primary); opacity: 0; transition: opacity 0.2s;
+    }
+    .tab-btn.active::after { opacity: 1; box-shadow: 0 0 8px var(--glow); }
+
+    /* Auth message */
+    #authMessage {
+      display: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
 
     /* Form fields */
     .field-group { display:flex; flex-direction:column; gap:16px; margin-bottom:20px; }
@@ -85,7 +101,8 @@
     .field-inner { position:relative; display:flex; align-items:center; }
     .field-inner input {
       width:100%; padding:11px 14px 11px 42px; border-radius:9px; border:1.5px solid rgba(13,125,224,0.2);
-      background: rgba(5,15,35,0.6); color:#e8f4ff; font-size:14px; transition:border-color 0.2s, box-shadow 0.2s; outline:none;
+      background: rgba(5,15,35,0.6); color:#e8f4ff; font-size:14px;
+      transition:border-color 0.2s, box-shadow 0.2s; outline:none; font-family:inherit;
     }
     .field-inner input::placeholder { color: rgba(100,150,200,0.4); }
     .field-inner input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(var(--primary-rgb),0.15), 0 0 12px rgba(var(--primary-rgb),0.1); }
@@ -93,13 +110,12 @@
     .field-btn { position:absolute; right:10px; background:none; border:none; cursor:pointer; color: rgba(100,150,200,0.5); font-size:15px; padding:4px; transition: color 0.2s; }
     .field-btn:hover { color: var(--primary); }
 
-    /* NEW: remember + actions row (redesign solicitado) */
+    /* Actions row */
     .actions-row {
       display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:6px; margin-bottom:18px;
     }
-    .remember {
-      display:flex; align-items:center; gap:10px; color: rgba(200,220,255,0.8); font-size:13px;
-    }
+    .remember { display:flex; align-items:center; gap:10px; color: rgba(200,220,255,0.8); font-size:13px; }
+
     /* Custom toggle */
     .toggle {
       --w: 44px; --h: 24px; --pad: 3px;
@@ -112,11 +128,8 @@
       cursor:pointer;
     }
     .toggle .knob {
-      width: calc(var(--h) - var(--pad)*2);
-      height: calc(var(--h) - var(--pad)*2);
-      border-radius:50%;
-      background: #fff;
-      transform: translateX(0);
+      width: calc(var(--h) - var(--pad)*2); height: calc(var(--h) - var(--pad)*2);
+      border-radius:50%; background: #fff; transform: translateX(0);
       transition: transform 0.22s cubic-bezier(.2,.9,.3,1), background 0.22s;
       box-shadow: 0 4px 10px rgba(0,0,0,0.45);
     }
@@ -127,44 +140,48 @@
     }
     .toggle.on .knob { transform: translateX(calc(var(--w) - var(--h))); background: linear-gradient(135deg,#fff,#e6f6ff); }
 
-    /* Forgot link (right) */
-    .forgot-link-inline { color: rgba(100,160,255,0.7); text-decoration:none; font-size:13px; }
+    .forgot-link-inline { color: rgba(100,160,255,0.7); text-decoration:none; font-size:13px; cursor:pointer; background:none; border:none; font-family:inherit; }
     .forgot-link-inline:hover { color: var(--primary); text-decoration:underline; }
 
-    /* Button area (enhanced) */
+    /* Button */
     .btn-wrap { margin-top:6px; position:relative; }
     .btn-login {
       width:100%; padding:13px; border-radius:12px; border:none;
       background: linear-gradient(135deg,var(--primary) 0%, var(--primary-dark) 100%);
-      color:#fff; font-family:inherit; font-size:15px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      color:#fff; font-family:inherit; font-size:15px; font-weight:700; letter-spacing:1px;
+      text-transform:uppercase; cursor:pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s;
       box-shadow: 0 10px 30px rgba(var(--primary-rgb),0.28), inset 0 -4px 24px rgba(255,255,255,0.03);
       position:relative; overflow:hidden;
     }
+    .btn-login:hover { box-shadow: 0 12px 36px rgba(var(--primary-rgb),0.40); transform: translateY(-1px); }
     .btn-login:active { transform: translateY(1px) scale(0.998); }
-    /* subtle rim */
+    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
     .btn-login::after {
       content:''; position:absolute; inset:0; border-radius:12px; pointer-events:none;
-      box-shadow: 0 0 36px rgba(var(--primary-rgb),0.08) inset;
-      mix-blend-mode: screen;
+      box-shadow: 0 0 36px rgba(var(--primary-rgb),0.08) inset; mix-blend-mode: screen;
     }
-    /* ripple */
+
+    /* Ripple */
     .ripple {
       position:absolute; border-radius:50%; transform: scale(0.2); background: rgba(255,255,255,0.15);
-      animation: rippleAnim 0.7s ease-out;
-      pointer-events:none;
+      animation: rippleAnim 0.7s ease-out; pointer-events:none;
     }
     @keyframes rippleAnim { to { transform: scale(2.8); opacity: 0; } }
 
-    /* secure note below button */
     .secure-note {
       margin-top:12px; text-align:center; font-size:12px; color: rgba(180,210,255,0.45);
       display:flex; align-items:center; justify-content:center; gap:8px;
     }
-    .secure-note .dot { width:8px; height:8px; background: linear-gradient(135deg,var(--primary),var(--primary-dark)); border-radius:50%; box-shadow:0 0 6px rgba(var(--primary-rgb),0.4); }
+    .secure-note .dot {
+      width:8px; height:8px; background: linear-gradient(135deg,var(--primary),var(--primary-dark));
+      border-radius:50%; box-shadow:0 0 6px rgba(var(--primary-rgb),0.4);
+    }
 
-    /* Footer */
     .login-footer { margin-top:18px; padding-top:18px; border-top: 1px solid rgba(255,255,255,0.06); text-align:center; font-size:12px; color: rgba(100,140,190,0.4); }
+
+    /* Signup form hidden by default */
+    #signupForm { display: none; }
 
     @media (max-width:480px) {
       .login-wrap { padding:28px 20px 24px; }
@@ -175,7 +192,6 @@
 </head>
 <body>
 
-  <!-- preserve background canvas -->
   <canvas id="bgCanvas"></canvas>
   <div class="scanlines" aria-hidden="true"></div>
 
@@ -188,140 +204,166 @@
       <p class="login-subtitle">Gerador de Orçamentos — Faça login ou crie sua conta</p>
     </div>
 
+    <!-- Tabs -->
     <div class="login-tabs">
-      <button class="tab-btn active" onclick="switchTab(this)">Login</button>
-      <button class="tab-btn" onclick="switchTab(this)">Cadastrar</button>
+      <button class="tab-btn active" id="tabLogin">Login</button>
+      <button class="tab-btn" id="tabSignup">Cadastrar</button>
     </div>
 
-    <form id="loginForm" onsubmit="return false;">
+    <!-- Mensagem de feedback -->
+    <div id="authMessage"></div>
+
+    <!-- ===== FORMULÁRIO DE LOGIN ===== -->
+    <form id="loginForm">
       <div class="field-group">
         <div class="field">
-          <label for="emailInput">E-mail ou Usuário</label>
+          <label for="loginIdentifier">E-mail ou Usuário</label>
           <div class="field-inner">
             <span class="field-icon">👤</span>
-            <input id="emailInput" type="text" placeholder="E-mail ou nome de usuário" autocomplete="username" />
+            <input type="text" id="loginIdentifier" placeholder="seu@email.com ou usuário" autocomplete="username" required />
           </div>
         </div>
-
         <div class="field">
-          <label for="passwordInput">Senha</label>
+          <label for="loginPassword">Senha</label>
           <div class="field-inner">
             <span class="field-icon">🔒</span>
-            <input id="passwordInput" type="password" placeholder="••••••••" autocomplete="current-password" />
-            <button class="field-btn" type="button" onclick="togglePass()" title="Mostrar senha">👁</button>
+            <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required />
+            <button type="button" class="field-btn" onclick="togglePass('loginPassword', this)" title="Mostrar/ocultar senha">👁</button>
           </div>
         </div>
       </div>
 
-      <!-- ---- actions row (redesenhada) ---- -->
       <div class="actions-row">
-        <label class="remember" id="rememberLabel" role="checkbox" aria-checked="false" tabindex="0">
-          <div id="rememberToggle" class="toggle" onclick="toggleRemember()" onkeydown="keyToggleRemember(event)">
+        <label class="remember" id="rememberLabel" role="checkbox" aria-checked="false" tabindex="0" onkeydown="keyToggleRemember(event)" onclick="toggleRemember()">
+          <div class="toggle" id="rememberToggle">
             <div class="knob"></div>
           </div>
           <span>Manter conectado</span>
         </label>
-
-        <a class="forgot-link-inline" href="#" onclick="onForgot(event)">Esqueceu sua senha?</a>
+        <button type="button" class="forgot-link-inline" id="forgotPasswordBtn">Esqueceu sua senha?</button>
       </div>
 
-      <!-- enhanced button area -->
       <div class="btn-wrap">
-        <button id="submitBtn" class="btn-login" type="submit" aria-label="Entrar"> &nbsp;INICIAR SESSÃO</button>
-        <div class="secure-note"><span class="dot" aria-hidden="true"></span><span>Ambiente seguro de autenticação</span></div>
+        <button type="submit" class="btn-login" id="submitBtn">Iniciar Sessão</button>
+      </div>
+      <div class="secure-note">
+        <div class="dot"></div>
+        Ambiente seguro de autenticação
       </div>
     </form>
 
-    <div class="login-footer">© 2026 SoftPrime — Todos os direitos reservados</div>
+    <!-- ===== FORMULÁRIO DE CADASTRO ===== -->
+    <form id="signupForm">
+      <div class="field-group">
+        <div class="field">
+          <label for="signupUsername">Nome de Usuário</label>
+          <div class="field-inner">
+            <span class="field-icon">👤</span>
+            <input type="text" id="signupUsername" placeholder="usuario" autocomplete="username" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="signupEmail">E-mail</label>
+          <div class="field-inner">
+            <span class="field-icon">✉️</span>
+            <input type="email" id="signupEmail" placeholder="seu@email.com" autocomplete="email" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="signupPassword">Senha</label>
+          <div class="field-inner">
+            <span class="field-icon">🔒</span>
+            <input type="password" id="signupPassword" placeholder="••••••••" autocomplete="new-password" required />
+            <button type="button" class="field-btn" onclick="togglePass('signupPassword', this)" title="Mostrar/ocultar senha">👁</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-wrap">
+        <button type="submit" class="btn-login" id="signupBtn">Criar Conta</button>
+      </div>
+      <div class="secure-note">
+        <div class="dot"></div>
+        Ambiente seguro de autenticação
+      </div>
+    </form>
+
+    <div class="login-footer">© 2025 SoftPrime — Todos os direitos reservados</div>
   </div>
 
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Arquivos do projeto (ordem importa!) -->
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="auth-handlers.js"></script>
+
   <script>
-    /* ---------------------------
-       Canvas futurista (preserve)
-       This script is the animation engine for the background.
-       It's unchanged from the version you already have (keeps your bg).
-    ---------------------------- */
+    /* =============================================
+       BACKGROUND CANVAS ANIMATION
+       ============================================= */
     (function () {
       const canvas = document.getElementById('bgCanvas');
       const ctx = canvas.getContext('2d');
       let W, H, raf, frame_n = 0;
 
-      function rand(a, b) { return Math.random() * (b - a) + a; }
+      const rand = (a, b) => a + Math.random() * (b - a);
 
-      const PARTICLE_COUNT = 110;
-      const particles = [];
-
+      const PARTICLE_COUNT = 55;
       class Particle {
-        constructor() { this.reset(true); }
-        reset(init) {
-          this.x  = rand(0, W || 800);
-          this.y  = init ? rand(0, H || 600) : rand(-10, (H || 600) * 0.2);
-          this.vx = rand(-0.25, 0.25);
-          this.vy = rand(0.12, 0.55);
-          this.r  = rand(0.4, 2.0);
-          this.a  = rand(0.12, 0.65);
-          this.col = Math.random() > 0.55 ? '#7ef9ff' : '#0d7de0';
+        constructor() { this.reset(); }
+        reset() {
+          this.x = Math.random() * W;
+          this.y = Math.random() * H;
+          this.r = rand(0.5, 2.2);
+          this.vx = rand(-0.18, 0.18);
+          this.vy = rand(-0.18, 0.18);
+          this.alpha = rand(0.08, 0.35);
+          this.phase = Math.random() * Math.PI * 2;
         }
         update() {
-          this.x += this.vx;
-          this.y += this.vy;
-          if (this.y > H + 5) this.reset(false);
-          if (this.x < -10) this.x = W + 10;
-          if (this.x > W + 10) this.x = -10;
+          this.x += this.vx; this.y += this.vy;
+          if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
         }
         draw() {
-          ctx.save();
-          ctx.globalAlpha = this.a;
-          ctx.shadowColor = this.col;
-          ctx.shadowBlur = 8;
-          ctx.fillStyle = this.col;
+          const a = this.alpha * (0.7 + 0.3 * Math.sin(frame_n * 0.02 + this.phase));
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(120,190,255,${a})`;
           ctx.fill();
-          ctx.restore();
         }
       }
 
-      const RAYS = 7;
-      const rays = Array.from({ length: RAYS }, (_, i) => ({
-        angle : (i / RAYS) * Math.PI * 2 + rand(0, 0.6),
-        speed : rand(0.0003, 0.0007) * (Math.random() > .5 ? 1 : -1),
-        len   : rand(0.4, 0.72),
-        alpha : rand(0.02, 0.055),
-        width : rand(70, 170)
+      const particles = [];
+      const rays = Array.from({ length: 7 }, () => ({
+        angle: Math.random() * Math.PI * 2,
+        speed: rand(0.0003, 0.0007) * (Math.random() > .5 ? 1 : -1),
+        len: rand(0.4, 0.72),
+        alpha: rand(0.02, 0.055),
+        width: rand(70, 170)
       }));
 
       let gridTick = 0;
 
       function drawGrid() {
         const COLS = 22, ROWS = 16;
-        const cw = W / COLS;
-        const ch = H / ROWS;
+        const cw = W / COLS, ch = H / ROWS;
         gridTick += 0.22;
         const offset = gridTick % ch;
-
         ctx.save();
         ctx.lineWidth = 0.6;
-
         ctx.strokeStyle = 'rgba(13,125,224,0.065)';
         ctx.globalAlpha = 1;
         for (let c = 0; c <= COLS; c++) {
-          ctx.beginPath();
-          ctx.moveTo(c * cw, 0);
-          ctx.lineTo(c * cw, H);
-          ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(c * cw, 0); ctx.lineTo(c * cw, H); ctx.stroke();
         }
-
         for (let r = -1; r <= ROWS + 1; r++) {
           const y = r * ch + offset;
-          const t = y / H;
-          const fade = Math.sin(Math.max(0, Math.min(1, t)) * Math.PI);
+          const fade = Math.sin(Math.max(0, Math.min(1, y / H)) * Math.PI);
           ctx.globalAlpha = Math.max(0, fade * 0.12);
-          ctx.strokeStyle = `rgba(13,125,224,1)`;
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(W, y);
-          ctx.stroke();
+          ctx.strokeStyle = 'rgba(13,125,224,1)';
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
         }
         ctx.restore();
       }
@@ -331,21 +373,16 @@
         rays.forEach(r => {
           r.angle += r.speed;
           ctx.save();
-          ctx.translate(cx, cy);
-          ctx.rotate(r.angle);
+          ctx.translate(cx, cy); ctx.rotate(r.angle);
           const g = ctx.createLinearGradient(0, 0, W * r.len, 0);
-          g.addColorStop(0,   `rgba(13,125,224,${r.alpha})`);
+          g.addColorStop(0, `rgba(13,125,224,${r.alpha})`);
           g.addColorStop(0.6, `rgba(13,125,224,${r.alpha * 0.3})`);
-          g.addColorStop(1,   'rgba(13,125,224,0)');
+          g.addColorStop(1, 'rgba(13,125,224,0)');
           ctx.fillStyle = g;
           ctx.beginPath();
-          ctx.moveTo(0, -r.width * 0.5);
-          ctx.lineTo(W * r.len, -r.width * 0.04);
-          ctx.lineTo(W * r.len,  r.width * 0.04);
-          ctx.lineTo(0,  r.width * 0.5);
-          ctx.closePath();
-          ctx.fill();
-          ctx.restore();
+          ctx.moveTo(0, -r.width * 0.5); ctx.lineTo(W * r.len, -r.width * 0.04);
+          ctx.lineTo(W * r.len, r.width * 0.04); ctx.lineTo(0, r.width * 0.5);
+          ctx.closePath(); ctx.fill(); ctx.restore();
         });
       }
 
@@ -353,36 +390,25 @@
         const pulse = 0.95 + 0.05 * Math.sin(frame_n * 0.018);
         const cx = W * 0.5, cy = H * 0.46;
         const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, W * 0.52 * pulse);
-        g.addColorStop(0,   'rgba(13,100,210,0.14)');
-        g.addColorStop(0.45,'rgba(10,70,160,0.05)');
-        g.addColorStop(1,   'rgba(0,0,0,0)');
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, W, H);
+        g.addColorStop(0, 'rgba(13,100,210,0.14)');
+        g.addColorStop(0.45, 'rgba(10,70,160,0.05)');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
       }
 
       function tick() {
         frame_n++;
         ctx.clearRect(0, 0, W, H);
-
-        ctx.fillStyle = '#020b18';
-        ctx.fillRect(0, 0, W, H);
-
-        drawGrid();
-        drawGlow();
-        drawRays();
+        ctx.fillStyle = '#020b18'; ctx.fillRect(0, 0, W, H);
+        drawGrid(); drawGlow(); drawRays();
         particles.forEach(p => { p.update(); p.draw(); });
-
         raf = requestAnimationFrame(tick);
       }
 
-      function resize() {
-        W = canvas.width  = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-      }
+      function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
       function init() {
-        resize();
-        particles.length = 0;
+        resize(); particles.length = 0;
         for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
         if (raf) cancelAnimationFrame(raf);
         tick();
@@ -392,94 +418,62 @@
       init();
     })();
 
-    /* ---------------------------
-       UI behaviors (toggle, tab, button ripple)
-    ---------------------------- */
+    /* =============================================
+       UI HELPERS
+       ============================================= */
 
-    // toggle password visibility
-    function togglePass() {
-      const ip = document.getElementById('passwordInput');
-      ip.type = ip.type === 'password' ? 'text' : 'password';
+    // Toggle visibilidade da senha
+    function togglePass(inputId, btn) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+      btn.textContent = input.type === 'password' ? '👁' : '🙈';
     }
 
-    // tabs (simple visual)
-    function switchTab(btn) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      // If you want to change content between tabs, do here.
-    }
-
-    // remember toggle logic + keyboard accessibility
+    // Toggle "Manter conectado"
     const rememberToggleEl = document.getElementById('rememberToggle');
     const rememberLabel = document.getElementById('rememberLabel');
 
     function setRemember(state) {
-      if (state) {
-        rememberToggleEl.classList.add('on');
-        rememberLabel.setAttribute('aria-checked', 'true');
-      } else {
-        rememberToggleEl.classList.remove('on');
-        rememberLabel.setAttribute('aria-checked', 'false');
-      }
-      try { localStorage.setItem('softprime_remember', state ? '1' : '0'); } catch(e){}
+      rememberToggleEl.classList.toggle('on', state);
+      rememberLabel.setAttribute('aria-checked', state ? 'true' : 'false');
+      try { localStorage.setItem('softprime_remember', state ? '1' : '0'); } catch(e) {}
     }
 
     function toggleRemember() {
-      const isOn = rememberToggleEl.classList.contains('on');
-      setRemember(!isOn);
+      setRemember(!rememberToggleEl.classList.contains('on'));
     }
 
     function keyToggleRemember(e) {
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-        e.preventDefault(); toggleRemember();
-      }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleRemember(); }
     }
 
-    // load saved preference
-    (function loadRemember() {
-      try {
-        const v = localStorage.getItem('softprime_remember');
-        setRemember(v === '1');
-      } catch(e){}
-    })();
+    // Carrega preferência salva
+    try {
+      setRemember(localStorage.getItem('softprime_remember') === '1');
+    } catch(e) {}
 
-    // Forgot handler
-    function onForgot(e) {
-      e.preventDefault();
-      alert('Ação: recuperar senha (implemente conforme seu fluxo).');
-    }
-
-    // button ripple + demo submit
-    document.getElementById('submitBtn').addEventListener('click', function (e) {
-      // ripple effect
-      const btn = this;
+    // Ripple no botão
+    function addRipple(btn, e) {
       const rect = btn.getBoundingClientRect();
       const d = Math.max(rect.width, rect.height);
       const ripple = document.createElement('span');
       ripple.className = 'ripple';
-      ripple.style.width = ripple.style.height = d + 'px';
-      ripple.style.left = (e.clientX - rect.left - d/2) + 'px';
-      ripple.style.top  = (e.clientY - rect.top  - d/2) + 'px';
+      ripple.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - rect.left - d/2}px;top:${e.clientY - rect.top - d/2}px`;
       btn.appendChild(ripple);
       setTimeout(() => ripple.remove(), 800);
+    }
 
-      // demo: read fields
-      const email = document.getElementById('emailInput').value.trim();
-      const pwd   = document.getElementById('passwordInput').value;
-      // Replace below with real submit logic
-      console.log('Login attempt', { email, pwd });
-      // small feedback (demo)
-      btn.disabled = true;
-      btn.style.opacity = 0.9;
-      setTimeout(() => { btn.disabled = false; btn.style.opacity = 1; alert('Ação de login (implemente seu fluxo)'); }, 800);
+    document.getElementById('submitBtn').addEventListener('click', function(e) {
+      addRipple(this, e);
     });
 
-    // small accessibility: Enter on password => submit
-    document.getElementById('passwordInput').addEventListener('keydown', function(e){
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById('submitBtn').click();
-      }
+    document.getElementById('signupBtn').addEventListener('click', function(e) {
+      addRipple(this, e);
+    });
+
+    // Enter no campo senha faz submit
+    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); document.getElementById('loginForm').requestSubmit(); }
     });
   </script>
 </body>

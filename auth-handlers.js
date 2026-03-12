@@ -44,14 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Função para alternar abas
   function switchToLogin() {
     console.log('[AUTH] Alternando para Login');
-    if (tabLogin) {
-      tabLogin.style.color = '#0d7de0';
-      tabLogin.style.borderBottom = '3px solid #0d7de0';
-    }
-    if (tabSignup) {
-      tabSignup.style.color = '#6b7280';
-      tabSignup.style.borderBottom = '3px solid transparent';
-    }
+    if (tabLogin) { tabLogin.classList.add('active'); tabLogin.style.color = ''; tabLogin.style.borderBottom = ''; }
+    if (tabSignup) { tabSignup.classList.remove('active'); tabSignup.style.color = ''; tabSignup.style.borderBottom = ''; }
     if (loginForm) loginForm.style.display = 'block';
     if (signupForm) signupForm.style.display = 'none';
     if (authMessage) authMessage.style.display = 'none';
@@ -59,14 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function switchToSignup() {
     console.log('[AUTH] Alternando para Cadastro');
-    if (tabSignup) {
-      tabSignup.style.color = '#0d7de0';
-      tabSignup.style.borderBottom = '3px solid #0d7de0';
-    }
-    if (tabLogin) {
-      tabLogin.style.color = '#6b7280';
-      tabLogin.style.borderBottom = '3px solid transparent';
-    }
+    if (tabSignup) { tabSignup.classList.add('active'); tabSignup.style.color = ''; tabSignup.style.borderBottom = ''; }
+    if (tabLogin) { tabLogin.classList.remove('active'); tabLogin.style.color = ''; tabLogin.style.borderBottom = ''; }
     if (signupForm) signupForm.style.display = 'block';
     if (loginForm) loginForm.style.display = 'none';
     if (authMessage) authMessage.style.display = 'none';
