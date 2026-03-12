@@ -428,12 +428,41 @@
       .quotes-layout { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      .header { left: 0; }
-      .sidebar { display: none; }
+      .header { left: 0; height: 56px; }
+      .sidebar {
+        display: flex !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 400;
+        width: 240px !important;
+        min-width: 240px !important;
+      }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .sidebar-btn span:not(.nav-icon) { display: inline !important; }
+      .sidebar-section-label { display: block !important; }
+      .sidebar-btn { justify-content: flex-start !important; padding: 10px 14px !important; }
+      .sidebar-brand { padding: 20px 16px !important; justify-content: flex-start !important; }
+      .sidebar-logo-text { display: block !important; }
       .main-content { margin-left: 0; }
       .form-grid { grid-template-columns: 1fr; }
       .screen { padding: 16px 12px 40px; }
+      .hamburger-btn {
+        display: flex !important;
+        align-items: center; justify-content: center;
+        background: none; border: none; cursor: pointer;
+        color: #fff; padding: 8px; margin-right: 8px; border-radius: 8px;
+      }
+      .hamburger-btn:hover { background: rgba(255,255,255,0.08); }
+      .sidebar-overlay {
+        display: block !important;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 399; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      }
+      .sidebar-overlay.visible { opacity: 1; pointer-events: all; }
     }
+    .hamburger-btn { display: none; }
+    .sidebar-overlay { display: none; }
   </style>
 </head>
 <body>
@@ -441,7 +470,13 @@
   <!-- ========== HEADER (barra topo do conteúdo) ========== -->
   <header class="header">
     <div class="header-row">
-      <div class="brand"></div>
+      <div class="brand">
+        <button class="hamburger-btn" id="hamburgerBtn" title="Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
       <div class="header-actions">
         <button class="profile-btn" id="profileBtn" title="Meu Perfil">
           <div class="profile-avatar" id="profileAvatar">?</div>
@@ -455,6 +490,9 @@
   </header>
 
   <!-- ========== APP LAYOUT ========== -->
+  <!-- Overlay mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
   <div class="app-layout">
 
     <!-- SIDEBAR ESTILO VISITECH -->
@@ -1274,6 +1312,35 @@
         clearInterval(_avatarInit);
       }
     }, 300);
+  </script>
+  <script>
+    // Menu mobile hamburguer
+    (function() {
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+
+      function openMenu() {
+        sidebar.classList.add('mobile-open');
+        overlay.classList.add('visible');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeMenu() {
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('visible');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMenu);
+      if (overlay) overlay.addEventListener('click', closeMenu);
+
+      // Fecha ao clicar em qualquer item do menu
+      document.querySelectorAll('.sidebar-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (window.innerWidth <= 600) closeMenu();
+        });
+      });
+    })();
   </script>
 </body>
 </html>
