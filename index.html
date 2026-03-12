@@ -30,7 +30,7 @@
       border-bottom: none;
       position: fixed;
       top: 0; left: 240px; right: 0;
-      z-index: 200;
+      z-index: 350;
       height: 60px;
     }
     .header-row {
@@ -428,7 +428,11 @@
       .quotes-layout { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      .header { left: 0; height: 56px; }
+      .header { left: 0 !important; height: 56px; z-index: 350; }
+      .header-row { padding: 0 12px; }
+      .app-layout { padding-top: 56px; }
+      .profile-btn span#userName { display: none; }
+      .profile-btn { padding: 6px 10px; gap: 6px; }
       .sidebar {
         display: flex !important;
         transform: translateX(-100%);
