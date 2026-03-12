@@ -62,14 +62,18 @@ class AuthManager {
   }
 
   showAuth() {
-    if (!window.location.pathname.endsWith('login.html') && window.location.pathname !== '/login.html') {
-      window.location.href = 'login.html';
+    const path = window.location.pathname;
+    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/';
+    if (!isLoginPage) {
+      window.location.replace('/login.html');
     }
   }
 
   showApp() {
-    if (window.location.pathname.endsWith('login.html') || window.location.pathname === '/login.html') {
-      window.location.href = 'index.html';
+    const path = window.location.pathname;
+    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/' || path === '/';
+    if (isLoginPage) {
+      window.location.replace('/index.html');
       return;
     }
 
