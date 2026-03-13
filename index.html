@@ -434,12 +434,14 @@
       .quotes-layout { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      .header { left: 0 !important; right: 0 !important; height: 56px !important; z-index: 9000 !important; }
-      .header-row { padding: 0 12px; display: flex; align-items: center; justify-content: space-between; }
-      .brand { display: flex !important; }
-      .app-layout { padding-top: 56px !important; }
-      .profile-btn span#userName { display: none; }
-      .profile-btn { padding: 6px 10px; gap: 6px; }
+      .header { left: 0 !important; right: 0 !important; height: 60px !important; z-index: 9000 !important; }
+      .header-row { padding: 0 16px; display: flex !important; align-items: center !important; justify-content: space-between !important; width: 100%; }
+      .brand { display: flex !important; align-items: center !important; flex-shrink: 0; }
+      .header-actions { display: flex !important; align-items: center !important; flex-shrink: 0; }
+      .app-layout { padding-top: 60px !important; }
+      .profile-btn { display: flex !important; align-items: center !important; padding: 6px 12px !important; gap: 8px !important; flex-shrink: 0; }
+      .profile-btn span#userName { display: none !important; }
+      .profile-avatar { flex-shrink: 0; }
       .main-content { position: relative; z-index: 1; }
       .sidebar {
         display: flex !important;
