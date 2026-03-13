@@ -485,8 +485,15 @@
         background: none; border: none; cursor: pointer;
         color: #fff; padding: 10px; border-radius: 8px;
         -webkit-tap-highlight-color: transparent;
+        flex-shrink: 0;
       }
       .hamburger-btn:active { background: rgba(255,255,255,0.1); }
+      .mobile-header-title {
+        display: block !important;
+        font-size: 18px; font-weight: 800;
+        color: #fff; letter-spacing: 1px;
+        text-transform: uppercase; margin-left: 4px;
+      }
 
       /* Perfil no menu mobile */
       .sidebar-mobile-profile { display: block !important; }
@@ -573,6 +580,7 @@
     .hamburger-btn { display: none; }
     .sidebar-overlay { display: none; }
     .sidebar-mobile-profile { display: none; }
+    .mobile-header-title { display: none; }
   </style>
 </head>
 <body>
@@ -588,6 +596,7 @@
             <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
         </button>
+        <span class="mobile-header-title">Soft<span style="color:#7c3aed;">Prime</span></span>
       </div>
       <div class="header-actions">
         <button class="profile-btn" id="profileBtn" title="Meu Perfil">
