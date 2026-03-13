@@ -38,6 +38,7 @@ class AuthManager {
 
       this._initialized = true;
 
+      // Redireciona UMA vez na inicialização com base na sessão atual
       if (session) {
         this.currentUser = session.user;
         this.showApp();
@@ -45,12 +46,15 @@ class AuthManager {
         this.showAuth();
       }
 
+      // onAuthStateChange só atua em mudanças reais (login/logout)
+      // INITIAL_SESSION é ignorado pois já tratamos com getSession acima
       this.supabase.auth.onAuthStateChange((event, session) => {
         console.log('🔔 Auth event:', event);
-        if (session) {
+        if (event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') return;
+        if (event === 'SIGNED_IN') {
           this.currentUser = session.user;
           this.showApp();
-        } else {
+        } else if (event === 'SIGNED_OUT') {
           this.currentUser = null;
           this.showAuth();
         }
@@ -63,19 +67,25 @@ class AuthManager {
 
   showAuth() {
     const path = window.location.pathname;
-    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/' || path.endsWith('/login');
+    const isLoginPage = path === '/login' || path === '/login/' || path.endsWith('login.html');
     if (!isLoginPage) {
       window.location.replace('/login');
     }
+    // Já está no login — não faz nada
   }
 
   showApp() {
     const path = window.location.pathname;
-    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/' || path === '/' || path.endsWith('/login');
+    const isLoginPage = path === '/login' || path === '/login/' || path === '/' || path.endsWith('login.html');
+    const isIndexPage = path === '/index' || path === '/index/' || path.endsWith('index.html');
+
     if (isLoginPage) {
       window.location.replace('/index');
       return;
     }
+
+    // Já está no index — só atualiza a UI, NUNCA redireciona de novo
+    if (!isIndexPage) return;
 
     const userNameEl = document.getElementById('userName');
     if (userNameEl && this.currentUser) {
