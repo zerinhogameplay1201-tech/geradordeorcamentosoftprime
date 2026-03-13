@@ -100,6 +100,8 @@ class AuthManager {
         });
     }
 
+    const guard = document.getElementById('auth-guard');
+    if (guard) guard.remove();
     if (typeof renderAll === 'function') renderAll();
   }
 

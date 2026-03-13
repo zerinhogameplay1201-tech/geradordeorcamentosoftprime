@@ -10,6 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
+    /* Tela de bloqueio enquanto verifica autenticação */
+    #auth-guard {
+      position: fixed; inset: 0; z-index: 99999;
+      background: #0f172a;
+      display: flex; align-items: center; justify-content: center;
+    }
     /* Neutraliza qualquer background branco do styles.css na sidebar */
     nav.sidebar, .sidebar, .sidebar * { background-color: transparent; }
     nav.sidebar, .sidebar { background: #111827 !important; }
@@ -472,6 +478,8 @@
   </style>
 </head>
 <body>
+  <div id="auth-guard"></div>
+
 
   <!-- ========== HEADER (barra topo do conteúdo) ========== -->
   <header class="header">
