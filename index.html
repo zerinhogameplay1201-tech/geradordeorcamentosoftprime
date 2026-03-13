@@ -871,7 +871,7 @@
 
   <!-- ========== DROPDOWN MENU PERFIL (estilo Visitech) ========== -->
   <div id="profileDropdown" style="
-    display:none; position:fixed; top:60px; right:16px; z-index:9998;
+    display:none; position:fixed; z-index:9998;
     background:#1f2937; border:1px solid rgba(255,255,255,0.10);
     border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.45);
     min-width:220px; overflow:hidden;
@@ -1279,18 +1279,18 @@
       profileDropdown.style.display = isOpen ? 'none' : 'block';
 
       if (!isOpen) {
-        // Posiciona o dropdown alinhado abaixo do botão
+        // Posiciona o dropdown alinhado abaixo do botão (igual Visitech)
         const rect = profileBtn.getBoundingClientRect();
         const isMobile = window.innerWidth <= 600;
-        profileDropdown.style.top   = (rect.bottom + 8) + 'px';
+        const dropW = Math.max(rect.width, 220);
+        profileDropdown.style.top    = (rect.bottom + 6) + 'px';
+        profileDropdown.style.left   = 'auto';
+        profileDropdown.style.width  = dropW + 'px';
         if (isMobile) {
           profileDropdown.style.right = '12px';
-          profileDropdown.style.left  = 'auto';
-          profileDropdown.style.width = '200px';
         } else {
+          // Alinha borda direita do dropdown com borda direita do botão
           profileDropdown.style.right = (window.innerWidth - rect.right) + 'px';
-          profileDropdown.style.left  = 'auto';
-          profileDropdown.style.width = Math.max(rect.width, 220) + 'px';
         }
         // Preenche dados no dropdown
         const auth = window.authManager;
