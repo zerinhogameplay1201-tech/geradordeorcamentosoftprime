@@ -181,9 +181,19 @@
     #signupForm { display: none; }
 
     @media (max-width:480px) {
-      .login-wrap { padding:28px 20px 24px; }
+      .login-wrap { padding:24px 16px 20px; border-radius: 16px; }
       .actions-row { flex-direction:column; align-items:stretch; gap:10px; }
       .forgot-link-inline { text-align:right; display:block; }
+      .logo-name { font-size: 28px !important; }
+      .login-subtitle { font-size: 12px; }
+      .tab-btn { font-size: 13px; padding: 10px 8px; }
+      .field-wrap input { 
+        font-size: 16px !important; /* previne zoom iOS */
+        padding: 12px 14px 12px 40px;
+        min-height: 46px;
+      }
+      .btn-login { min-height: 48px; font-size: 15px; }
+      .remember { font-size: 13px; }
     }
   </style>
 </head>
