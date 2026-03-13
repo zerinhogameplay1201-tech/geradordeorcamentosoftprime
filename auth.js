@@ -63,17 +63,17 @@ class AuthManager {
 
   showAuth() {
     const path = window.location.pathname;
-    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/';
+    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/' || path.endsWith('/login');
     if (!isLoginPage) {
-      window.location.replace('/login.html');
+      window.location.replace('/login');
     }
   }
 
   showApp() {
     const path = window.location.pathname;
-    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/' || path === '/';
+    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/' || path === '/' || path.endsWith('/login');
     if (isLoginPage) {
-      window.location.replace('/index.html');
+      window.location.replace('/index');
       return;
     }
 
@@ -212,7 +212,7 @@ class AuthManager {
   async signOut() {
     try {
       await this.supabase.auth.signOut();
-      window.location.href = 'login.html';
+      window.location.href = '/login';
       return { success: true };
     } catch (error) {
       return { success: false, message: `❌ ${error.message}` };

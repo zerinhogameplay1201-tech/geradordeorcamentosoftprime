@@ -1,10 +1,33 @@
 [build]
   publish = "."
 
+# URLs limpas — remove o .html
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/index"
+  to = "/index.html"
+  status = 200
+
+# Redireciona raiz para login
 [[redirects]]
   from = "/"
   to = "/login.html"
   status = 302
+
+# Redireciona quem acessar com .html para URL limpa
+[[redirects]]
+  from = "/login.html"
+  to = "/login"
+  status = 301
+
+[[redirects]]
+  from = "/index.html"
+  to = "/index"
+  status = 301
 
 [[headers]]
   for = "/*"
