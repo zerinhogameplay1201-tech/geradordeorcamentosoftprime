@@ -5,7 +5,6 @@ class AuthManager {
     this.supabase = null;
     this.currentUser = null;
     this._initialized = false;
-    this._redirecting = false; // trava para evitar múltiplos redirects
     this.init();
   }
 
@@ -34,7 +33,6 @@ class AuthManager {
         auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
       });
 
-      // Verifica sessão UMA única vez na inicialização
       const { data: { session }, error } = await this.supabase.auth.getSession();
       if (error) console.error('❌ Erro ao verificar sessão:', error.message);
 
@@ -42,24 +40,21 @@ class AuthManager {
 
       if (session) {
         this.currentUser = session.user;
-        this._handleAuthPage(); // só redireciona se estiver na página de login
+        this.showApp();
       } else {
-        this._handleAppPage(); // só redireciona se estiver na página do app
+        this.showAuth();
       }
 
-      // onAuthStateChange: APENAS para login e logout do usuário
-      // Ignora INITIAL_SESSION (já tratado acima), TOKEN_REFRESHED e USER_UPDATED
+      // Só reage a SIGNED_IN e SIGNED_OUT — ignora todo o resto
       this.supabase.auth.onAuthStateChange((event, session) => {
         console.log('🔔 Auth event:', event);
-
         if (event === 'SIGNED_IN') {
           this.currentUser = session.user;
-          this._handleAuthPage(); // veio do login → vai para o app
+          this.showApp();
         } else if (event === 'SIGNED_OUT') {
           this.currentUser = null;
-          this._handleAppPage(); // saiu do app → vai para o login
+          this.showAuth();
         }
-        // Todos os outros eventos (INITIAL_SESSION, TOKEN_REFRESHED, USER_UPDATED) são ignorados
       });
 
     } catch (error) {
@@ -67,36 +62,28 @@ class AuthManager {
     }
   }
 
-  // Chamado quando há sessão ativa — se estiver na página de login, redireciona para o app
-  _handleAuthPage() {
+  showAuth() {
     const path = window.location.pathname;
-    const isLoginPage = path === '/login' || path === '/login/' || path === '/' || path.endsWith('login.html');
+    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/';
+    if (!isLoginPage) {
+      window.location.replace('/login.html');
+    }
+    // Já está no login — não faz nada, para aqui
+  }
+
+  showApp() {
+    const path = window.location.pathname;
+    const isLoginPage = path.endsWith('login.html') || path === '/login' || path === '/login/' || path === '/';
+    const isAppPage = path.endsWith('index.html') || path === '/index' || path === '/index/';
 
     if (isLoginPage) {
-      if (this._redirecting) return;
-      this._redirecting = true;
-      window.location.replace('/index');
-    } else {
-      // Já está no app — só atualiza a UI
-      this._updateUI();
+      window.location.replace('/index.html');
+      return;
     }
-  }
 
-  // Chamado quando não há sessão — se estiver no app, redireciona para o login
-  _handleAppPage() {
-    const path = window.location.pathname;
-    const isLoginPage = path === '/login' || path === '/login/' || path === '/' || path.endsWith('login.html');
+    // Já está no app — só atualiza UI, NUNCA redireciona
+    if (!isAppPage) return;
 
-    if (!isLoginPage) {
-      if (this._redirecting) return;
-      this._redirecting = true;
-      window.location.replace('/login');
-    }
-    // Já está no login — não faz nada
-  }
-
-  // Atualiza nome do usuário e remove auth-guard (sem redirecionar)
-  _updateUI() {
     const userNameEl = document.getElementById('userName');
     if (userNameEl && this.currentUser) {
       this.supabase
@@ -125,10 +112,6 @@ class AuthManager {
     if (typeof renderAll === 'function') renderAll();
   }
 
-  // Mantido para compatibilidade com código legado
-  showAuth() { this._handleAppPage(); }
-  showApp() { this._handleAuthPage(); }
-
   async signUp(email, password, username) {
     try {
       if (!this.supabase)
@@ -139,12 +122,14 @@ class AuthManager {
 
       const cleanUsername = username.trim();
 
+      // Verifica se username já existe
       const { data: existingUser } = await this.supabase
         .from('profiles').select('id').ilike('username', cleanUsername).maybeSingle();
 
       if (existingUser)
         return { success: false, message: '❌ Este nome de usuário já está em uso. Escolha outro.' };
 
+      // Cadastra salvando username no metadata do Supabase Auth
       const { data, error } = await this.supabase.auth.signUp({
         email, password,
         options: {
@@ -157,6 +142,7 @@ class AuthManager {
 
       console.log('✅ Usuário criado no Auth:', data.user.id);
 
+      // Salva na tabela profiles com até 3 tentativas
       let profileSaved = false;
       for (let attempt = 1; attempt <= 3; attempt++) {
         await new Promise(r => setTimeout(r, attempt * 400));
@@ -175,6 +161,7 @@ class AuthManager {
       if (!profileSaved)
         console.warn('⚠️ Username salvo apenas no metadata do Auth (tabela profiles indisponível).');
 
+      // Login automático (funciona se "Confirm email" estiver DESATIVADO no Supabase)
       const { data: signInData, error: signInError } = await this.supabase.auth.signInWithPassword({ email, password });
 
       if (!signInError && signInData?.session) {
@@ -232,7 +219,7 @@ class AuthManager {
   async signOut() {
     try {
       await this.supabase.auth.signOut();
-      window.location.href = '/login';
+      window.location.href = '/login.html';
       return { success: true };
     } catch (error) {
       return { success: false, message: `❌ ${error.message}` };
@@ -242,7 +229,7 @@ class AuthManager {
   async resetPassword(email) {
     try {
       const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/login`
+        redirectTo: `${window.location.origin}/login.html`
       });
       if (error) throw error;
       return { success: true, message: '✅ Email de recuperação enviado!' };

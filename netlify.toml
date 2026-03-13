@@ -1,19 +1,7 @@
 [build]
   publish = "."
 
-# URL limpa: /login serve o login.html sem redirecionar
-[[redirects]]
-  from = "/login"
-  to = "/login.html"
-  status = 200
-
-# URL limpa: /index serve o index.html sem redirecionar  
-[[redirects]]
-  from = "/index"
-  to = "/index.html"
-  status = 200
-
-# Raiz vai para login
+# Raiz vai direto para login.html
 [[redirects]]
   from = "/"
   to = "/login.html"
