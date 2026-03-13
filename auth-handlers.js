@@ -114,12 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      showMessage('🔄 Entrando...', 'info');
-
       const result = await window.authManager.signIn(identifier, password);
       
       if (result.success) {
-        showMessage(result.message, 'success');
         loginForm.reset();
       } else {
         showMessage(result.message, 'error');
